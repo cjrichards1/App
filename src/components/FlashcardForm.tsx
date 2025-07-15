@@ -112,8 +112,11 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
         <h2 className="text-3xl font-bold text-gradient">Create New Flashcard</h2>
         <div className="flex items-center gap-3">
           <button
+            type="button"
+            onClick={() => setIsLatex(!isLatex)}
+            style={isLatex
               ? { background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)', color: 'white', borderColor: '#F43F5E', boxShadow: '0 4px 15px rgba(244, 63, 94, 0.3)' }
-              : { backgroundColor: '#F8FAFC', color: '#1F2937', borderColor: '#E2E8F0' }
+              : { backgroundColor: '#F8FAFC', color: '#1F2937', borderColor: '#E2E8F0' }}
             className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 btn-scale border-2"
           >
             {isLatex ? <FunctionSquare className="w-5 h-5" /> : <Type className="w-5 h-5" />}
