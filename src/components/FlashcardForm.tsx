@@ -117,10 +117,7 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
             className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors border"
             style={isLatex 
               ? { backgroundColor: '#fbcfe8', color: '#F43F5E', borderColor: '#F43F5E' }
-              : { backgroundColor: '#F3F4F6', color: '#1F2937', borderColor: '#D1D5DB' }
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
-           style={{ '--tw-ring-color': '#3B82F6' } as React.CSSProperties}
+              : { backgroundColor: '#F3F4F6', color: '#1F2937', borderColor: '#D1D5DB' }}
           >
             {isLatex ? <FunctionSquare className="w-4 h-4" /> : <Type className="w-4 h-4" />}
             {isLatex ? 'LaTeX Mode' : 'Text Mode'}
@@ -231,8 +228,8 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
               value={back}
               onChange={(e) => setBack(e.target.value)}
               placeholder={isLatex ? "Enter LaTeX: 2x" : "Enter your answer..."}
-             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent resize-none"
-             style={{ '--tw-ring-color': '#3B82F6' } as React.CSSProperties}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent resize-none"
+              style={{ '--tw-ring-color': '#3B82F6' } as React.CSSProperties}
               rows={4}
               required
             />
@@ -281,8 +278,8 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
 
         <button
           type="submit"
-        className="w-full text-white py-3 px-6 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2 font-medium"
-        style={{ backgroundColor: '#3B82F6' }}
+          className="w-full text-white py-3 px-6 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2 font-medium"
+          style={{ backgroundColor: '#3B82F6' }}
         >
           <Plus className="w-5 h-5" />
           Add Flashcard
