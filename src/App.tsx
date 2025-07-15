@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { SparklesIcon, PlusIcon, BookOpenIcon, AcademicCapIcon, FolderIcon, FolderPlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { FlashcardForm } from './components/FlashcardForm';
 import { FlashcardList } from './components/FlashcardList';
 import { StudyMode } from './components/StudyMode';
 import { useFlashcards } from './hooks/useFlashcards';
-import type { Flashcard, Folder } from './types/flashcard';
 
 type View = 'home' | 'create' | 'library' | 'study';
 
@@ -44,12 +43,7 @@ function App() {
 
   const handleCreateFolder = () => {
     if (newFolderName.trim()) {
-      addFolder({
-        id: Date.now().toString(),
-        name: newFolderName.trim(),
-        color: newFolderColor,
-        createdAt: new Date()
-      });
+      addFolder(newFolderName.trim(), newFolderColor);
       setNewFolderName('');
       setNewFolderColor('#3B82F6');
       setShowFolderForm(false);
