@@ -115,9 +115,6 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
             type="button"
             onClick={() => setIsLatex(!isLatex)}
             className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors border"
-            style={isLatex 
-              ? { backgroundColor: '#fbcfe8', color: '#F43F5E', borderColor: '#F43F5E' }
-              : { backgroundColor: '#F3F4F6', color: '#1F2937', borderColor: '#D1D5DB' }}
           >
             {isLatex ? <FunctionSquare className="w-4 h-4" /> : <Type className="w-4 h-4" />}
             {isLatex ? 'LaTeX Mode' : 'Text Mode'}
