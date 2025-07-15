@@ -146,15 +146,16 @@ function App() {
         <button
           onClick={() => setCurrentView('create')}
           className="card-hover rounded-xl p-8 text-left focus-ring"
+          style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)' }}
           aria-label="Create new flashcards"
         >
           <div className="flex items-center gap-4 mb-6">
-            <div className="p-4 rounded-xl text-white" style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)' }}>
+            <div className="p-4 rounded-xl bg-white bg-opacity-20">
               <PlusIcon className="w-8 h-8" />
             </div>
             <div>
-              <h3 className="text-2xl font-bold mb-1" style={{ color: '#1F2937' }}>Create Cards</h3>
-              <p style={{ color: '#6B7280' }}>Add new flashcards with text or LaTeX</p>
+              <h3 className="text-2xl font-bold mb-1 text-white">Create Cards</h3>
+              <p className="text-white text-opacity-80">Add new flashcards with text or LaTeX</p>
             </div>
           </div>
         </button>
@@ -162,15 +163,16 @@ function App() {
         <button
           onClick={() => setCurrentView('library')}
           className="card-hover rounded-xl p-8 text-left focus-ring"
+          style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)' }}
           aria-label="Browse flashcard library"
         >
           <div className="flex items-center gap-4 mb-6">
-            <div className="p-4 rounded-xl text-white" style={{ background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)' }}>
+            <div className="p-4 rounded-xl bg-white bg-opacity-20">
               <BookOpenIcon className="w-8 h-8" />
             </div>
             <div>
-              <h3 className="text-2xl font-bold mb-1" style={{ color: '#1F2937' }}>Browse Library</h3>
-              <p style={{ color: '#6B7280' }}>View and manage your flashcards</p>
+              <h3 className="text-2xl font-bold mb-1 text-white">Browse Library</h3>
+              <p className="text-white text-opacity-80">View and manage your flashcards</p>
             </div>
           </div>
         </button>
@@ -179,15 +181,16 @@ function App() {
           onClick={() => setCurrentView('study')}
           disabled={flashcards.length === 0}
           className="card-hover rounded-xl p-8 text-left focus-ring disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
+          style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)' }}
           aria-label="Start studying flashcards"
         >
           <div className="flex items-center gap-4 mb-6">
-            <div className="p-4 rounded-xl text-white" style={{ background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)' }}>
+            <div className="p-4 rounded-xl bg-white bg-opacity-20">
               <PlayIcon className="w-8 h-8" />
             </div>
             <div>
-              <h3 className="text-2xl font-bold mb-1" style={{ color: '#1F2937' }}>Start Studying</h3>
-              <p style={{ color: '#6B7280' }}>Begin a study session</p>
+              <h3 className="text-2xl font-bold mb-1 text-white">Start Studying</h3>
+              <p className="text-white text-opacity-80">Begin a study session</p>
             </div>
           </div>
         </button>
