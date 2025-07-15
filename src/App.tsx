@@ -407,7 +407,7 @@ function App() {
           {currentView === 'create' && (
             <div className="max-w-2xl mx-auto px-4 py-8">
               <FlashcardForm 
-                onSubmit={addFlashcard} 
+                onAdd={addFlashcard} 
                 categories={categories}
                 folders={folders}
               />
@@ -416,7 +416,12 @@ function App() {
           {currentView === 'library' && renderLibrary()}
           {currentView === 'study' && (
             <div className="max-w-4xl mx-auto px-4 py-8">
-              <StudyMode flashcards={filteredCards} />
+              <StudyMode 
+                flashcards={filteredCards}
+                onBack={() => setCurrentView('home')}
+                onMarkAnswer={markAnswer}
+                onSaveSession={saveStudySession}
+              />
             </div>
           )}
         </main>
