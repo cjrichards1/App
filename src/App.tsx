@@ -14,98 +14,100 @@ function App() {
   const stats = getStats();
 
   const renderDashboard = () => (
-    <div className="space-y-10 page-transition">
+    <div className="space-y-12 page-transition">
       {/* Header */}
-      <div className="text-center mb-12">
-        <div className="flex items-center justify-center gap-4 mb-6">
-          <div className="p-3 rounded-2xl gradient-primary shadow-colored-primary pulse-glow">
-            <Brain className="w-16 h-16 text-white" />
+      <div className="text-center mb-16">
+        <div className="flex items-center justify-center gap-6 mb-8">
+          <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-colored-primary">
+            <Brain className="w-20 h-20 text-white" />
           </div>
-          <h1 className="text-5xl font-bold text-gradient">FlashVibe</h1>
+          <h1 className="text-6xl font-black heading-primary bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
+            FlashVibe
+          </h1>
         </div>
-        <p className="text-2xl font-light" style={{ color: '#6B7280' }}>Learn Fast, Vibe Smart</p>
-        <div className="w-24 h-1 gradient-primary mx-auto mt-4 rounded-full"></div>
+        <p className="text-2xl font-medium text-muted mb-4">Learn Fast, Vibe Smart</p>
+        <div className="w-32 h-1 bg-gradient-to-r from-blue-500 to-green-500 mx-auto rounded-full"></div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid md:grid-cols-4 gap-8">
-        <div className="gradient-card rounded-2xl shadow-soft border-0 p-8 card-hover">
-          <div className="flex items-center gap-4">
-            <div className="p-4 rounded-xl gradient-primary shadow-colored-primary">
-              <BookOpen className="w-6 h-6" style={{ color: '#3B82F6' }} />
+      <div className="grid md:grid-cols-4 gap-6">
+        <div className="stat-card">
+          <div className="flex items-center gap-5">
+            <div className="p-3 rounded-xl bg-blue-50">
+              <BookOpen className="w-7 h-7 text-blue-600" />
             </div>
             <div>
-              <div className="text-3xl font-bold" style={{ color: '#1F2937' }}>{stats.totalCards}</div>
-              <div className="text-sm font-medium" style={{ color: '#6B7280' }}>Total Cards</div>
+              <div className="text-3xl font-bold text-gray-900">{stats.totalCards}</div>
+              <div className="text-sm font-medium text-muted">Total Cards</div>
             </div>
           </div>
         </div>
 
-        <div className="gradient-card rounded-2xl shadow-soft border-0 p-8 card-hover-accent">
-          <div className="flex items-center gap-4">
-            <div className="p-4 rounded-xl gradient-accent shadow-colored-accent">
-              <Play className="w-6 h-6" style={{ color: '#10B981' }} />
+        <div className="stat-card">
+          <div className="flex items-center gap-5">
+            <div className="p-3 rounded-xl bg-green-50">
+              <Play className="w-7 h-7 text-green-600" />
             </div>
             <div>
-              <div className="text-3xl font-bold" style={{ color: '#1F2937' }}>{stats.studiedToday}</div>
-              <div className="text-sm font-medium" style={{ color: '#6B7280' }}>Studied Today</div>
+              <div className="text-3xl font-bold text-gray-900">{stats.studiedToday}</div>
+              <div className="text-sm font-medium text-muted">Studied Today</div>
             </div>
           </div>
         </div>
 
-        <div className="gradient-card rounded-2xl shadow-soft border-0 p-8 card-hover-secondary">
-          <div className="flex items-center gap-4">
-            <div className="p-4 rounded-xl gradient-secondary shadow-colored-secondary">
-              <BarChart3 className="w-6 h-6" style={{ color: '#F43F5E' }} />
+        <div className="stat-card">
+          <div className="flex items-center gap-5">
+            <div className="p-3 rounded-xl bg-pink-50">
+              <BarChart3 className="w-7 h-7 text-pink-600" />
             </div>
             <div>
-              <div className="text-3xl font-bold" style={{ color: '#1F2937' }}>{stats.averageAccuracy.toFixed(0)}%</div>
-              <div className="text-sm font-medium" style={{ color: '#6B7280' }}>Accuracy</div>
+              <div className="text-3xl font-bold text-gray-900">{stats.averageAccuracy.toFixed(0)}%</div>
+              <div className="text-sm font-medium text-muted">Accuracy</div>
             </div>
           </div>
         </div>
 
-        <div className="gradient-card rounded-2xl shadow-soft border-0 p-8 card-hover">
-          <div className="flex items-center gap-4">
-            <div className="p-4 rounded-xl gradient-primary shadow-colored-primary">
-              <Brain className="w-6 h-6" style={{ color: '#3B82F6' }} />
+        <div className="stat-card">
+          <div className="flex items-center gap-5">
+            <div className="p-3 rounded-xl bg-purple-50">
+              <Brain className="w-7 h-7 text-purple-600" />
             </div>
             <div>
-              <div className="text-3xl font-bold" style={{ color: '#1F2937' }}>{Object.keys(stats.categoryBreakdown).length}</div>
-              <div className="text-sm font-medium" style={{ color: '#6B7280' }}>Categories</div>
+              <div className="text-3xl font-bold text-gray-900">{Object.keys(stats.categoryBreakdown).length}</div>
+              <div className="text-sm font-medium text-muted">Categories</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Quick Actions */}
-      <div className="grid md:grid-cols-3 gap-8">
+      <div className="grid md:grid-cols-3 gap-6">
         <button
           onClick={() => setCurrentView('create')}
-          className="gradient-card rounded-2xl shadow-soft border-0 p-10 text-left group card-hover btn-scale"
+          className="card-quizlet p-8 text-left group transition-all duration-200 hover:shadow-medium"
         >
-          <div className="flex items-center gap-6 mb-6">
-            <div className="p-4 rounded-2xl gradient-primary shadow-colored-primary group-hover:scale-110 transition-transform duration-300">
-              <Plus className="w-10 h-10 text-white" />
+          <div className="flex items-center gap-5 mb-4">
+            <div className="p-4 rounded-xl bg-blue-500 group-hover:bg-blue-600 transition-colors duration-200">
+              <Plus className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h3 className="text-2xl font-bold mb-2" style={{ color: '#1F2937' }}>Create Cards</h3>
-              <p className="text-lg" style={{ color: '#6B7280' }}>Add new flashcards with text or LaTeX</p>
+              <h3 className="text-xl font-bold heading-secondary mb-1">Create Cards</h3>
+              <p className="text-muted">Add new flashcards with text or LaTeX</p>
             </div>
           </div>
         </button>
 
         <button
           onClick={() => setCurrentView('library')}
-          className="gradient-card rounded-2xl shadow-soft border-0 p-10 text-left group card-hover-accent btn-scale"
+          className="card-quizlet p-8 text-left group transition-all duration-200 hover:shadow-medium"
         >
-          <div className="flex items-center gap-6 mb-6">
-            <div className="p-4 rounded-2xl gradient-accent shadow-colored-accent group-hover:scale-110 transition-transform duration-300">
-              <BookOpen className="w-10 h-10 text-white" />
+          <div className="flex items-center gap-5 mb-4">
+            <div className="p-4 rounded-xl bg-green-500 group-hover:bg-green-600 transition-colors duration-200">
+              <BookOpen className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h3 className="text-2xl font-bold mb-2" style={{ color: '#1F2937' }}>Browse Library</h3>
-              <p className="text-lg" style={{ color: '#6B7280' }}>View and manage your flashcards</p>
+              <h3 className="text-xl font-bold heading-secondary mb-1">Browse Library</h3>
+              <p className="text-muted">View and manage your flashcards</p>
             </div>
           </div>
         </button>
@@ -113,15 +115,15 @@ function App() {
         <button
           onClick={() => setCurrentView('study')}
           disabled={flashcards.length === 0}
-          className="gradient-card rounded-2xl shadow-soft border-0 p-10 text-left group card-hover-secondary btn-scale disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+          className="card-quizlet p-8 text-left group transition-all duration-200 hover:shadow-medium disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-soft disabled:hover:transform-none"
         >
-          <div className="flex items-center gap-6 mb-6">
-            <div className="p-4 rounded-2xl gradient-secondary shadow-colored-secondary group-hover:scale-110 transition-transform duration-300">
-              <Play className="w-10 h-10 text-white" />
+          <div className="flex items-center gap-5 mb-4">
+            <div className="p-4 rounded-xl bg-pink-500 group-hover:bg-pink-600 transition-colors duration-200">
+              <Play className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h3 className="text-2xl font-bold mb-2" style={{ color: '#1F2937' }}>Start Studying</h3>
-              <p className="text-lg" style={{ color: '#6B7280' }}>Begin a study session</p>
+              <h3 className="text-xl font-bold heading-secondary mb-1">Start Studying</h3>
+              <p className="text-muted">Begin a study session</p>
             </div>
           </div>
         </button>
@@ -129,13 +131,13 @@ function App() {
 
       {/* Category Breakdown */}
       {Object.keys(stats.categoryBreakdown).length > 0 && (
-        <div className="gradient-card rounded-2xl shadow-soft border-0 p-8">
-          <h3 className="text-2xl font-bold mb-6" style={{ color: '#1F2937' }}>Cards by Category</h3>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="card-quizlet p-8">
+          <h3 className="text-2xl font-bold heading-secondary mb-6">Cards by Category</h3>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {Object.entries(stats.categoryBreakdown).map(([category, count]) => (
-              <div key={category} className="flex items-center justify-between p-4 rounded-xl card-hover" style={{ backgroundColor: '#F8FAFC' }}>
-                <span className="font-semibold capitalize text-lg" style={{ color: '#1F2937' }}>{category}</span>
-                <span className="font-medium" style={{ color: '#6B7280' }}>{count} cards</span>
+              <div key={category} className="flex items-center justify-between p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
+                <span className="font-semibold capitalize text-gray-900">{category}</span>
+                <span className="font-medium text-muted">{count} cards</span>
               </div>
             ))}
           </div>
@@ -145,21 +147,22 @@ function App() {
   );
 
   const renderNavigation = () => (
-    <nav className="glass backdrop-blur-md shadow-medium border-b-0 mb-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+    <nav className="nav-modern sticky top-0 z-50 mb-8">
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="flex items-center justify-between h-16">
           <button
             onClick={() => setCurrentView('dashboard')}
-            className="flex items-center gap-3 hover:opacity-80 transition-all duration-300 btn-scale"
-            style={{ color: '#3B82F6' }}
+            className="flex items-center gap-3 hover:opacity-80 transition-all duration-200"
           >
-            <div className="p-2 rounded-xl gradient-primary shadow-colored-primary">
-              <Brain className="w-7 h-7 text-white" />
+            <div className="p-2 rounded-lg bg-blue-500">
+              <Brain className="w-6 h-6 text-white" />
             </div>
-            <span className="font-bold text-xl text-gradient">FlashVibe</span>
+            <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
+              FlashVibe
+            </span>
           </button>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             {[
               { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
               { id: 'create', label: 'Create', icon: Plus },
@@ -170,17 +173,13 @@ function App() {
                 key={id}
                 onClick={() => setCurrentView(id as View)}
                 disabled={id === 'study' && flashcards.length === 0}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
                   currentView === id
-                    ? 'text-white shadow-colored-primary'
-                    : 'hover:bg-white hover:bg-opacity-20'
+                    ? 'bg-blue-500 text-white shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
-                style={currentView === id 
-                  ? { background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)' } 
-                  : { color: '#1F2937' }
-                }
               >
-                <Icon className="w-5 h-5" />
+                <Icon className="w-4 h-4" />
                 {label}
               </button>
             ))}
@@ -191,10 +190,10 @@ function App() {
   );
 
   return (
-    <div className="min-h-screen gradient-bg">
+    <div className="min-h-screen" style={{ background: '#FAFBFC' }}>
       {currentView !== 'study' && renderNavigation()}
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-6xl mx-auto px-6 py-8">
         {currentView === 'dashboard' && renderDashboard()}
         {currentView === 'create' && <FlashcardForm onAdd={addFlashcard} />}
         {currentView === 'library' && (
