@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Type, Function } from 'lucide-react';
+import { Plus, Type, FunctionSquare } from 'lucide-react';
 import { InlineMath, BlockMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 
