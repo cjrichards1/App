@@ -7,6 +7,7 @@ import { useFlashcards } from './hooks/useFlashcards';
 
 type View = 'home' | 'create' | 'library' | 'study';
 
+function App() {
   const [currentView, setCurrentView] = useState<View>('home');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
