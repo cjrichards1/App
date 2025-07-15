@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SparklesIcon, PlusIcon, BookOpenIcon, AcademicCapIcon, FolderIcon, FolderPlusIcon } from '@heroicons/react/24/outline';
+import { SparklesIcon, PlusIcon, BookOpenIcon, AcademicCapIcon, FolderIcon, FolderPlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { FlashcardForm } from './components/FlashcardForm';
 import { FlashcardList } from './components/FlashcardList';
 import { StudyMode } from './components/StudyMode';
@@ -371,7 +371,7 @@ function App() {
                 className="p-1 hover:bg-red-100 rounded text-red-500"
                 title="Delete category"
               >
-                <X className="w-3 h-3" />
+                <XMarkIcon className="w-3 h-3" />
               </button>
             )}
           </div>
