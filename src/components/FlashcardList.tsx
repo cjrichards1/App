@@ -89,11 +89,11 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({ flashcards, onDele
             <button
               key={category.value}
               onClick={() => setSelectedCategory(category.value)}
-              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                selectedCategory === category.value
-                  ? 'bg-indigo-100 text-indigo-800 border border-indigo-200'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
+              className="px-3 py-1 rounded-full text-sm font-medium transition-colors border"
+              style={selectedCategory === category.value
+                ? { backgroundColor: '#dbeafe', color: '#3B82F6', borderColor: '#3B82F6' }
+                : { backgroundColor: '#F3F4F6', color: '#6B7280', borderColor: '#D1D5DB' }
+              }
             >
               {category.label}
             </button>
@@ -137,7 +137,8 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({ flashcards, onDele
                     <select
                       value={editForm.category}
                       onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
-                      className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:border-transparent"
+                      style={{ '--tw-ring-color': '#3B82F6' } as React.CSSProperties}
                     >
                       {categories.slice(1).map((cat) => (
                         <option key={cat.value} value={cat.value}>
@@ -148,7 +149,8 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({ flashcards, onDele
                     <select
                       value={editForm.difficulty}
                       onChange={(e) => setEditForm({ ...editForm, difficulty: e.target.value as 'easy' | 'medium' | 'hard' })}
-                      className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:border-transparent"
+                      style={{ '--tw-ring-color': '#3B82F6' } as React.CSSProperties}
                     >
                       <option value="easy">Easy</option>
                       <option value="medium">Medium</option>
@@ -158,7 +160,8 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({ flashcards, onDele
                   <div className="flex gap-2">
                     <button
                       onClick={handleSaveEdit}
-                      className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+                      className="px-4 py-2 text-white rounded-md hover:opacity-90 transition-opacity"
+                      style={{ backgroundColor: '#3B82F6' }}
                     >
                       Save
                     </button>
@@ -191,13 +194,15 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({ flashcards, onDele
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleEdit(card)}
-                        className="p-1 text-gray-400 hover:text-indigo-600 transition-colors"
+                        className="p-1 text-gray-400 hover:opacity-80 transition-opacity"
+                        style={{ '--hover-color': '#3B82F6' }}
                       >
                         <Edit3 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => onDelete(card.id)}
-                        className="p-1 text-gray-400 hover:text-red-600 transition-colors"
+                        className="p-1 text-gray-400 hover:opacity-80 transition-opacity"
+                        style={{ '--hover-color': '#F43F5E' }}
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>

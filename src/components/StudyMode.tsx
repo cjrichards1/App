@@ -110,14 +110,15 @@ export const StudyMode: React.FC<StudyModeProps> = ({
 
   if (shuffledCards.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center p-4">
+      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#F3F4F6' }}>
         <div className="bg-white rounded-2xl shadow-xl p-8 text-center max-w-md w-full">
           <Trophy className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">No Cards to Study</h2>
-          <p className="text-gray-600 mb-6">Create some flashcards first to start studying!</p>
+          <h2 className="text-2xl font-bold mb-2" style={{ color: '#1F2937' }}>No Cards to Study</h2>
+          <p className="mb-6" style={{ color: '#6B7280' }}>Create some flashcards first to start studying!</p>
           <button
             onClick={onBack}
-            className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors"
+            className="text-white px-6 py-3 rounded-lg hover:opacity-90 transition-opacity"
+            style={{ backgroundColor: '#3B82F6' }}
           >
             Go Back
           </button>
@@ -128,42 +129,44 @@ export const StudyMode: React.FC<StudyModeProps> = ({
 
   if (isComplete) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center p-4">
+      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#F3F4F6' }}>
         <div className="bg-white rounded-2xl shadow-xl p-8 text-center max-w-md w-full">
-          <Trophy className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Session Complete!</h2>
-          <p className="text-gray-600 mb-6">Great job studying your flashcards!</p>
+          <Trophy className="w-16 h-16 mx-auto mb-4" style={{ color: '#10B981' }} />
+          <h2 className="text-2xl font-bold mb-2" style={{ color: '#1F2937' }}>Session Complete!</h2>
+          <p className="mb-6" style={{ color: '#6B7280' }}>Great job studying your flashcards!</p>
           
           <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="bg-green-50 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-green-600">{session.correctAnswers}</div>
-              <div className="text-sm text-green-700">Correct</div>
+            <div className="p-4 rounded-lg" style={{ backgroundColor: '#d1fae5' }}>
+              <div className="text-2xl font-bold" style={{ color: '#10B981' }}>{session.correctAnswers}</div>
+              <div className="text-sm" style={{ color: '#10B981' }}>Correct</div>
             </div>
-            <div className="bg-red-50 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-red-600">{session.incorrectAnswers}</div>
-              <div className="text-sm text-red-700">Incorrect</div>
+            <div className="p-4 rounded-lg" style={{ backgroundColor: '#fdf2f8' }}>
+              <div className="text-2xl font-bold" style={{ color: '#F43F5E' }}>{session.incorrectAnswers}</div>
+              <div className="text-sm" style={{ color: '#F43F5E' }}>Incorrect</div>
             </div>
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600">{getAccuracy()}%</div>
-              <div className="text-sm text-blue-700">Accuracy</div>
+            <div className="p-4 rounded-lg" style={{ backgroundColor: '#dbeafe' }}>
+              <div className="text-2xl font-bold" style={{ color: '#3B82F6' }}>{getAccuracy()}%</div>
+              <div className="text-sm" style={{ color: '#3B82F6' }}>Accuracy</div>
             </div>
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-purple-600">{getSessionDuration()}</div>
-              <div className="text-sm text-purple-700">Minutes</div>
+            <div className="p-4 rounded-lg" style={{ backgroundColor: '#fbcfe8' }}>
+              <div className="text-2xl font-bold" style={{ color: '#F43F5E' }}>{getSessionDuration()}</div>
+              <div className="text-sm" style={{ color: '#F43F5E' }}>Minutes</div>
             </div>
           </div>
 
           <div className="flex gap-3">
             <button
               onClick={resetSession}
-              className="flex-1 bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
+              className="flex-1 text-white px-4 py-3 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+              style={{ backgroundColor: '#3B82F6' }}
             >
               <RotateCcw className="w-4 h-4" />
               Study Again
             </button>
             <button
               onClick={onBack}
-              className="flex-1 bg-gray-200 text-gray-800 px-4 py-3 rounded-lg hover:bg-gray-300 transition-colors flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-3 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+              style={{ backgroundColor: '#F3F4F6', color: '#1F2937' }}
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Library
@@ -175,19 +178,20 @@ export const StudyMode: React.FC<StudyModeProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-4">
+    <div className="min-h-screen p-4" style={{ backgroundColor: '#F3F4F6' }}>
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={onBack}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+            style={{ color: '#6B7280' }}
           >
             <ArrowLeft className="w-5 h-5" />
             Back to Library
           </button>
           
-          <div className="flex items-center gap-6 text-sm text-gray-600">
+          <div className="flex items-center gap-6 text-sm" style={{ color: '#6B7280' }}>
             <div className="flex items-center gap-1">
               <Target className="w-4 h-4" />
               <span>{getAccuracy()}% accuracy</span>
@@ -202,16 +206,17 @@ export const StudyMode: React.FC<StudyModeProps> = ({
         {/* Progress Bar */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-700">
+            <span className="text-sm font-medium" style={{ color: '#1F2937' }}>
               Card {currentIndex + 1} of {shuffledCards.length}
             </span>
-            <span className="text-sm text-gray-600">
+            <span className="text-sm" style={{ color: '#6B7280' }}>
               {session.correctAnswers} correct, {session.incorrectAnswers} incorrect
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div
-              className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+              className="h-2 rounded-full transition-all duration-300"
+              style={{ backgroundColor: '#3B82F6' }}
               style={{ width: `${((currentIndex + 1) / shuffledCards.length) * 100}%` }}
             />
           </div>
@@ -228,23 +233,28 @@ export const StudyMode: React.FC<StudyModeProps> = ({
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
                 {currentCard?.isLatex ? (
-                  <FunctionSquare className="w-5 h-5 text-purple-600" />
+                  <FunctionSquare className="w-5 h-5" style={{ color: '#F43F5E' }} />
                 ) : (
-                  <Type className="w-5 h-5 text-gray-600" />
+                  <Type className="w-5 h-5" style={{ color: '#6B7280' }} />
                 )}
-                <span className="text-sm font-medium text-gray-600">
+                <span className="text-sm font-medium" style={{ color: '#6B7280' }}>
                   {isFlipped ? 'Answer' : 'Question'}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  currentCard?.difficulty === 'easy' ? 'bg-green-100 text-green-800' :
-                  currentCard?.difficulty === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-red-100 text-red-800'
-                }`}>
+                <span 
+                  className="px-3 py-1 rounded-full text-xs font-medium"
+                  style={
+                    currentCard?.difficulty === 'easy' 
+                      ? { backgroundColor: '#d1fae5', color: '#10B981' }
+                      : currentCard?.difficulty === 'medium' 
+                      ? { backgroundColor: '#fef3c7', color: '#f59e0b' }
+                      : { backgroundColor: '#fdf2f8', color: '#F43F5E' }
+                  }
+                >
                   {currentCard?.difficulty}
                 </span>
-                <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                <span className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F3F4F6', color: '#1F2937' }}>
                   {currentCard?.category}
                 </span>
               </div>
@@ -273,14 +283,16 @@ export const StudyMode: React.FC<StudyModeProps> = ({
           <div className="flex gap-4 justify-center">
             <button
               onClick={() => handleAnswer(false)}
-              className="flex items-center gap-2 bg-red-500 text-white px-8 py-4 rounded-xl hover:bg-red-600 transition-colors text-lg font-medium"
+              className="flex items-center gap-2 text-white px-8 py-4 rounded-xl hover:opacity-90 transition-opacity text-lg font-medium"
+              style={{ backgroundColor: '#F43F5E' }}
             >
               <XCircle className="w-6 h-6" />
               Incorrect
             </button>
             <button
               onClick={() => handleAnswer(true)}
-              className="flex items-center gap-2 bg-green-500 text-white px-8 py-4 rounded-xl hover:bg-green-600 transition-colors text-lg font-medium"
+              className="flex items-center gap-2 text-white px-8 py-4 rounded-xl hover:opacity-90 transition-opacity text-lg font-medium"
+              style={{ backgroundColor: '#10B981' }}
             >
               <CheckCircle className="w-6 h-6" />
               Correct
