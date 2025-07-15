@@ -381,10 +381,13 @@ function App() {
       <FlashcardList
         flashcards={filteredCards}
         folders={folders}
+        categories={categories}
         onDelete={deleteFlashcard}
-        onUpdate={updateFlashcard}
+        onEdit={updateFlashcard}
+        onAddFolder={addFolder}
         onDeleteFolder={deleteFolder}
         onMoveCard={moveCardToFolder}
+        onDeleteCategory={deleteCategory}
       />
     </div>
   );
