@@ -243,15 +243,15 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({
         <div className="flex flex-wrap gap-2">
           {categories.map((category) => (
             <button
-              key={category.value}
-              onClick={() => setSelectedCategory(category.value)}
+             key={category}
+             onClick={() => setSelectedCategory(category)}
               className={`px-3 py-1 rounded-full text-sm font-medium transition-colors border ${
-                selectedCategory === category.value
+               selectedCategory === category
                   ? 'bg-blue-100 text-blue-600 border-blue-600'
                   : 'bg-gray-100 text-gray-600 border-gray-300'
               }`}
             >
-              {category.label}
+             {category.charAt(0).toUpperCase() + category.slice(1)}
             </button>
           ))}
         </div>
