@@ -30,6 +30,8 @@ function App() {
     deleteCategory,
     markAnswer,
     saveStudySession
+    markAnswer,
+    saveStudySession
   } = useFlashcards();
 
   const [showCategoryForm, setShowCategoryForm] = useState(false);
