@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SparklesIcon, PlusIcon, BookOpenIcon, AcademicCapIcon, FolderIcon, FolderPlusIcon, XMarkIcon, Bars3Icon, ChevronLeftIcon, HomeIcon, ChartBarIcon } from '@heroicons/react/24/outline';
+import { SparklesIcon, PlusIcon, BookOpenIcon, AcademicCapIcon, FolderIcon, FolderPlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { FlashcardForm } from './components/FlashcardForm';
 import { FlashcardList } from './components/FlashcardList';
 import { StudyMode } from './components/StudyMode';
@@ -7,7 +7,6 @@ import { useFlashcards } from './hooks/useFlashcards';
 
 type View = 'home' | 'create' | 'library' | 'study';
 
-function App() {
   const [currentView, setCurrentView] = useState<View>('home');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -51,139 +50,6 @@ function App() {
     }
   };
 
-  const renderSidebar = () => (
-    <div className={`fixed left-0 top-0 h-full bg-white shadow-lg border-r border-gray-200 transition-all duration-300 z-20 ${
-      sidebarCollapsed ? 'w-16' : 'w-64'
-    }`}>
-      {/* Sidebar Header */}
-      <div className="p-4 border-b border-gray-200">
-        <div className="flex items-center justify-between">
-          {!sidebarCollapsed && (
-            <div className="flex items-center gap-2">
-              <SparklesIcon className="w-6 h-6 text-blue-600" />
-              <span className="font-bold text-lg text-slate-800">FlashVibe</span>
-            </div>
-          )}
-          <button
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-          >
-            {sidebarCollapsed ? (
-              <Bars3Icon className="w-5 h-5 text-gray-600" />
-            ) : (
-              <ChevronLeftIcon className="w-5 h-5 text-gray-600" />
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <nav className="p-4">
-        <div className="space-y-2">
-          <button
-            onClick={() => setCurrentView('home')}
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${
-              currentView === 'home'
-                ? 'bg-blue-100 text-blue-600'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
-            title={sidebarCollapsed ? 'Home' : ''}
-          >
-            <HomeIcon className="w-5 h-5 flex-shrink-0" />
-            {!sidebarCollapsed && <span className="font-medium">Home</span>}
-          </button>
-          
-          <button
-            onClick={() => setCurrentView('create')}
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${
-              currentView === 'create'
-                ? 'bg-blue-100 text-blue-600'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
-            title={sidebarCollapsed ? 'Create' : ''}
-          >
-            <PlusIcon className="w-5 h-5 flex-shrink-0" />
-            {!sidebarCollapsed && <span className="font-medium">Create</span>}
-          </button>
-          
-          <button
-            onClick={() => setCurrentView('library')}
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${
-              currentView === 'library'
-                ? 'bg-blue-100 text-blue-600'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
-            title={sidebarCollapsed ? 'Library' : ''}
-          >
-            <BookOpenIcon className="w-5 h-5 flex-shrink-0" />
-            {!sidebarCollapsed && <span className="font-medium">Library</span>}
-          </button>
-          
-          <button
-            onClick={() => setCurrentView('study')}
-            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${
-              currentView === 'study'
-                ? 'bg-blue-100 text-blue-600'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
-            title={sidebarCollapsed ? 'Study' : ''}
-          >
-            <AcademicCapIcon className="w-5 h-5 flex-shrink-0" />
-            {!sidebarCollapsed && <span className="font-medium">Study</span>}
-          </button>
-        </div>
-
-        {/* Quick Actions */}
-        {!sidebarCollapsed && (
-          <div className="mt-8">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-              Quick Actions
-            </h3>
-            <div className="space-y-2">
-              <button
-                onClick={() => setShowFolderForm(true)}
-                className="w-full flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors text-sm"
-              >
-                <FolderPlusIcon className="w-4 h-4" />
-                <span>New Folder</span>
-              </button>
-              <button
-                onClick={() => setShowCategoryForm(true)}
-                className="w-full flex items-center gap-3 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors text-sm"
-              >
-                <PlusIcon className="w-4 h-4" />
-                <span>New Category</span>
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Stats Summary */}
-        {!sidebarCollapsed && (
-          <div className="mt-8">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-              Quick Stats
-            </h3>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">Total Cards</span>
-                <span className="font-semibold text-blue-600">{flashcards.length}</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">Folders</span>
-                <span className="font-semibold text-rose-500">{folders.length}</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">Categories</span>
-                <span className="font-semibold text-emerald-500">{categories.length}</span>
-              </div>
-            </div>
-          </div>
-        )}
-      </nav>
-    </div>
-  );
   const handleCreateCategory = () => {
     if (newCategoryName.trim()) {
       addCategory(newCategoryName.trim());
@@ -521,59 +387,43 @@ function App() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-blue-50 relative flex">
+    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-blue-50 relative">
       <SparklesIcon className="fixed inset-0 w-screen h-screen text-blue-500 opacity-10 pointer-events-none z-0" />
       
-      {/* Sidebar */}
-      {renderSidebar()}
-      
-      {/* Main Content */}
-      <div className={`flex-1 relative z-10 transition-all duration-300 ${
-        sidebarCollapsed ? 'ml-16' : 'ml-64'
-      }`}>
-        <header className="w-full px-4 bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg sm:hidden">
-          <div className="text-center py-6 border-b border-white/20">
-            <h1 className="text-3xl sm:text-5xl font-bold text-white mb-2">
-              Flash<span className="underline decoration-white/50">Vibe</span>
-            </h1>
-            <p className="text-white/80 text-sm sm:text-lg">Smart Learning, Simplified</p>
-          </div>
-          
-          {renderNavigation()}
-        </header>
+      <header className="w-full px-4 bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg relative z-10">
+        <div className="text-center py-6 border-b border-white/20">
+          <h1 className="text-3xl sm:text-5xl font-bold text-white mb-2">
+            Flash<span className="underline decoration-white/50">Vibe</span>
+          </h1>
+          <p className="text-white/80 text-sm sm:text-lg">Smart Learning, Simplified</p>
+        </div>
+        
+        {renderNavigation()}
+      </header>
 
-        <main>
-          {currentView === 'home' && renderHome()}
-          {currentView === 'create' && (
-            <div className="max-w-4xl mx-auto px-4 py-8">
-              <FlashcardForm 
-                onAdd={addFlashcard} 
-                categories={categories}
-                folders={folders}
-              />
-            </div>
-          )}
-          {currentView === 'library' && renderLibrary()}
-          {currentView === 'study' && (
-            <div className="max-w-6xl mx-auto px-4 py-8">
-              <StudyMode 
-                flashcards={filteredCards}
-                onBack={() => setCurrentView('home')}
-                onMarkAnswer={markAnswer}
-                onSaveSession={saveStudySession}
-              />
-            </div>
-          )}
-        </main>
-      </div>
-      
-      {/* Overlay for mobile when sidebar is open */}
-      {!sidebarCollapsed && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-10 sm:hidden"
-          onClick={() => setSidebarCollapsed(true)}
-        />
-      )}
+      <main className="relative z-10">
+        {currentView === 'home' && renderHome()}
+        {currentView === 'create' && (
+          <div className="max-w-4xl mx-auto px-4 py-8">
+            <FlashcardForm 
+              onAdd={addFlashcard} 
+              categories={categories}
+              folders={folders}
+            />
+          </div>
+        )}
+        {currentView === 'library' && renderLibrary()}
+        {currentView === 'study' && (
+          <div className="max-w-6xl mx-auto px-4 py-8">
+            <StudyMode 
+              flashcards={filteredCards}
+              onBack={() => setCurrentView('home')}
+              onMarkAnswer={markAnswer}
+              onSaveSession={saveStudySession}
+            />
+          </div>
+        )}
+      </main>
     </div>
   );
 }
