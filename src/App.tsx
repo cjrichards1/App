@@ -34,7 +34,7 @@ function App() {
           aria-label="Go to dashboard"
         >
           <SparklesIcon 
-            className="w-8 h-8 md:w-8 md:h-8 sm:fixed sm:inset-0 sm:w-screen sm:h-screen sm:z-0 sm:opacity-10 sm:pointer-events-none animate-pulse-glow" 
+            className="w-screen h-screen fixed inset-0 z-0 opacity-10 pointer-events-none animate-pulse-glow" 
             style={{ color: '#3B82F6' }}
           />
           <div className="text-center relative z-10">
