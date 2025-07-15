@@ -21,7 +21,7 @@ function App() {
           <Brain className="w-12 h-12 text-indigo-600" />
           <h1 className="text-4xl font-bold text-gray-900">FlashVibe</h1>
         </div>
-        <p className="text-xl text-gray-600">Master any subject with intelligent flashcards</p>
+        <p className="text-xl text-gray-600">Learn Fast, Vibe Smart</p>
       </div>
 
       {/* Stats Grid */}
