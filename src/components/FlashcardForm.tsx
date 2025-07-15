@@ -120,7 +120,7 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
                 : 'bg-gray-100 text-gray-700 border border-gray-200'
             }`}
           >
-            {isLatex ? <Function className="w-4 h-4" /> : <Type className="w-4 h-4" />}
+            {isLatex ? <FunctionSquare className="w-4 h-4" /> : <Type className="w-4 h-4" />}
             {isLatex ? 'LaTeX Mode' : 'Text Mode'}
           </button>
           {isLatex && (

@@ -175,7 +175,7 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({ flashcards, onDele
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-2">
                       {card.isLatex ? (
-                        <Function className="w-4 h-4 text-purple-600" />
+                        <FunctionSquare className="w-4 h-4 text-purple-600" />
                       ) : (
                         <Type className="w-4 h-4 text-gray-600" />
                       )}

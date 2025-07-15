@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, RotateCcw, CheckCircle, XCircle, Trophy, Target, Clock, Function, Type } from 'lucide-react';
+import { ArrowLeft, RotateCcw, CheckCircle, XCircle, Trophy, Target, Clock, FunctionSquare, Type } from 'lucide-react';
 import { Flashcard, StudySession } from '../types/flashcard';
 import { InlineMath, BlockMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
@@ -228,7 +228,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
                 {currentCard?.isLatex ? (
-                  <Function className="w-5 h-5 text-purple-600" />
+                  <FunctionSquare className="w-5 h-5 text-purple-600" />
                 ) : (
                   <Type className="w-5 h-5 text-gray-600" />
                 )}
