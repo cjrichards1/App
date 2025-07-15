@@ -4,16 +4,25 @@ import { Flashcard, StudySession, FlashcardStats, Folder } from '../types/flashc
 const STORAGE_KEY = 'flashcards';
 const SESSIONS_KEY = 'study-sessions';
 const FOLDERS_KEY = 'folders';
+const CATEGORIES_KEY = 'categories';
 
 export const useFlashcards = () => {
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [studySessions, setStudySessions] = useState<StudySession[]>([]);
   const [folders, setFolders] = useState<Folder[]>([]);
+  const [categories, setCategories] = useState<string[]>([
+    'general',
+    'language', 
+    'science',
+    'math',
+    'history'
+  ]);
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     const storedSessions = localStorage.getItem(SESSIONS_KEY);
     const storedFolders = localStorage.getItem(FOLDERS_KEY);
+    const storedCategories = localStorage.getItem(CATEGORIES_KEY);
     
     if (stored) {
       const parsed = JSON.parse(stored);
@@ -40,8 +49,16 @@ export const useFlashcards = () => {
         createdAt: new Date(folder.createdAt),
       })));
     }
+    
+    if (storedCategories) {
+      setCategories(JSON.parse(storedCategories));
+    }
   }, []);
 
+  const saveCategories = (newCategories: string[]) => {
+    localStorage.setItem(CATEGORIES_KEY, JSON.stringify(newCategories));
+    setCategories(newCategories);
+  };
   const saveFolders = (newFolders: Folder[]) => {
     localStorage.setItem(FOLDERS_KEY, JSON.stringify(newFolders));
     setFolders(newFolders);
@@ -110,6 +127,24 @@ export const useFlashcards = () => {
     saveFolders(updated);
   };
 
+  const addCategory = (name: string) => {
+    if (!categories.includes(name)) {
+      const updated = [...categories, name];
+      saveCategories(updated);
+    }
+  };
+
+  const deleteCategory = (categoryToDelete: string) => {
+    // Move all cards from this category to "general"
+    const updatedCards = flashcards.map(card => 
+      card.category === categoryToDelete ? { ...card, category: 'general' } : card
+    );
+    saveFlashcards(updatedCards);
+    
+    // Delete the category
+    const updated = categories.filter(category => category !== categoryToDelete);
+    saveCategories(updated);
+  };
   const moveCardToFolder = (cardId: string, folderId?: string) => {
     const updated = flashcards.map(card => 
       card.id === cardId ? { ...card, folderId } : card
@@ -190,7 +225,7 @@ export const useFlashcards = () => {
   return {
     flashcards,
     folders,
-    folders,
+    categories,
     addFlashcard,
     updateFlashcard,
     deleteFlashcard,
@@ -198,10 +233,8 @@ export const useFlashcards = () => {
     updateFolder,
     deleteFolder,
     moveCardToFolder,
-    addFolder,
-    updateFolder,
-    deleteFolder,
-    moveCardToFolder,
+    addCategory,
+    deleteCategory,
     markAnswer,
     saveStudySession,
     getStats,

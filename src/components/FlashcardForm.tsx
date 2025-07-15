@@ -6,6 +6,7 @@ import 'katex/dist/katex.min.css';
 
 interface FlashcardFormProps {
   folders: Folder[];
+  categories: string[];
   onAdd: (flashcard: {
     front: string;
     back: string;
@@ -16,13 +17,6 @@ interface FlashcardFormProps {
   }) => void;
 }
 
-const categories = [
-  { value: 'general', label: 'General' },
-  { value: 'language', label: 'Language' },
-  { value: 'science', label: 'Science' },
-  { value: 'math', label: 'Mathematics' },
-  { value: 'history', label: 'History' },
-];
 
 const LaTeXPreview: React.FC<{ content: string; isBlock?: boolean }> = ({ content, isBlock = false }) => {
   try {
@@ -35,7 +29,7 @@ const LaTeXPreview: React.FC<{ content: string; isBlock?: boolean }> = ({ conten
   }
 };
 
-export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, onAdd }) => {
+export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categories, onAdd }) => {
   const [front, setFront] = useState('');
   const [back, setBack] = useState('');
   const [category, setCategory] = useState('general');
@@ -296,8 +290,8 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, onAdd }) 
                 aria-label="Select flashcard category"
               >
                 {categories.map((cat) => (
-                  <option key={cat.value} value={cat.value}>
-                    {cat.label}
+                  <option key={cat} value={cat}>
+                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
                   </option>
                 ))}
               </select>

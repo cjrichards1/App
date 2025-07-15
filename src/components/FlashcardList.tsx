@@ -7,21 +7,15 @@ import 'katex/dist/katex.min.css';
 interface FlashcardListProps {
   flashcards: Flashcard[];
   folders: FolderType[];
+  categories: string[];
   onDelete: (id: string) => void;
   onEdit: (id: string, updates: Partial<Flashcard>) => void;
   onAddFolder: (name: string, color: string) => void;
   onDeleteFolder: (id: string) => void;
   onMoveCard: (cardId: string, folderId?: string) => void;
+  onDeleteCategory: (category: string) => void;
 }
 
-const categories = [
-  { value: 'all', label: 'All Categories' },
-  { value: 'general', label: 'General' },
-  { value: 'language', label: 'Language' },
-  { value: 'science', label: 'Science' },
-  { value: 'math', label: 'Mathematics' },
-  { value: 'history', label: 'History' },
-];
 
 const folderColors = [
   { value: '#3B82F6', label: 'Electric Blue' },
@@ -47,11 +41,13 @@ const LaTeXContent: React.FC<{ content: string; isLatex: boolean }> = ({ content
 export const FlashcardList: React.FC<FlashcardListProps> = ({ 
   flashcards, 
   folders, 
+  categories,
   onDelete, 
   onEdit, 
   onAddFolder, 
   onDeleteFolder, 
-  onMoveCard 
+  onMoveCard,
+  onDeleteCategory
 }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
@@ -301,9 +297,9 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({
                       onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
                       className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                      {categories.slice(1).map((cat) => (
-                        <option key={cat.value} value={cat.value}>
-                          {cat.label}
+                      {categories.map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat.charAt(0).toUpperCase() + cat.slice(1)}
                         </option>
                       ))}
                     </select>
@@ -343,7 +339,7 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({
                         <Type className="w-4 h-4 text-gray-500" />
                       )}
                       <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-600">
-                        {categories.find(c => c.value === card.category)?.label || card.category}
+                        {card.category.charAt(0).toUpperCase() + card.category.slice(1)}
                       </span>
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                         card.difficulty === 'easy' 

@@ -19,26 +19,19 @@ function App() {
   const { 
     flashcards, 
     folders,
+    categories,
     addFlashcard, 
     deleteFlashcard, 
     updateFlashcard,
     addFolder,
     deleteFolder,
-    moveCardToFolder
+    moveCardToFolder,
+    addCategory,
+    deleteCategory
   } = useFlashcards();
 
-  const categories = [
-    'Mathematics',
-    'Science',
-    'History',
-    'Language',
-    'Programming',
-    'Art',
-    'Music',
-    'Geography',
-    'Literature',
-    'Philosophy'
-  ];
+  const [showCategoryForm, setShowCategoryForm] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
 
   const folderColors = [
     '#3B82F6', // Electric Blue
@@ -63,6 +56,13 @@ function App() {
     }
   };
 
+  const handleCreateCategory = () => {
+    if (newCategoryName.trim()) {
+      addCategory(newCategoryName.trim());
+      setNewCategoryName('');
+      setShowCategoryForm(false);
+    }
+  };
   const filteredCards = flashcards.filter(card => {
     const categoryMatch = selectedCategory === 'all' || card.category === selectedCategory;
     const folderMatch = selectedFolder === 'all' || 
@@ -206,14 +206,53 @@ function App() {
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h2 className="text-2xl font-bold text-slate-800">Your Library</h2>
-        <button
-          onClick={() => setShowFolderForm(true)}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-        >
-          <FolderPlusIcon className="w-5 h-5" />
-          New Folder
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setShowFolderForm(true)}
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+          >
+            <FolderPlusIcon className="w-5 h-5" />
+            New Folder
+          </button>
+          <button
+            onClick={() => setShowCategoryForm(true)}
+            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+          >
+            <PlusIcon className="w-5 h-5" />
+            New Category
+          </button>
+        </div>
       </div>
+
+      {/* Category Creation Form */}
+      {showCategoryForm && (
+        <div className="bg-white rounded-lg p-6 mb-6 shadow-lg border border-gradient-to-r from-emerald-200 to-blue-200">
+          <h3 className="text-lg font-semibold text-slate-800 mb-4">Create New Category</h3>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <input
+              type="text"
+              value={newCategoryName}
+              onChange={(e) => setNewCategoryName(e.target.value)}
+              placeholder="Category name"
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+            />
+            <div className="flex gap-2">
+              <button
+                onClick={handleCreateCategory}
+                className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+              >
+                Create
+              </button>
+              <button
+                onClick={() => setShowCategoryForm(false)}
+                className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showFolderForm && (
         <div className="bg-white rounded-lg p-6 mb-6 shadow-lg border border-gradient-to-r from-blue-200 to-rose-200">
@@ -312,17 +351,30 @@ function App() {
           All Categories
         </button>
         {categories.map(category => (
-          <button
+          <div
             key={category}
-            onClick={() => setSelectedCategory(category)}
-            className={`px-3 py-2 rounded-lg transition-colors duration-200 ${
-              selectedCategory === category
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-slate-700 hover:bg-gray-50 border border-gray-200'
-            }`}
+            className="flex items-center gap-1"
           >
-            {category}
-          </button>
+            <button
+              onClick={() => setSelectedCategory(category)}
+              className={`px-3 py-2 rounded-lg transition-colors duration-200 ${
+                selectedCategory === category
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white text-slate-700 hover:bg-gray-50 border border-gray-200'
+              }`}
+            >
+              {category.charAt(0).toUpperCase() + category.slice(1)} ({flashcards.filter(card => card.category === category).length})
+            </button>
+            {category !== 'general' && (
+              <button
+                onClick={() => deleteCategory(category)}
+                className="p-1 hover:bg-red-100 rounded text-red-500"
+                title="Delete category"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            )}
+          </div>
         ))}
       </div>
 
