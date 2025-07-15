@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { PlusIcon, CommandLineIcon, DocumentTextIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { InlineMath, BlockMath } from 'react-katex';
+import { Folder } from '../types/flashcard';
 import 'katex/dist/katex.min.css';
 
 interface FlashcardFormProps {
+  folders: Folder[];
   onAdd: (flashcard: {
     front: string;
     back: string;
     category: string;
     difficulty: 'easy' | 'medium' | 'hard';
     isLatex: boolean;
+    folderId?: string;
   }) => void;
 }
 
@@ -32,13 +35,14 @@ const LaTeXPreview: React.FC<{ content: string; isBlock?: boolean }> = ({ conten
   }
 };
 
-export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
+export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, onAdd }) => {
   const [front, setFront] = useState('');
   const [back, setBack] = useState('');
   const [category, setCategory] = useState('general');
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
   const [isLatex, setIsLatex] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [selectedFolder, setSelectedFolder] = useState<string>('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,9 +53,11 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
         category,
         difficulty,
         isLatex,
+        folderId: selectedFolder || undefined,
       });
       setFront('');
       setBack('');
+      setSelectedFolder('');
     }
   };
 
@@ -262,6 +268,25 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
           <div className="grid md:grid-cols-2 gap-8">
             <div>
               <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
+                Folder (Optional)
+              </label>
+              <select
+                value={selectedFolder}
+                onChange={(e) => setSelectedFolder(e.target.value)}
+                className="input-enhanced w-full p-4 rounded-lg focus-ring"
+                aria-label="Select folder"
+              >
+                <option value="">No Folder</option>
+                {folders.map((folder) => (
+                  <option key={folder.id} value={folder.id}>
+                    📁 {folder.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
                 Category
               </label>
               <select
@@ -277,7 +302,9 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
                 ))}
               </select>
             </div>
+          </div>
 
+          <div className="grid md:grid-cols-1 gap-8">
             <div>
               <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
                 Difficulty

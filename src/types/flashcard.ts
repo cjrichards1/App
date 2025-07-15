@@ -9,6 +9,15 @@ export interface Flashcard {
   lastStudied?: Date;
   correctCount: number;
   incorrectCount: number;
+  folderId?: string;
+}
+
+export interface Folder {
+  id: string;
+  name: string;
+  color: string;
+  createdAt: Date;
+  cardCount: number;
 }
 
 export interface StudySession {
