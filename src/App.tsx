@@ -26,47 +26,49 @@ function App() {
 
   const renderHeader = () => (
     <header className="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-200 w-full">
-      <div className="w-full px-4 py-4 sm:max-w-7xl sm:mx-auto sm:px-6">
-        <div className="flex items-center justify-between">
-          <button
-            onClick={() => setCurrentView('dashboard')}
-            className="flex items-center gap-3 hover:opacity-80 transition-all duration-300 focus-ring rounded-lg p-2 relative flex-1 sm:flex-initial"
-            aria-label="Go to dashboard"
-          >
-            <SparklesIcon 
-              className="w-8 h-8 md:w-8 md:h-8 sm:fixed sm:inset-0 sm:w-screen sm:h-screen sm:z-0 sm:opacity-10 sm:pointer-events-none animate-pulse-glow" 
-              style={{ color: '#3B82F6' }}
-            />
-            <div className="text-left relative z-10">
-              <h1 className="text-2xl sm:text-4xl font-bold logo-underline relative" style={{ color: '#3B82F6' }}>
-                FlashVibe
-              </h1>
-              <p className="text-sm sm:text-lg -mt-1" style={{ color: '#1F2937' }}>Learn Fast, Vibe Smart</p>
-            </div>
-          </button>
-          
-          <nav className="flex items-center gap-1 sm:gap-2">
-            {[
-              { id: 'dashboard', label: 'Dashboard', icon: ChartBarIcon },
-              { id: 'create', label: 'Create', icon: PlusIcon },
-              { id: 'library', label: 'Library', icon: BookOpenIcon },
-              { id: 'study', label: 'Study', icon: PlayIcon },
-            ].map(({ id, label, icon: Icon }) => (
-              <button
-                key={id}
-                onClick={() => setCurrentView(id as View)}
-                disabled={id === 'study' && flashcards.length === 0}
-                className={`nav-button flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus-ring ${
-                  currentView === id ? 'active' : ''
-                }`}
-                aria-label={`Navigate to ${label}`}
-              >
-                <Icon className="w-4 h-4" />
-                <span className="hidden sm:inline">{label}</span>
-              </button>
-            ))}
-          </nav>
-        </div>
+      {/* Centralized FlashVibe Title */}
+      <div className="w-full px-4 py-6 text-center border-b border-gray-100">
+        <button
+          onClick={() => setCurrentView('dashboard')}
+          className="inline-flex items-center gap-3 hover:opacity-80 transition-all duration-300 focus-ring rounded-lg p-2 relative"
+          aria-label="Go to dashboard"
+        >
+          <SparklesIcon 
+            className="w-8 h-8 md:w-8 md:h-8 sm:fixed sm:inset-0 sm:w-screen sm:h-screen sm:z-0 sm:opacity-10 sm:pointer-events-none animate-pulse-glow" 
+            style={{ color: '#3B82F6' }}
+          />
+          <div className="text-center relative z-10">
+            <h1 className="text-3xl sm:text-5xl font-bold logo-underline relative" style={{ color: '#3B82F6' }}>
+              FlashVibe
+            </h1>
+            <p className="text-sm sm:text-lg -mt-1" style={{ color: '#1F2937' }}>Learn Fast, Vibe Smart</p>
+          </div>
+        </button>
+      </div>
+      
+      {/* Navigation */}
+      <div className="w-full px-4 py-3 sm:max-w-7xl sm:mx-auto sm:px-6">
+        <nav className="flex items-center justify-center gap-1 sm:gap-2">
+          {[
+            { id: 'dashboard', label: 'Dashboard', icon: ChartBarIcon },
+            { id: 'create', label: 'Create', icon: PlusIcon },
+            { id: 'library', label: 'Library', icon: BookOpenIcon },
+            { id: 'study', label: 'Study', icon: PlayIcon },
+          ].map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              onClick={() => setCurrentView(id as View)}
+              disabled={id === 'study' && flashcards.length === 0}
+              className={`nav-button flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus-ring ${
+                currentView === id ? 'active' : ''
+              }`}
+              aria-label={`Navigate to ${label}`}
+            >
+              <Icon className="w-4 h-4" />
+              <span className="hidden sm:inline">{label}</span>
+            </button>
+          ))}
+        </nav>
       </div>
     </header>
   );
