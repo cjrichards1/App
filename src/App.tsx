@@ -30,10 +30,10 @@ function App() {
         <div className="flex items-center justify-between">
           <button
             onClick={() => setCurrentView('dashboard')}
-            className="flex items-center gap-3 hover:opacity-80 transition-all duration-300 focus-ring rounded-lg p-2"
+            className="flex items-center gap-3 hover:opacity-80 transition-all duration-300 focus-ring rounded-lg p-2 relative"
             aria-label="Go to dashboard"
           >
-            <SparklesIcon className="w-8 h-8 text-blue-600 animate-pulse-glow" />
+            <SparklesIcon className="w-8 h-8 md:w-8 md:h-8 sm:fixed sm:inset-0 sm:w-screen sm:h-screen sm:z-0 sm:opacity-10 sm:pointer-events-none text-blue-600 animate-pulse-glow" />
             <div className="text-left">
               <h1 className="text-4xl font-bold text-blue-600 logo-underline relative">
                 FlashVibe
