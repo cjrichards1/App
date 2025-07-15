@@ -56,13 +56,54 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
   };
 
   const latexExamples = [
-    { label: 'Fraction', code: '\\frac{a}{b}' },
-    { label: 'Square root', code: '\\sqrt{x}' },
-    { label: 'Integral', code: '\\int_{a}^{b} f(x) dx' },
-    { label: 'Sum', code: '\\sum_{i=1}^{n} x_i' },
-    { label: 'Greek letters', code: '\\alpha, \\beta, \\gamma' },
-    { label: 'Superscript', code: 'x^2' },
-    { label: 'Subscript', code: 'x_1' },
+    { 
+      category: 'Basic Operations',
+      examples: [
+        { label: 'Fraction', code: '\\frac{a}{b}', preview: 'a/b' },
+        { label: 'Square root', code: '\\sqrt{x}', preview: '√x' },
+        { label: 'Nth root', code: '\\sqrt[n]{x}', preview: 'ⁿ√x' },
+        { label: 'Power', code: 'x^{2}', preview: 'x²' },
+        { label: 'Subscript', code: 'x_{1}', preview: 'x₁' },
+      ]
+    },
+    {
+      category: 'Calculus',
+      examples: [
+        { label: 'Derivative', code: '\\frac{d}{dx}f(x)', preview: 'd/dx f(x)' },
+        { label: 'Partial derivative', code: '\\frac{\\partial f}{\\partial x}', preview: '∂f/∂x' },
+        { label: 'Integral', code: '\\int f(x) dx', preview: '∫ f(x) dx' },
+        { label: 'Definite integral', code: '\\int_{a}^{b} f(x) dx', preview: '∫ᵃᵇ f(x) dx' },
+        { label: 'Limit', code: '\\lim_{x \\to a} f(x)', preview: 'lim(x→a) f(x)' },
+      ]
+    },
+    {
+      category: 'Greek Letters',
+      examples: [
+        { label: 'Common', code: '\\alpha, \\beta, \\gamma', preview: 'α, β, γ' },
+        { label: 'More', code: '\\delta, \\epsilon, \\theta', preview: 'δ, ε, θ' },
+        { label: 'Capital', code: '\\Delta, \\Gamma, \\Theta', preview: 'Δ, Γ, Θ' },
+        { label: 'Pi & others', code: '\\pi, \\phi, \\psi, \\omega', preview: 'π, φ, ψ, ω' },
+      ]
+    },
+    {
+      category: 'Symbols',
+      examples: [
+        { label: 'Infinity', code: '\\infty', preview: '∞' },
+        { label: 'Plus/minus', code: '\\pm', preview: '±' },
+        { label: 'Approximately', code: '\\approx', preview: '≈' },
+        { label: 'Not equal', code: '\\neq', preview: '≠' },
+        { label: 'Less/greater equal', code: '\\leq, \\geq', preview: '≤, ≥' },
+      ]
+    },
+    {
+      category: 'Advanced',
+      examples: [
+        { label: 'Sum', code: '\\sum_{i=1}^{n} x_i', preview: 'Σᵢ₌₁ⁿ xᵢ' },
+        { label: 'Product', code: '\\prod_{i=1}^{n} x_i', preview: 'Πᵢ₌₁ⁿ xᵢ' },
+        { label: 'Matrix', code: '\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}', preview: '[a b; c d]' },
+        { label: 'Binomial', code: '\\binom{n}{k}', preview: '(n k)' },
+      ]
+    }
   ];
 
   return (
@@ -95,15 +136,62 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
       </div>
 
       {isLatex && (
-        <div className="mb-6 p-4 bg-purple-50 rounded-lg border border-purple-200">
-          <h3 className="text-sm font-medium text-purple-900 mb-3">LaTeX Quick Reference</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
-            {latexExamples.map((example, index) => (
-              <div key={index} className="flex flex-col">
-                <span className="text-purple-700 font-medium">{example.label}:</span>
-                <code className="text-purple-600 bg-white px-2 py-1 rounded mt-1">{example.code}</code>
+        <div className="mb-6 p-6 bg-purple-50 rounded-lg border border-purple-200">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-purple-900">LaTeX Guide & Quick Reference</h3>
+            <div className="text-xs text-purple-700 bg-purple-100 px-2 py-1 rounded">
+              Click any example to copy
+            </div>
+          </div>
+          
+          <div className="mb-4 p-3 bg-purple-100 rounded-md">
+            <h4 className="text-sm font-medium text-purple-900 mb-2">💡 Tips for LaTeX Flashcards:</h4>
+            <ul className="text-xs text-purple-800 space-y-1">
+              <li>• Use curly braces {} to group expressions: x^{2+3} not x^2+3</li>
+              <li>• For multi-character subscripts/superscripts: x_{max} not x_max</li>
+              <li>• Use \\ for line breaks in longer expressions</li>
+              <li>• Preview your LaTeX before saving to catch syntax errors</li>
+            </ul>
+          </div>
+
+          <div className="space-y-4">
+            {latexExamples.map((category, categoryIndex) => (
+              <div key={categoryIndex}>
+                <h4 className="text-sm font-semibold text-purple-900 mb-2 border-b border-purple-200 pb-1">
+                  {category.category}
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                  {category.examples.map((example, index) => (
+                    <div 
+                      key={index} 
+                      className="bg-white p-2 rounded border border-purple-200 hover:border-purple-300 cursor-pointer transition-colors"
+                      onClick={() => {
+                        navigator.clipboard.writeText(example.code);
+                        // You could add a toast notification here
+                      }}
+                      title="Click to copy"
+                    >
+                      <div className="flex justify-between items-start mb-1">
+                        <span className="text-xs font-medium text-purple-700">{example.label}</span>
+                        <span className="text-xs text-gray-500">{example.preview}</span>
+                      </div>
+                      <code className="text-xs text-purple-600 bg-purple-50 px-2 py-1 rounded block overflow-x-auto">
+                        {example.code}
+                      </code>
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
+          </div>
+          
+          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+            <h4 className="text-sm font-medium text-yellow-800 mb-1">⚠️ Common Mistakes:</h4>
+            <div className="text-xs text-yellow-700 space-y-1">
+              <div>❌ <code>x^2+3</code> → ✅ <code>x^{2+3}</code> (for x²⁺³)</div>
+              <div>❌ <code>\frac12</code> → ✅ <code>\frac{1}{2}</code> (always use braces)</div>
+              <div>❌ <code>\sqrt x+1</code> → ✅ <code>\sqrt{x+1}</code> (group the expression)</div>
+            </div>
           </div>
         </div>
       )}
