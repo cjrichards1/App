@@ -155,7 +155,7 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categorie
               <h4 className="text-base font-semibold mb-3" style={{ color: '#1F2937' }}>💡 LaTeX Tips:</h4>
               <ul className="text-sm space-y-1" style={{ color: '#374151' }}>
                 <li>• Use curly braces {} to group expressions: x^{2+3} not x^2+3</li>
-                <li>• For multi-character subscripts/superscripts: x_{max} not x_max</li>
+                <li>• For multi-character subscripts/superscripts: x_{'{max}'} not x_max</li>
                 <li>• Preview your LaTeX before saving to catch syntax errors</li>
               </ul>
             </div>
