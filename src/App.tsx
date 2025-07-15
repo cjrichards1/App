@@ -19,7 +19,7 @@ function App() {
       <div className="text-center">
         <div className="flex items-center justify-center gap-3 mb-4">
           <Brain className="w-12 h-12 text-indigo-600" />
-          <h1 className="text-4xl font-bold text-gray-900">FlashCard Master</h1>
+          <h1 className="text-4xl font-bold text-gray-900">FlashVibe</h1>
         </div>
         <p className="text-xl text-gray-600">Master any subject with intelligent flashcards</p>
       </div>
@@ -150,7 +150,7 @@ function App() {
             className="flex items-center gap-2 text-indigo-600 hover:text-indigo-700 transition-colors"
           >
             <Brain className="w-6 h-6" />
-            <span className="font-semibold">FlashCard Master</span>
+            <span className="font-semibold">FlashVibe</span>
           </button>
           
           <div className="flex items-center gap-1">
