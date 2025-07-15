@@ -110,16 +110,23 @@ export const StudyMode: React.FC<StudyModeProps> = ({
 
   if (shuffledCards.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-100 to-blue-50 flex items-center justify-center p-6">
-        <div className="empty-state bg-white rounded-xl p-12 text-center max-w-lg w-full shadow-lg border border-blue-100">
-          <div className="p-6 rounded-2xl bg-gradient-to-br from-rose-500 to-rose-600 mx-auto mb-8 w-fit">
-            <TrophyIcon className="w-16 h-16 text-white pulse-icon" />
+      <div className="min-h-screen flex items-center justify-center p-6" style={{ backgroundColor: '#F3F4F6' }}>
+        <div className="empty-state rounded-xl p-12 text-center max-w-lg w-full shadow-lg border-2 border-gradient" 
+             style={{ backgroundColor: '#FFFFFF' }}>
+          <div className="p-6 rounded-2xl mx-auto mb-8 w-fit" 
+               style={{ background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)' }}>
+            <TrophyIcon className="w-16 h-16 pulse-icon" style={{ color: '#FFFFFF' }} />
           </div>
-          <h2 className="text-3xl font-bold text-slate-800 mb-4">No Cards to Study</h2>
-          <p className="mb-8 text-lg text-gray-600">Create some flashcards first to start studying!</p>
+          <h2 className="text-3xl font-bold mb-4" style={{ color: '#1F2937' }}>No Cards to Study</h2>
+          <p className="mb-8 text-lg" style={{ color: '#6B7280' }}>Create some flashcards first to start studying!</p>
           <button
             onClick={onBack}
-            className="btn-primary px-8 py-4 text-lg font-semibold text-white rounded-lg focus-ring"
+            className="px-8 py-4 text-lg font-semibold rounded-lg focus-ring transition-all duration-300 flex items-center gap-3"
+            style={{ 
+              background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)', 
+              color: '#FFFFFF',
+              boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)'
+            }}
             aria-label="Go back to dashboard"
           >
             <ArrowLeftIcon className="w-5 h-5" />
@@ -132,37 +139,60 @@ export const StudyMode: React.FC<StudyModeProps> = ({
 
   if (isComplete) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-100 to-blue-50 flex items-center justify-center p-6">
-        <div className="bg-white rounded-xl p-12 text-center max-w-2xl w-full shadow-lg border border-blue-100 animate-bounce-in">
-          <div className="p-6 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 mx-auto mb-8 w-fit">
-            <TrophyIcon className="w-16 h-16 text-white animate-pulse-glow" />
+      <div className="min-h-screen flex items-center justify-center p-6" style={{ backgroundColor: '#F3F4F6' }}>
+        <div className="rounded-xl p-12 text-center max-w-2xl w-full shadow-lg border-2 border-gradient animate-bounce-in" 
+             style={{ backgroundColor: '#FFFFFF' }}>
+          <div className="p-6 rounded-2xl mx-auto mb-8 w-fit" 
+               style={{ background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)' }}>
+            <TrophyIcon className="w-16 h-16 animate-pulse-glow" style={{ color: '#FFFFFF' }} />
           </div>
-          <h2 className="text-4xl font-bold text-slate-800 mb-4">Session Complete!</h2>
-          <p className="mb-8 text-xl text-gray-600">Excellent work on your study session!</p>
+          <h2 className="text-4xl font-bold mb-4" style={{ color: '#1F2937' }}>Session Complete!</h2>
+          <p className="mb-8 text-xl" style={{ color: '#6B7280' }}>Excellent work on your study session!</p>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div className="stat-card p-6 rounded-xl bg-gradient-to-br from-green-50 to-green-100 border border-green-200">
-              <div className="text-3xl font-bold text-green-600">{session.correctAnswers}</div>
-              <div className="text-sm font-medium text-green-600">Correct</div>
+            <div className="stat-card p-6 rounded-xl border" 
+                 style={{ 
+                   background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(16, 185, 129, 0.1))', 
+                   borderColor: 'rgba(16, 185, 129, 0.2)' 
+                 }}>
+              <div className="text-3xl font-bold" style={{ color: '#10B981' }}>{session.correctAnswers}</div>
+              <div className="text-sm font-medium" style={{ color: '#10B981' }}>Correct</div>
             </div>
-            <div className="stat-card p-6 rounded-xl bg-gradient-to-br from-rose-50 to-rose-100 border border-rose-200">
-              <div className="text-3xl font-bold text-rose-600">{session.incorrectAnswers}</div>
-              <div className="text-sm font-medium text-rose-600">Incorrect</div>
+            <div className="stat-card p-6 rounded-xl border" 
+                 style={{ 
+                   background: 'linear-gradient(135deg, rgba(244, 63, 94, 0.05), rgba(244, 63, 94, 0.1))', 
+                   borderColor: 'rgba(244, 63, 94, 0.2)' 
+                 }}>
+              <div className="text-3xl font-bold" style={{ color: '#F43F5E' }}>{session.incorrectAnswers}</div>
+              <div className="text-sm font-medium" style={{ color: '#F43F5E' }}>Incorrect</div>
             </div>
-            <div className="stat-card p-6 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200">
-              <div className="text-3xl font-bold text-blue-600">{getAccuracy()}%</div>
-              <div className="text-sm font-medium text-blue-600">Accuracy</div>
+            <div className="stat-card p-6 rounded-xl border" 
+                 style={{ 
+                   background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.1))', 
+                   borderColor: 'rgba(59, 130, 246, 0.2)' 
+                 }}>
+              <div className="text-3xl font-bold" style={{ color: '#3B82F6' }}>{getAccuracy()}%</div>
+              <div className="text-sm font-medium" style={{ color: '#3B82F6' }}>Accuracy</div>
             </div>
-            <div className="stat-card p-6 rounded-xl bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200">
-              <div className="text-3xl font-bold text-purple-600">{getSessionDuration()}</div>
-              <div className="text-sm font-medium text-purple-600">Minutes</div>
+            <div className="stat-card p-6 rounded-xl border" 
+                 style={{ 
+                   background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(139, 92, 246, 0.1))', 
+                   borderColor: 'rgba(139, 92, 246, 0.2)' 
+                 }}>
+              <div className="text-3xl font-bold" style={{ color: '#8B5CF6' }}>{getSessionDuration()}</div>
+              <div className="text-sm font-medium" style={{ color: '#8B5CF6' }}>Minutes</div>
             </div>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               onClick={resetSession}
-              className="btn-primary flex-1 py-4 px-6 text-white rounded-lg font-semibold flex items-center justify-center gap-3 focus-ring"
+              className="flex-1 py-4 px-6 rounded-lg font-semibold flex items-center justify-center gap-3 focus-ring transition-all duration-300"
+              style={{ 
+                background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)', 
+                color: '#FFFFFF',
+                boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)'
+              }}
               aria-label="Study again"
             >
               <ArrowPathIcon className="w-5 h-5" />
@@ -170,7 +200,12 @@ export const StudyMode: React.FC<StudyModeProps> = ({
             </button>
             <button
               onClick={onBack}
-              className="btn-secondary flex-1 py-4 px-6 text-white rounded-lg font-semibold flex items-center justify-center gap-3 focus-ring"
+              className="flex-1 py-4 px-6 rounded-lg font-semibold flex items-center justify-center gap-3 focus-ring transition-all duration-300"
+              style={{ 
+                background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)', 
+                color: '#FFFFFF',
+                boxShadow: '0 4px 15px rgba(244, 63, 94, 0.3)'
+              }}
               aria-label="Back to dashboard"
             >
               <ArrowLeftIcon className="w-5 h-5" />
@@ -183,25 +218,32 @@ export const StudyMode: React.FC<StudyModeProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-blue-50 p-6">
+    <div className="min-h-screen p-6" style={{ backgroundColor: '#F3F4F6' }}>
       <div className="max-w-6xl mx-auto animate-fade-in">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 gap-4">
           <button
             onClick={onBack}
-            className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg text-slate-700 hover:bg-gray-50 transition-all duration-300 border border-gray-200 focus-ring"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 border-2 focus-ring"
+            style={{ 
+              backgroundColor: '#FFFFFF', 
+              color: '#1F2937', 
+              borderColor: '#E5E7EB' 
+            }}
             aria-label="Back to dashboard"
           >
             <ArrowLeftIcon className="w-4 h-4" />
             <span className="font-medium">Back to Dashboard</span>
           </button>
           
-          <div className="flex items-center gap-8 text-base font-medium text-gray-600">
-            <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg border border-gray-200">
+          <div className="flex items-center gap-8 text-base font-medium" style={{ color: '#6B7280' }}>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-lg border-2" 
+                 style={{ backgroundColor: '#FFFFFF', borderColor: '#E5E7EB' }}>
               <ChartBarIcon className="w-4 h-4" />
               <span>{getAccuracy()}% accuracy</span>
             </div>
-            <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg border border-gray-200">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-lg border-2" 
+                 style={{ backgroundColor: '#FFFFFF', borderColor: '#E5E7EB' }}>
               <ClockIcon className="w-4 h-4" />
               <span>{getSessionDuration()} min</span>
             </div>
@@ -211,14 +253,15 @@ export const StudyMode: React.FC<StudyModeProps> = ({
         {/* Progress Bar */}
         <div className="mb-12">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-lg font-semibold text-slate-800">
+            <span className="text-lg font-semibold" style={{ color: '#1F2937' }}>
               Card {currentIndex + 1} of {shuffledCards.length}
             </span>
-            <div className="bg-gray-100 rounded-full px-3 py-1 text-sm text-gray-600">
+            <div className="rounded-full px-3 py-1 text-sm" 
+                 style={{ backgroundColor: '#F3F4F6', color: '#6B7280' }}>
               {session.correctAnswers} correct, {session.incorrectAnswers} incorrect
             </div>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+          <div className="w-full rounded-full h-3 overflow-hidden" style={{ backgroundColor: '#E5E7EB' }}>
             <div
               className="progress-bar h-3 rounded-full transition-all duration-500 ease-out"
               style={{ width: `${((currentIndex + 1) / shuffledCards.length) * 100}%` }}
@@ -248,15 +291,15 @@ export const StudyMode: React.FC<StudyModeProps> = ({
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-2">
                     {currentCard?.isLatex ? (
-                      <div className="p-2 rounded-lg bg-rose-500">
-                        <CommandLineIcon className="w-5 h-5 text-white" />
+                      <div className="p-2 rounded-lg" style={{ backgroundColor: '#F43F5E' }}>
+                        <CommandLineIcon className="w-5 h-5" style={{ color: '#FFFFFF' }} />
                       </div>
                     ) : (
-                      <div className="p-2 rounded-lg bg-gray-100">
-                        <DocumentTextIcon className="w-5 h-5 text-gray-600" />
+                      <div className="p-2 rounded-lg" style={{ backgroundColor: '#F3F4F6' }}>
+                        <DocumentTextIcon className="w-5 h-5" style={{ color: '#6B7280' }} />
                       </div>
                     )}
-                    <span className="text-sm font-semibold text-gray-600">Question</span>
+                    <span className="text-sm font-semibold" style={{ color: '#6B7280' }}>Question</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span 
@@ -275,7 +318,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({
                 </div>
 
                 <div className="flex-1 flex items-center justify-center text-center">
-                  <div className="card-content text-xl text-slate-800">
+                  <div className="card-content text-xl" style={{ color: '#1F2937' }}>
                     {currentCard && (
                       <LaTeXContent 
                         content={currentCard.front}
@@ -286,7 +329,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({
                   </div>
                 </div>
 
-                <div className="text-center text-sm font-medium text-gray-500 mt-4">
+                <div className="text-center text-sm font-medium mt-4" style={{ color: '#9CA3AF' }}>
                   Front
                 </div>
               </div>
@@ -295,23 +338,24 @@ export const StudyMode: React.FC<StudyModeProps> = ({
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-2">
                     {currentCard?.isLatex ? (
-                      <div className="p-2 rounded-lg bg-rose-500">
-                        <CommandLineIcon className="w-5 h-5 text-white" />
+                      <div className="p-2 rounded-lg" style={{ backgroundColor: '#F43F5E' }}>
+                        <CommandLineIcon className="w-5 h-5" style={{ color: '#FFFFFF' }} />
                       </div>
                     ) : (
-                      <div className="p-2 rounded-lg bg-gray-100">
-                        <DocumentTextIcon className="w-5 h-5 text-gray-600" />
+                      <div className="p-2 rounded-lg" style={{ backgroundColor: '#F3F4F6' }}>
+                        <DocumentTextIcon className="w-5 h-5" style={{ color: '#6B7280' }} />
                       </div>
                     )}
-                    <span className="text-sm font-semibold text-gray-600">Answer</span>
+                    <span className="text-sm font-semibold" style={{ color: '#6B7280' }}>Answer</span>
                   </div>
-                  <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                  <span className="px-2 py-1 rounded-full text-xs font-medium" 
+                        style={{ backgroundColor: '#F3F4F6', color: '#374151' }}>
                     {currentCard?.category}
                   </span>
                 </div>
 
                 <div className="flex-1 flex items-center justify-center text-center">
-                  <div className="card-content text-xl text-slate-800">
+                  <div className="card-content text-xl" style={{ color: '#1F2937' }}>
                     {currentCard && (
                       <LaTeXContent 
                         content={currentCard.back}
@@ -322,7 +366,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({
                   </div>
                 </div>
 
-                <div className="text-center text-sm font-medium text-gray-500 mt-4">
+                <div className="text-center text-sm font-medium mt-4" style={{ color: '#9CA3AF' }}>
                   Back
                 </div>
               </div>
@@ -332,7 +376,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({
 
         {/* Instructions */}
         <div className="text-center mb-8">
-          <p className="text-lg font-medium text-gray-600">
+          <p className="text-lg font-medium" style={{ color: '#6B7280' }}>
             {isFlipped ? 'How did you do?' : 'Click the card to reveal the answer'}
           </p>
         </div>
@@ -342,7 +386,12 @@ export const StudyMode: React.FC<StudyModeProps> = ({
           <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
             <button
               onClick={() => handleAnswer(false)}
-              className="btn-secondary flex items-center justify-center gap-3 px-8 py-4 text-white rounded-lg transition-all duration-300 text-lg font-semibold focus-ring"
+              className="flex items-center justify-center gap-3 px-8 py-4 rounded-lg transition-all duration-300 text-lg font-semibold focus-ring"
+              style={{ 
+                background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)', 
+                color: '#FFFFFF',
+                boxShadow: '0 4px 15px rgba(244, 63, 94, 0.3)'
+              }}
               aria-label="Mark answer as incorrect"
             >
               <XCircleIcon className="w-5 h-5" />
@@ -350,7 +399,12 @@ export const StudyMode: React.FC<StudyModeProps> = ({
             </button>
             <button
               onClick={() => handleAnswer(true)}
-              className="flex items-center justify-center gap-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 px-8 py-4 text-white rounded-lg transition-all duration-300 text-lg font-semibold hover:scale-105 focus-ring"
+              className="flex items-center justify-center gap-3 px-8 py-4 rounded-lg transition-all duration-300 text-lg font-semibold hover:scale-105 focus-ring"
+              style={{ 
+                background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)', 
+                color: '#FFFFFF',
+                boxShadow: '0 4px 15px rgba(16, 185, 129, 0.3)'
+              }}
               aria-label="Mark answer as correct"
             >
               <CheckCircleIcon className="w-5 h-5" />

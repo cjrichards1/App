@@ -208,13 +208,14 @@ function App() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-blue-50 wave-pattern">
+    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200" style={{ backgroundColor: '#F3F4F6' }}>
+      <div className="wave-pattern min-h-screen">
       {currentView !== 'study' && renderHeader()}
       
       {/* Success Message */}
       {successMessage && (
         <div className="fixed top-20 right-6 z-50 animate-slide-in">
-          <div className="bg-green-100 border border-green-200 text-green-800 px-6 py-3 rounded-lg shadow-lg success-feedback">
+          <div className="px-6 py-3 rounded-lg shadow-lg success-feedback border-2">
             <div className="flex items-center gap-2">
               <SparklesIcon className="w-5 h-5" />
               {successMessage}
@@ -242,6 +243,7 @@ function App() {
           />
         )}
       </main>
+      </div>
     </div>
   );
 }

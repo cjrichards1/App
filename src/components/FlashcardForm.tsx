@@ -84,15 +84,15 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
 
   return (
     <div className="animate-fade-in max-w-5xl mx-auto">
-      <div className="bg-white rounded-xl shadow-md p-8 border border-blue-100">
+      <div className="rounded-xl shadow-md p-8 border-2 border-gradient" style={{ backgroundColor: '#FFFFFF' }}>
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600">
-              <PlusIcon className="w-8 h-8 text-white" />
+            <div className="p-3 rounded-xl" style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)' }}>
+              <PlusIcon className="w-8 h-8" style={{ color: '#FFFFFF' }} />
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-slate-800">Create New Flashcard</h2>
-              <p className="text-gray-600">Build your knowledge, one card at a time</p>
+              <h2 className="text-3xl font-bold" style={{ color: '#1F2937' }}>Create New Flashcard</h2>
+              <p style={{ color: '#6B7280' }}>Build your knowledge, one card at a time</p>
             </div>
           </div>
           
@@ -102,8 +102,8 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
               onClick={() => setIsLatex(!isLatex)}
               className={`flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 btn-scale border-2 focus-ring ${
                 isLatex 
-                  ? 'bg-gradient-to-r from-rose-500 to-rose-600 text-white border-rose-500 shadow-lg' 
-                  : 'bg-gray-50 text-slate-700 border-gray-200 hover:bg-gray-100'
+                ? { background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)', color: '#FFFFFF', borderColor: '#F43F5E', boxShadow: '0 4px 15px rgba(244, 63, 94, 0.3)' }
+                : { backgroundColor: '#F8FAFC', color: '#1F2937', borderColor: '#E2E8F0' }
               }`}
               aria-label={`Switch to ${isLatex ? 'text' : 'LaTeX'} mode`}
             >
@@ -115,7 +115,12 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
               <button
                 type="button"
                 onClick={() => setShowPreview(!showPreview)}
-                className="px-4 py-3 bg-blue-50 text-blue-700 rounded-xl text-sm font-medium hover:bg-blue-100 transition-all duration-300 border border-blue-200 focus-ring"
+                className="px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 border-2 focus-ring"
+                style={{ 
+                  backgroundColor: 'rgba(59, 130, 246, 0.1)', 
+                  color: '#3B82F6', 
+                  borderColor: 'rgba(59, 130, 246, 0.2)' 
+                }}
                 aria-label={`${showPreview ? 'Hide' : 'Show'} LaTeX preview`}
               >
                 {showPreview ? 'Hide Preview' : 'Show Preview'}
@@ -125,20 +130,26 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
         </div>
 
         {isLatex && (
-          <div className="mb-10 p-6 rounded-xl border-2 border-rose-200 bg-gradient-to-r from-rose-50 to-pink-50 animate-slide-in">
+          <div className="mb-10 p-6 rounded-xl border-2 animate-slide-in" 
+               style={{ 
+                 borderColor: 'rgba(244, 63, 94, 0.2)', 
+                 background: 'linear-gradient(to right, rgba(244, 63, 94, 0.05), rgba(244, 63, 94, 0.1))' 
+               }}>
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <SparklesIcon className="w-6 h-6 text-rose-600" />
-                <h3 className="text-xl font-bold text-slate-800">LaTeX Quick Reference</h3>
+                <SparklesIcon className="w-6 h-6" style={{ color: '#F43F5E' }} />
+                <h3 className="text-xl font-bold" style={{ color: '#1F2937' }}>LaTeX Quick Reference</h3>
               </div>
-              <div className="text-sm px-3 py-1 rounded-lg font-medium bg-rose-100 text-rose-700">
+              <div className="text-sm px-3 py-1 rounded-lg font-medium" 
+                   style={{ backgroundColor: 'rgba(244, 63, 94, 0.1)', color: '#F43F5E' }}>
                 Click any example to copy
               </div>
             </div>
             
-            <div className="mb-6 p-4 rounded-lg bg-rose-100 border border-rose-200">
-              <h4 className="text-base font-semibold mb-3 text-slate-800">💡 LaTeX Tips:</h4>
-              <ul className="text-sm space-y-1 text-slate-700">
+            <div className="mb-6 p-4 rounded-lg border" 
+                 style={{ backgroundColor: 'rgba(244, 63, 94, 0.1)', borderColor: 'rgba(244, 63, 94, 0.2)' }}>
+              <h4 className="text-base font-semibold mb-3" style={{ color: '#1F2937' }}>💡 LaTeX Tips:</h4>
+              <ul className="text-sm space-y-1" style={{ color: '#374151' }}>
                 <li>• Use curly braces {} to group expressions: x^{2+3} not x^2+3</li>
                 <li>• For multi-character subscripts/superscripts: x_{max} not x_max</li>
                 <li>• Preview your LaTeX before saving to catch syntax errors</li>
@@ -148,14 +159,19 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
             <div className="space-y-6">
               {latexExamples.map((category, categoryIndex) => (
                 <div key={categoryIndex}>
-                  <h4 className="text-base font-bold mb-3 pb-2 border-b border-rose-300 text-slate-800">
+                  <h4 className="text-base font-bold mb-3 pb-2 border-b" 
+                      style={{ color: '#1F2937', borderColor: 'rgba(244, 63, 94, 0.3)' }}>
                     {category.category}
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {category.examples.map((example, index) => (
                       <div 
                         key={index} 
-                        className="bg-white p-3 rounded-lg border border-rose-200 cursor-pointer hover:border-rose-300 hover:shadow-sm transition-all duration-200 focus-ring"
+                        className="p-3 rounded-lg border cursor-pointer hover:shadow-sm transition-all duration-200 focus-ring"
+                        style={{ 
+                          backgroundColor: '#FFFFFF', 
+                          borderColor: 'rgba(244, 63, 94, 0.2)' 
+                        }}
                         onClick={() => {
                           navigator.clipboard.writeText(example.code);
                         }}
@@ -169,10 +185,11 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
                         }}
                       >
                         <div className="flex justify-between items-start mb-1">
-                          <span className="text-sm font-semibold text-rose-600">{example.label}</span>
-                          <span className="text-sm text-gray-600">{example.preview}</span>
+                          <span className="text-sm font-semibold" style={{ color: '#F43F5E' }}>{example.label}</span>
+                          <span className="text-sm" style={{ color: '#6B7280' }}>{example.preview}</span>
                         </div>
-                        <code className="text-sm px-2 py-1 rounded bg-rose-50 text-rose-600 block overflow-x-auto font-mono">
+                        <code className="text-sm px-2 py-1 rounded block overflow-x-auto font-mono" 
+                              style={{ backgroundColor: 'rgba(244, 63, 94, 0.05)', color: '#F43F5E' }}>
                           {example.code}
                         </code>
                       </div>
@@ -187,7 +204,7 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <label className="block text-base font-semibold mb-3 text-slate-800">
+              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
                 Front (Question)
               </label>
               <textarea
@@ -200,8 +217,12 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
                 aria-label="Flashcard front content"
               />
               {isLatex && showPreview && front && (
-                <div className="mt-4 p-4 rounded-lg bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200">
-                  <div className="text-sm font-medium mb-2 text-slate-700">Preview:</div>
+                <div className="mt-4 p-4 rounded-lg border" 
+                     style={{ 
+                       background: 'linear-gradient(to right, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.1))', 
+                       borderColor: 'rgba(59, 130, 246, 0.2)' 
+                     }}>
+                  <div className="text-sm font-medium mb-2" style={{ color: '#374151' }}>Preview:</div>
                   <div className="card-content text-lg">
                     <LaTeXPreview content={front} />
                   </div>
@@ -210,7 +231,7 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
             </div>
 
             <div>
-              <label className="block text-base font-semibold mb-3 text-slate-800">
+              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
                 Back (Answer)
               </label>
               <textarea
@@ -223,8 +244,12 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
                 aria-label="Flashcard back content"
               />
               {isLatex && showPreview && back && (
-                <div className="mt-4 p-4 rounded-lg bg-gradient-to-r from-green-50 to-green-100 border border-green-200">
-                  <div className="text-sm font-medium mb-2 text-slate-700">Preview:</div>
+                <div className="mt-4 p-4 rounded-lg border" 
+                     style={{ 
+                       background: 'linear-gradient(to right, rgba(16, 185, 129, 0.05), rgba(16, 185, 129, 0.1))', 
+                       borderColor: 'rgba(16, 185, 129, 0.2)' 
+                     }}>
+                  <div className="text-sm font-medium mb-2" style={{ color: '#374151' }}>Preview:</div>
                   <div className="card-content text-lg">
                     <LaTeXPreview content={back} />
                   </div>
@@ -235,7 +260,7 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
 
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <label className="block text-base font-semibold mb-3 text-slate-800">
+              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
                 Category
               </label>
               <select
@@ -253,7 +278,7 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
             </div>
 
             <div>
-              <label className="block text-base font-semibold mb-3 text-slate-800">
+              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
                 Difficulty
               </label>
               <select
@@ -271,7 +296,12 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ onAdd }) => {
 
           <button
             type="submit"
-            className="btn-primary w-full py-4 px-6 text-white rounded-lg text-base font-semibold flex items-center justify-center gap-3 focus-ring"
+            className="w-full py-4 px-6 rounded-lg text-base font-semibold flex items-center justify-center gap-3 focus-ring transition-all duration-300"
+            style={{ 
+              background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)', 
+              color: '#FFFFFF',
+              boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)'
+            }}
             aria-label="Create flashcard"
           >
             <PlusIcon className="w-5 h-5" />
