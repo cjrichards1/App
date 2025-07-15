@@ -1,445 +1,331 @@
 import React, { useState } from 'react';
-import { Trash2, Edit3, BookOpen, Calendar, ChartBarIcon, FunctionSquare, Type, FolderPlus, Folder, FolderOpen, Plus, X } from 'lucide-react';
-import { Flashcard, Folder as FolderType } from '../types/flashcard';
-import { InlineMath } from 'react-katex';
+import { PlusIcon, CommandLineIcon, DocumentTextIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import { InlineMath, BlockMath } from 'react-katex';
+import { Folder } from '../types/flashcard';
 import 'katex/dist/katex.min.css';
 
-interface FlashcardListProps {
-  flashcards: Flashcard[];
-  folders: FolderType[];
+interface FlashcardFormProps {
+  folders: Folder[];
   categories: string[];
-  onDelete: (id: string) => void;
-  onEdit: (id: string, updates: Partial<Flashcard>) => void;
-  onAddFolder: (name: string, color: string) => void;
-  onDeleteFolder: (id: string) => void;
-  onMoveCard: (cardId: string, folderId?: string) => void;
-  onDeleteCategory: (category: string) => void;
+  onAdd: (flashcard: {
+    front: string;
+    back: string;
+    category: string;
+    difficulty: 'easy' | 'medium' | 'hard';
+    isLatex: boolean;
+    folderId?: string;
+  }) => void;
 }
 
 
-const folderColors = [
-  { value: '#3B82F6', label: 'Electric Blue' },
-  { value: '#F43F5E', label: 'Vibrant Coral' },
-  { value: '#10B981', label: 'Lime Green' },
-  { value: '#8B5CF6', label: 'Purple' },
-  { value: '#F59E0B', label: 'Amber' },
-  { value: '#6B7280', label: 'Gray' },
-];
-
-const LaTeXContent: React.FC<{ content: string; isLatex: boolean }> = ({ content, isLatex }) => {
-  if (!isLatex) {
-    return <span>{content}</span>;
-  }
-
+const LaTeXPreview: React.FC<{ content: string; isBlock?: boolean }> = ({ content, isBlock = false }) => {
   try {
+    if (isBlock) {
+      return <BlockMath math={content} />;
+    }
     return <InlineMath math={content} />;
   } catch (error) {
-    return <span className="text-red-500">Invalid LaTeX: {content}</span>;
+    return <span className="text-red-500 text-sm">Invalid LaTeX syntax</span>;
   }
 };
 
-export const FlashcardList: React.FC<FlashcardListProps> = ({ 
-  flashcards, 
-  folders, 
-  categories,
-  onDelete, 
-  onEdit, 
-  onAddFolder, 
-  onDeleteFolder, 
-  onMoveCard,
-  onDeleteCategory
-}) => {
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState({ front: '', back: '', category: '', difficulty: 'medium' as const });
-  const [showFolderForm, setShowFolderForm] = useState(false);
-  const [newFolderName, setNewFolderName] = useState('');
-  const [newFolderColor, setNewFolderColor] = useState('#3B82F6');
-  const [movingCardId, setMovingCardId] = useState<string | null>(null);
+export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categories, onAdd }) => {
+  const [front, setFront] = useState('');
+  const [back, setBack] = useState('');
+  const [category, setCategory] = useState('general');
+  const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
+  const [isLatex, setIsLatex] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [selectedFolder, setSelectedFolder] = useState<string>('');
 
-  const filteredCards = flashcards.filter(card => {
-    const categoryMatch = selectedCategory === 'all' || card.category === selectedCategory;
-    const folderMatch = selectedFolder === null || 
-                       (selectedFolder === 'uncategorized' && !card.folderId) ||
-                       card.folderId === selectedFolder;
-    return categoryMatch && folderMatch;
-  });
-
-  const uncategorizedCards = flashcards.filter(card => !card.folderId);
-
-  const handleEdit = (card: Flashcard) => {
-    setEditingId(card.id);
-    setEditForm({
-      front: card.front,
-      back: card.back,
-      category: card.category,
-      difficulty: card.difficulty,
-    });
-  };
-
-  const handleSaveEdit = () => {
-    if (editingId) {
-      onEdit(editingId, editForm);
-      setEditingId(null);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (front.trim() && back.trim()) {
+      onAdd({
+        front: front.trim(),
+        back: back.trim(),
+        category,
+        difficulty,
+        isLatex,
+        folderId: selectedFolder || undefined,
+      });
+      setFront('');
+      setBack('');
+      setSelectedFolder('');
     }
   };
 
-  const handleCancelEdit = () => {
-    setEditingId(null);
-    setEditForm({ front: '', back: '', category: '', difficulty: 'medium' });
-  };
-
-  const handleCreateFolder = () => {
-    if (newFolderName.trim()) {
-      onAddFolder(newFolderName.trim(), newFolderColor);
-      setNewFolderName('');
-      setNewFolderColor('#3B82F6');
-      setShowFolderForm(false);
+  const latexExamples = [
+    { 
+      category: 'Basic Operations',
+      examples: [
+        { label: 'Fraction', code: '\\frac{a}{b}', preview: 'a/b' },
+        { label: 'Square root', code: '\\sqrt{x}', preview: '√x' },
+        { label: 'Power', code: 'x^{2}', preview: 'x²' },
+        { label: 'Subscript', code: 'x_{1}', preview: 'x₁' },
+      ]
+    },
+    {
+      category: 'Calculus',
+      examples: [
+        { label: 'Derivative', code: '\\frac{d}{dx}f(x)', preview: 'd/dx f(x)' },
+        { label: 'Integral', code: '\\int f(x) dx', preview: '∫ f(x) dx' },
+        { label: 'Limit', code: '\\lim_{x \\to a} f(x)', preview: 'lim(x→a) f(x)' },
+      ]
+    },
+    {
+      category: 'Greek Letters',
+      examples: [
+        { label: 'Common', code: '\\alpha, \\beta, \\gamma', preview: 'α, β, γ' },
+        { label: 'Pi & others', code: '\\pi, \\phi, \\omega', preview: 'π, φ, ω' },
+      ]
     }
-  };
-
-  const handleMoveCard = (cardId: string, folderId?: string) => {
-    onMoveCard(cardId, folderId);
-    setMovingCardId(null);
-  };
-
-  const getAccuracy = (card: Flashcard) => {
-    const total = card.correctCount + card.incorrectCount;
-    return total > 0 ? Math.round((card.correctCount / total) * 100) : 0;
-  };
-
-  const getFolderCardCount = (folderId: string) => {
-    return flashcards.filter(card => card.folderId === folderId).length;
-  };
+  ];
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-slate-900">Flashcard Library</h2>
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => setShowFolderForm(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 text-white"
-            style={{ backgroundColor: '#3B82F6' }}
-          >
-            <FolderPlus className="w-4 h-4" />
-            New Folder
-          </button>
-          <div className="flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-gray-500" />
-            <span className="text-sm text-gray-500">{filteredCards.length} cards</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Folder Creation Form */}
-      {showFolderForm && (
-        <div className="mb-6 p-4 rounded-lg border-2 border-blue-200 bg-blue-50">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-slate-900">Create New Folder</h3>
-            <button
-              onClick={() => setShowFolderForm(false)}
-              className="p-1 hover:bg-gray-200 rounded"
-            >
-              <X className="w-4 h-4 text-gray-500" />
-            </button>
-          </div>
-          <div className="grid md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium mb-2 text-slate-900">Folder Name</label>
-              <input
-                type="text"
-                value={newFolderName}
-                onChange={(e) => setNewFolderName(e.target.value)}
-                placeholder="Enter folder name..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
+    <div className="animate-fade-in max-w-5xl mx-auto">
+      <div className="rounded-xl shadow-md p-8 border-gradient bg-white">
+        <div className="flex items-center justify-between mb-10">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-xl" style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)' }}>
+              <PlusIcon className="w-8 h-8 text-white" />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2 text-slate-900">Color</label>
-              <select
-                value={newFolderColor}
-                onChange={(e) => setNewFolderColor(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              <h2 className="text-3xl font-bold" style={{ color: '#1F2937' }}>Create New Flashcard</h2>
+              <p style={{ color: '#6B7280' }}>Build your knowledge, one card at a time</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => setIsLatex(!isLatex)}
+              className={`flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 border-2 focus-ring ${
+                isLatex 
+                  ? 'text-white'
+                  : ''
+              }`}
+              style={isLatex 
+                ? { background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)', borderColor: '#F43F5E', boxShadow: '0 4px 15px rgba(244, 63, 94, 0.3)' }
+                : { backgroundColor: '#F3F4F6', color: '#1F2937', borderColor: '#E5E7EB' }
+              }
+              aria-label={`Switch to ${isLatex ? 'text' : 'LaTeX'} mode`}
+            >
+              {isLatex ? <CommandLineIcon className="w-4 h-4" /> : <DocumentTextIcon className="w-4 h-4" />}
+              {isLatex ? 'LaTeX Mode' : 'Text Mode'}
+            </button>
+            
+            {isLatex && (
+              <button
+                type="button"
+                onClick={() => setShowPreview(!showPreview)}
+                className="px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 border-2 focus-ring"
+                style={{ 
+                  backgroundColor: 'rgba(59, 130, 246, 0.1)', 
+                  color: '#3B82F6', 
+                  borderColor: 'rgba(59, 130, 246, 0.2)' 
+                }}
+                aria-label={`${showPreview ? 'Hide' : 'Show'} LaTeX preview`}
               >
-                {folderColors.map((color) => (
-                  <option key={color.value} value={color.value}>
-                    {color.label}
+                {showPreview ? 'Hide Preview' : 'Show Preview'}
+              </button>
+            )}
+          </div>
+        </div>
+
+        {isLatex && (
+          <div className="mb-10 p-6 rounded-xl border-2 animate-slide-in" 
+               style={{ 
+                 borderColor: 'rgba(244, 63, 94, 0.2)', 
+                 background: 'linear-gradient(to right, rgba(244, 63, 94, 0.05), rgba(244, 63, 94, 0.1))' 
+               }}>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <SparklesIcon className="w-6 h-6" style={{ color: '#F43F5E' }} />
+                <h3 className="text-xl font-bold" style={{ color: '#1F2937' }}>LaTeX Quick Reference</h3>
+              </div>
+              <div className="text-sm px-3 py-1 rounded-lg font-medium" 
+                   style={{ backgroundColor: 'rgba(244, 63, 94, 0.1)', color: '#F43F5E' }}>
+                Click any example to copy
+              </div>
+            </div>
+            
+            <div className="mb-6 p-4 rounded-lg border" 
+                 style={{ backgroundColor: 'rgba(244, 63, 94, 0.1)', borderColor: 'rgba(244, 63, 94, 0.2)' }}>
+              <h4 className="text-base font-semibold mb-3" style={{ color: '#1F2937' }}>💡 LaTeX Tips:</h4>
+              <ul className="text-sm space-y-1" style={{ color: '#374151' }}>
+                <li>• Use curly braces {} to group expressions: x^{2+3} not x^2+3</li>
+                <li>• For multi-character subscripts/superscripts: x_{'{max}'} not x_max</li>
+                <li>• Preview your LaTeX before saving to catch syntax errors</li>
+              </ul>
+            </div>
+
+            <div className="space-y-6">
+              {latexExamples.map((category, categoryIndex) => (
+                <div key={categoryIndex}>
+                  <h4 className="text-base font-bold mb-3 pb-2 border-b" 
+                      style={{ color: '#1F2937', borderColor: 'rgba(244, 63, 94, 0.3)' }}>
+                    {category.category}
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {category.examples.map((example, index) => (
+                      <div 
+                        key={index} 
+                        className="p-3 rounded-lg border cursor-pointer hover:shadow-sm transition-all duration-200 focus-ring bg-white"
+                        style={{ borderColor: 'rgba(244, 63, 94, 0.2)' }}
+                        onClick={() => {
+                          navigator.clipboard.writeText(example.code);
+                        }}
+                        title="Click to copy"
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            navigator.clipboard.writeText(example.code);
+                          }
+                        }}
+                      >
+                        <div className="flex justify-between items-start mb-1">
+                          <span className="text-sm font-semibold" style={{ color: '#F43F5E' }}>{example.label}</span>
+                          <span className="text-sm" style={{ color: '#6B7280' }}>{example.preview}</span>
+                        </div>
+                        <code className="text-sm px-2 py-1 rounded block overflow-x-auto font-mono" 
+                              style={{ backgroundColor: 'rgba(244, 63, 94, 0.05)', color: '#F43F5E' }}>
+                          {example.code}
+                        </code>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
+                Front (Question)
+              </label>
+              <textarea
+                value={front}
+                onChange={(e) => setFront(e.target.value)}
+                placeholder={isLatex ? "Enter LaTeX: \\frac{d}{dx}[x^2] = ?" : "Enter your question..."}
+                className="input-enhanced w-full p-4 rounded-lg resize-none focus-ring"
+                rows={6}
+                required
+                aria-label="Flashcard front content"
+              />
+              {isLatex && showPreview && front && (
+                <div className="mt-4 p-4 rounded-lg border" 
+                     style={{ 
+                       background: 'linear-gradient(to right, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.1))', 
+                       borderColor: 'rgba(59, 130, 246, 0.2)' 
+                     }}>
+                  <div className="text-sm font-medium mb-2" style={{ color: '#374151' }}>Preview:</div>
+                  <div className="card-content text-lg">
+                    <LaTeXPreview content={front} />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
+                Back (Answer)
+              </label>
+              <textarea
+                value={back}
+                onChange={(e) => setBack(e.target.value)}
+                placeholder={isLatex ? "Enter LaTeX: 2x" : "Enter your answer..."}
+                className="input-enhanced w-full p-4 rounded-lg resize-none focus-ring"
+                rows={6}
+                required
+                aria-label="Flashcard back content"
+              />
+              {isLatex && showPreview && back && (
+                <div className="mt-4 p-4 rounded-lg border" 
+                     style={{ 
+                       background: 'linear-gradient(to right, rgba(16, 185, 129, 0.05), rgba(16, 185, 129, 0.1))', 
+                       borderColor: 'rgba(16, 185, 129, 0.2)' 
+                     }}>
+                  <div className="text-sm font-medium mb-2" style={{ color: '#374151' }}>Preview:</div>
+                  <div className="card-content text-lg">
+                    <LaTeXPreview content={back} />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
+                Folder (Optional)
+              </label>
+              <select
+                value={selectedFolder}
+                onChange={(e) => setSelectedFolder(e.target.value)}
+                className="input-enhanced w-full p-4 rounded-lg focus-ring"
+                aria-label="Select folder"
+              >
+                <option value="">No Folder</option>
+                {folders.map((folder) => (
+                  <option key={folder.id} value={folder.id}>
+                    📁 {folder.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
+                Category
+              </label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="input-enhanced w-full p-4 rounded-lg focus-ring"
+                aria-label="Select flashcard category"
+              >
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
                   </option>
                 ))}
               </select>
             </div>
           </div>
-          <div className="flex gap-2">
-            <button
-              onClick={handleCreateFolder}
-              className="px-4 py-2 text-white rounded-md hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: '#3B82F6' }}
-            >
-              Create Folder
-            </button>
-            <button
-              onClick={() => setShowFolderForm(false)}
-              className="px-4 py-2 bg-gray-500 text-white rounded-md hover:opacity-90 transition-opacity"
-            >
-              Cancel
-            </button>
+
+          <div className="grid md:grid-cols-1 gap-8">
+            <div>
+              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
+                Difficulty
+              </label>
+              <select
+                value={difficulty}
+                onChange={(e) => setDifficulty(e.target.value as 'easy' | 'medium' | 'hard')}
+                className="input-enhanced w-full p-4 rounded-lg focus-ring"
+                aria-label="Select flashcard difficulty"
+              >
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+              </select>
+            </div>
           </div>
-        </div>
-      )}
 
-      {/* Folder Navigation */}
-      <div className="mb-6">
-        <div className="flex flex-wrap gap-2 mb-4">
           <button
-            onClick={() => setSelectedFolder(null)}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors border ${
-              selectedFolder === null
-                ? 'bg-blue-100 text-blue-600 border-blue-600'
-                : 'bg-gray-100 text-gray-600 border-gray-300'
-            }`}
+            type="submit"
+            className="w-full py-4 px-6 rounded-lg text-base font-semibold flex items-center justify-center gap-3 focus-ring transition-all duration-300 btn-primary"
+            aria-label="Create flashcard"
           >
-            <BookOpen className="w-4 h-4" />
-            All Cards ({flashcards.length})
+            <PlusIcon className="w-5 h-5" />
+            Create Flashcard
           </button>
-          
-          <button
-            onClick={() => setSelectedFolder('uncategorized')}
-            className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors border ${
-              selectedFolder === 'uncategorized'
-                ? 'bg-blue-100 text-blue-600 border-blue-600'
-                : 'bg-gray-100 text-gray-600 border-gray-300'
-            }`}
-          >
-            <Folder className="w-4 h-4" />
-            Uncategorized ({uncategorizedCards.length})
-          </button>
-
-          {folders.map((folder) => (
-            <div key={folder.id} className="flex items-center gap-1">
-              <button
-                onClick={() => setSelectedFolder(folder.id)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors border ${
-                  selectedFolder === folder.id
-                    ? 'bg-blue-100 text-blue-600 border-blue-600'
-                    : 'bg-gray-100 text-gray-600 border-gray-300'
-                }`}
-              >
-                <FolderOpen className="w-4 h-4" style={{ color: folder.color }} />
-                {folder.name} ({getFolderCardCount(folder.id)})
-              </button>
-              <button
-                onClick={() => onDeleteFolder(folder.id)}
-                className="p-1 hover:bg-red-100 rounded text-red-500"
-                title="Delete folder"
-              >
-                <Trash2 className="w-3 h-3" />
-              </button>
-            </div>
-          ))}
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          {categories.map((category) => (
-            <button
-             key={category}
-             onClick={() => setSelectedCategory(category)}
-              className={`px-3 py-1 rounded-full text-sm font-medium transition-colors border ${
-               selectedCategory === category
-                  ? 'bg-blue-100 text-blue-600 border-blue-600'
-                  : 'bg-gray-100 text-gray-600 border-gray-300'
-              }`}
-            >
-             {category.charAt(0).toUpperCase() + category.slice(1)}
-            </button>
-          ))}
-        </div>
+        </form>
       </div>
-
-      {filteredCards.length === 0 ? (
-        <div className="text-center py-12">
-          <BookOpen className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-          <h3 className="text-lg font-medium mb-2 text-slate-900">No flashcards found</h3>
-          <p className="text-gray-500">
-            {selectedFolder ? 'This folder is empty.' : 'Create your first flashcard to get started!'}
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {filteredCards.map((card) => (
-            <div key={card.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow bg-white">
-              {editingId === card.id ? (
-                <div className="space-y-4">
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-1 text-slate-900">Front</label>
-                      <textarea
-                        value={editForm.front}
-                        onChange={(e) => setEditForm({ ...editForm, front: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        rows={2}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1 text-slate-900">Back</label>
-                      <textarea
-                        value={editForm.back}
-                        onChange={(e) => setEditForm({ ...editForm, back: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        rows={2}
-                      />
-                    </div>
-                  </div>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <select
-                      value={editForm.category}
-                      onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
-                      className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
-                      {categories.map((cat) => (
-                        <option key={cat} value={cat}>
-                          {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                        </option>
-                      ))}
-                    </select>
-                    <select
-                      value={editForm.difficulty}
-                      onChange={(e) => setEditForm({ ...editForm, difficulty: e.target.value as 'easy' | 'medium' | 'hard' })}
-                      className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
-                      <option value="easy">Easy</option>
-                      <option value="medium">Medium</option>
-                      <option value="hard">Hard</option>
-                    </select>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={handleSaveEdit}
-                      className="px-4 py-2 text-white rounded-md hover:opacity-90 transition-opacity"
-                      style={{ backgroundColor: '#3B82F6' }}
-                    >
-                      Save
-                    </button>
-                    <button
-                      onClick={handleCancelEdit}
-                      className="px-4 py-2 bg-gray-500 text-white rounded-md hover:opacity-90 transition-opacity"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      {card.isLatex ? (
-                        <FunctionSquare className="w-4 h-4" style={{ color: '#F43F5E' }} />
-                      ) : (
-                        <Type className="w-4 h-4 text-gray-500" />
-                      )}
-                      <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-600">
-                        {card.category.charAt(0).toUpperCase() + card.category.slice(1)}
-                      </span>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        card.difficulty === 'easy' 
-                          ? 'bg-green-100 text-green-600'
-                          : card.difficulty === 'medium' 
-                          ? 'bg-yellow-100 text-yellow-600'
-                          : 'bg-red-100 text-red-600'
-                      }`}>
-                        {card.difficulty}
-                      </span>
-                      {card.folderId && (
-                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                          📁 {folders.find(f => f.id === card.folderId)?.name}
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <div className="relative">
-                        <button
-                          onClick={() => setMovingCardId(movingCardId === card.id ? null : card.id)}
-                          className="p-1 hover:opacity-80 transition-opacity text-blue-600"
-                          title="Move to folder"
-                        >
-                          <Folder className="w-4 h-4" />
-                        </button>
-                        {movingCardId === card.id && (
-                          <div className="absolute right-0 top-8 bg-white border border-gray-200 rounded-lg shadow-lg p-2 z-10 min-w-48">
-                            <button
-                              onClick={() => handleMoveCard(card.id, undefined)}
-                              className="block w-full text-left px-3 py-2 hover:bg-gray-100 rounded text-sm"
-                            >
-                              📂 Uncategorized
-                            </button>
-                            {folders.map((folder) => (
-                              <button
-                                key={folder.id}
-                                onClick={() => handleMoveCard(card.id, folder.id)}
-                                className="block w-full text-left px-3 py-2 hover:bg-gray-100 rounded text-sm"
-                              >
-                                <span style={{ color: folder.color }}>📁</span> {folder.name}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      <button
-                        onClick={() => handleEdit(card)}
-                        className="p-1 hover:opacity-80 transition-opacity text-gray-500"
-                      >
-                        <Edit3 className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => onDelete(card.id)}
-                        className="p-1 hover:opacity-80 transition-opacity"
-                        style={{ color: '#F43F5E' }}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <div className="text-sm font-medium mb-1 text-slate-900">Front:</div>
-                      <div className="p-3 bg-gray-50 rounded-md min-h-[60px] flex items-center text-slate-900">
-                        <LaTeXContent content={card.front} isLatex={card.isLatex} />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium mb-1 text-slate-900">Back:</div>
-                      <div className="p-3 bg-gray-50 rounded-md min-h-[60px] flex items-center text-slate-900">
-                        <LaTeXContent content={card.back} isLatex={card.isLatex} />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between text-sm text-gray-500">
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        <span>Created: {card.createdAt.toLocaleDateString()}</span>
-                      </div>
-                      {card.lastStudied && (
-                        <div className="flex items-center gap-1">
-                          <BookOpen className="w-4 h-4" />
-                          <span>Last studied: {card.lastStudied.toLocaleDateString()}</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <ChartBarIcon className="w-4 h-4" />
-                      <span>Accuracy: {getAccuracy(card)}%</span>
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 };
