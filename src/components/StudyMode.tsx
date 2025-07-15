@@ -110,23 +110,17 @@ export const StudyMode: React.FC<StudyModeProps> = ({
 
   if (shuffledCards.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6" style={{ backgroundColor: '#F3F4F6' }}>
-        <div className="empty-state rounded-xl p-12 text-center max-w-lg w-full shadow-lg border-2 border-gradient" 
-             style={{ backgroundColor: '#FFFFFF' }}>
+      <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-b from-gray-100 to-blue-50">
+        <div className="empty-state rounded-xl p-12 text-center max-w-lg w-full shadow-lg border-gradient">
           <div className="p-6 rounded-2xl mx-auto mb-8 w-fit" 
                style={{ background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)' }}>
-            <TrophyIcon className="w-16 h-16 pulse-icon" style={{ color: '#FFFFFF' }} />
+            <TrophyIcon className="w-16 h-16 pulse-icon text-white" />
           </div>
           <h2 className="text-3xl font-bold mb-4" style={{ color: '#1F2937' }}>No Cards to Study</h2>
           <p className="mb-8 text-lg" style={{ color: '#6B7280' }}>Create some flashcards first to start studying!</p>
           <button
             onClick={onBack}
-            className="px-8 py-4 text-lg font-semibold rounded-lg focus-ring transition-all duration-300 flex items-center gap-3"
-            style={{ 
-              background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)', 
-              color: '#FFFFFF',
-              boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)'
-            }}
+            className="px-8 py-4 text-lg font-semibold rounded-lg focus-ring transition-all duration-300 flex items-center gap-3 btn-primary"
             aria-label="Go back to dashboard"
           >
             <ArrowLeftIcon className="w-5 h-5" />
@@ -139,12 +133,11 @@ export const StudyMode: React.FC<StudyModeProps> = ({
 
   if (isComplete) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6" style={{ backgroundColor: '#F3F4F6' }}>
-        <div className="rounded-xl p-12 text-center max-w-2xl w-full shadow-lg border-2 border-gradient animate-bounce-in" 
-             style={{ backgroundColor: '#FFFFFF' }}>
+      <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-b from-gray-100 to-blue-50">
+        <div className="rounded-xl p-12 text-center max-w-2xl w-full shadow-lg border-gradient animate-bounce-in bg-white">
           <div className="p-6 rounded-2xl mx-auto mb-8 w-fit" 
                style={{ background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)' }}>
-            <TrophyIcon className="w-16 h-16 animate-pulse-glow" style={{ color: '#FFFFFF' }} />
+            <TrophyIcon className="w-16 h-16 animate-pulse-glow text-white" />
           </div>
           <h2 className="text-4xl font-bold mb-4" style={{ color: '#1F2937' }}>Session Complete!</h2>
           <p className="mb-8 text-xl" style={{ color: '#6B7280' }}>Excellent work on your study session!</p>
@@ -187,12 +180,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               onClick={resetSession}
-              className="flex-1 py-4 px-6 rounded-lg font-semibold flex items-center justify-center gap-3 focus-ring transition-all duration-300"
-              style={{ 
-                background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)', 
-                color: '#FFFFFF',
-                boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)'
-              }}
+              className="flex-1 py-4 px-6 rounded-lg font-semibold flex items-center justify-center gap-3 focus-ring transition-all duration-300 btn-primary"
               aria-label="Study again"
             >
               <ArrowPathIcon className="w-5 h-5" />
@@ -200,12 +188,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({
             </button>
             <button
               onClick={onBack}
-              className="flex-1 py-4 px-6 rounded-lg font-semibold flex items-center justify-center gap-3 focus-ring transition-all duration-300"
-              style={{ 
-                background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)', 
-                color: '#FFFFFF',
-                boxShadow: '0 4px 15px rgba(244, 63, 94, 0.3)'
-              }}
+              className="flex-1 py-4 px-6 rounded-lg font-semibold flex items-center justify-center gap-3 focus-ring transition-all duration-300 btn-secondary"
               aria-label="Back to dashboard"
             >
               <ArrowLeftIcon className="w-5 h-5" />
@@ -218,18 +201,14 @@ export const StudyMode: React.FC<StudyModeProps> = ({
   }
 
   return (
-    <div className="min-h-screen p-6" style={{ backgroundColor: '#F3F4F6' }}>
+    <div className="min-h-screen p-6 bg-gradient-to-b from-gray-100 to-blue-50">
       <div className="max-w-6xl mx-auto animate-fade-in">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 gap-4">
           <button
             onClick={onBack}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 border-2 focus-ring"
-            style={{ 
-              backgroundColor: '#FFFFFF', 
-              color: '#1F2937', 
-              borderColor: '#E5E7EB' 
-            }}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 border-2 focus-ring bg-white"
+            style={{ color: '#1F2937', borderColor: '#E5E7EB' }}
             aria-label="Back to dashboard"
           >
             <ArrowLeftIcon className="w-4 h-4" />
@@ -237,13 +216,13 @@ export const StudyMode: React.FC<StudyModeProps> = ({
           </button>
           
           <div className="flex items-center gap-8 text-base font-medium" style={{ color: '#6B7280' }}>
-            <div className="flex items-center gap-2 px-4 py-2 rounded-lg border-2" 
-                 style={{ backgroundColor: '#FFFFFF', borderColor: '#E5E7EB' }}>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-lg border-2 bg-white" 
+                 style={{ borderColor: '#E5E7EB' }}>
               <ChartBarIcon className="w-4 h-4" />
               <span>{getAccuracy()}% accuracy</span>
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 rounded-lg border-2" 
-                 style={{ backgroundColor: '#FFFFFF', borderColor: '#E5E7EB' }}>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-lg border-2 bg-white" 
+                 style={{ borderColor: '#E5E7EB' }}>
               <ClockIcon className="w-4 h-4" />
               <span>{getSessionDuration()} min</span>
             </div>
@@ -256,8 +235,8 @@ export const StudyMode: React.FC<StudyModeProps> = ({
             <span className="text-lg font-semibold" style={{ color: '#1F2937' }}>
               Card {currentIndex + 1} of {shuffledCards.length}
             </span>
-            <div className="rounded-full px-3 py-1 text-sm" 
-                 style={{ backgroundColor: '#F3F4F6', color: '#6B7280' }}>
+            <div className="rounded-full px-3 py-1 text-sm bg-white" 
+                 style={{ color: '#6B7280' }}>
               {session.correctAnswers} correct, {session.incorrectAnswers} incorrect
             </div>
           </div>
@@ -292,7 +271,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({
                   <div className="flex items-center gap-2">
                     {currentCard?.isLatex ? (
                       <div className="p-2 rounded-lg" style={{ backgroundColor: '#F43F5E' }}>
-                        <CommandLineIcon className="w-5 h-5" style={{ color: '#FFFFFF' }} />
+                        <CommandLineIcon className="w-5 h-5 text-white" />
                       </div>
                     ) : (
                       <div className="p-2 rounded-lg" style={{ backgroundColor: '#F3F4F6' }}>
@@ -306,10 +285,10 @@ export const StudyMode: React.FC<StudyModeProps> = ({
                       className="px-2 py-1 rounded-full text-xs font-medium"
                       style={
                         currentCard?.difficulty === 'easy' 
-                          ? { backgroundColor: '#dcfce7', color: '#16a34a' }
+                          ? { backgroundColor: 'rgba(16, 185, 129, 0.1)', color: '#10B981' }
                           : currentCard?.difficulty === 'medium' 
-                          ? { backgroundColor: '#fef3c7', color: '#ca8a04' }
-                          : { backgroundColor: '#fce7f3', color: '#e11d48' }
+                          ? { backgroundColor: 'rgba(245, 158, 11, 0.1)', color: '#F59E0B' }
+                          : { backgroundColor: 'rgba(244, 63, 94, 0.1)', color: '#F43F5E' }
                       }
                     >
                       {currentCard?.difficulty}
@@ -339,7 +318,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({
                   <div className="flex items-center gap-2">
                     {currentCard?.isLatex ? (
                       <div className="p-2 rounded-lg" style={{ backgroundColor: '#F43F5E' }}>
-                        <CommandLineIcon className="w-5 h-5" style={{ color: '#FFFFFF' }} />
+                        <CommandLineIcon className="w-5 h-5 text-white" />
                       </div>
                     ) : (
                       <div className="p-2 rounded-lg" style={{ backgroundColor: '#F3F4F6' }}>
@@ -348,8 +327,8 @@ export const StudyMode: React.FC<StudyModeProps> = ({
                     )}
                     <span className="text-sm font-semibold" style={{ color: '#6B7280' }}>Answer</span>
                   </div>
-                  <span className="px-2 py-1 rounded-full text-xs font-medium" 
-                        style={{ backgroundColor: '#F3F4F6', color: '#374151' }}>
+                  <span className="px-2 py-1 rounded-full text-xs font-medium bg-white" 
+                        style={{ color: '#374151' }}>
                     {currentCard?.category}
                   </span>
                 </div>
@@ -386,12 +365,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({
           <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
             <button
               onClick={() => handleAnswer(false)}
-              className="flex items-center justify-center gap-3 px-8 py-4 rounded-lg transition-all duration-300 text-lg font-semibold focus-ring"
-              style={{ 
-                background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)', 
-                color: '#FFFFFF',
-                boxShadow: '0 4px 15px rgba(244, 63, 94, 0.3)'
-              }}
+              className="flex items-center justify-center gap-3 px-8 py-4 rounded-lg transition-all duration-300 text-lg font-semibold focus-ring btn-secondary"
               aria-label="Mark answer as incorrect"
             >
               <XCircleIcon className="w-5 h-5" />

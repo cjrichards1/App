@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Trash2, Edit3, BookOpen, Calendar, Target, FunctionSquare, Type } from 'lucide-react';
+import { Trash2, Edit3, BookOpen, Calendar, ChartBarIcon, FunctionSquare, Type } from 'lucide-react';
 import { Flashcard } from '../types/flashcard';
 import { InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
@@ -11,19 +11,13 @@ interface FlashcardListProps {
 }
 
 const categories = [
-  { value: 'all', label: 'All Categories', color: 'bg-gray-100 text-gray-800' },
-  { value: 'general', label: 'General', color: 'bg-gray-100 text-gray-800' },
-  { value: 'language', label: 'Language', color: 'bg-blue-100 text-blue-800' },
-  { value: 'science', label: 'Science', color: 'bg-green-100 text-green-800' },
-  { value: 'math', label: 'Mathematics', color: 'bg-purple-100 text-purple-800' },
-  { value: 'history', label: 'History', color: 'bg-yellow-100 text-yellow-800' },
+  { value: 'all', label: 'All Categories' },
+  { value: 'general', label: 'General' },
+  { value: 'language', label: 'Language' },
+  { value: 'science', label: 'Science' },
+  { value: 'math', label: 'Mathematics' },
+  { value: 'history', label: 'History' },
 ];
-
-const difficultyColors = {
-  easy: 'bg-green-100 text-green-800',
-  medium: 'bg-yellow-100 text-yellow-800',
-  hard: 'bg-red-100 text-red-800',
-};
 
 const LaTeXContent: React.FC<{ content: string; isLatex: boolean }> = ({ content, isLatex }) => {
   if (!isLatex) {
@@ -76,10 +70,10 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({ flashcards, onDele
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">Flashcard Library</h2>
+        <h2 className="text-xl font-semibold" style={{ color: '#1F2937' }}>Flashcard Library</h2>
         <div className="flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-gray-500" />
-          <span className="text-sm text-gray-600">{filteredCards.length} cards</span>
+          <BookOpen className="w-5 h-5" style={{ color: '#6B7280' }} />
+          <span className="text-sm" style={{ color: '#6B7280' }}>{filteredCards.length} cards</span>
         </div>
       </div>
 
@@ -91,7 +85,7 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({ flashcards, onDele
               onClick={() => setSelectedCategory(category.value)}
               className="px-3 py-1 rounded-full text-sm font-medium transition-colors border"
               style={selectedCategory === category.value
-                ? { backgroundColor: '#dbeafe', color: '#3B82F6', borderColor: '#3B82F6' }
+                ? { backgroundColor: 'rgba(59, 130, 246, 0.1)', color: '#3B82F6', borderColor: '#3B82F6' }
                 : { backgroundColor: '#F3F4F6', color: '#6B7280', borderColor: '#D1D5DB' }
               }
             >
@@ -103,32 +97,34 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({ flashcards, onDele
 
       {filteredCards.length === 0 ? (
         <div className="text-center py-12">
-          <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No flashcards yet</h3>
-          <p className="text-gray-600">Create your first flashcard to get started!</p>
+          <BookOpen className="w-12 h-12 mx-auto mb-4" style={{ color: '#9CA3AF' }} />
+          <h3 className="text-lg font-medium mb-2" style={{ color: '#1F2937' }}>No flashcards yet</h3>
+          <p style={{ color: '#6B7280' }}>Create your first flashcard to get started!</p>
         </div>
       ) : (
         <div className="space-y-4">
           {filteredCards.map((card) => (
-            <div key={card.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+            <div key={card.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow bg-white">
               {editingId === card.id ? (
                 <div className="space-y-4">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Front</label>
+                      <label className="block text-sm font-medium mb-1" style={{ color: '#1F2937' }}>Front</label>
                       <textarea
                         value={editForm.front}
                         onChange={(e) => setEditForm({ ...editForm, front: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:border-transparent"
+                        style={{ '--tw-ring-color': '#3B82F6' } as React.CSSProperties}
                         rows={2}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Back</label>
+                      <label className="block text-sm font-medium mb-1" style={{ color: '#1F2937' }}>Back</label>
                       <textarea
                         value={editForm.back}
                         onChange={(e) => setEditForm({ ...editForm, back: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:border-transparent"
+                        style={{ '--tw-ring-color': '#3B82F6' } as React.CSSProperties}
                         rows={2}
                       />
                     </div>
@@ -167,7 +163,8 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({ flashcards, onDele
                     </button>
                     <button
                       onClick={handleCancelEdit}
-                      className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors"
+                      className="px-4 py-2 rounded-md hover:opacity-90 transition-opacity"
+                      style={{ backgroundColor: '#6B7280', color: '#FFFFFF' }}
                     >
                       Cancel
                     </button>
@@ -178,31 +175,37 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({ flashcards, onDele
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-2">
                       {card.isLatex ? (
-                        <FunctionSquare className="w-4 h-4 text-purple-600" />
+                        <FunctionSquare className="w-4 h-4" style={{ color: '#F43F5E' }} />
                       ) : (
-                        <Type className="w-4 h-4 text-gray-600" />
+                        <Type className="w-4 h-4" style={{ color: '#6B7280' }} />
                       )}
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        categories.find(c => c.value === card.category)?.color || 'bg-gray-100 text-gray-800'
-                      }`}>
+                      <span className="px-2 py-1 rounded-full text-xs font-medium" 
+                            style={{ backgroundColor: 'rgba(59, 130, 246, 0.1)', color: '#3B82F6' }}>
                         {categories.find(c => c.value === card.category)?.label || card.category}
                       </span>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${difficultyColors[card.difficulty]}`}>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium`}
+                            style={
+                              card.difficulty === 'easy' 
+                                ? { backgroundColor: 'rgba(16, 185, 129, 0.1)', color: '#10B981' }
+                                : card.difficulty === 'medium' 
+                                ? { backgroundColor: 'rgba(245, 158, 11, 0.1)', color: '#F59E0B' }
+                                : { backgroundColor: 'rgba(244, 63, 94, 0.1)', color: '#F43F5E' }
+                            }>
                         {card.difficulty}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleEdit(card)}
-                        className="p-1 text-gray-400 hover:opacity-80 transition-opacity"
-                        style={{ '--hover-color': '#3B82F6' }}
+                        className="p-1 hover:opacity-80 transition-opacity"
+                        style={{ color: '#6B7280' }}
                       >
                         <Edit3 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => onDelete(card.id)}
-                        className="p-1 text-gray-400 hover:opacity-80 transition-opacity"
-                        style={{ '--hover-color': '#F43F5E' }}
+                        className="p-1 hover:opacity-80 transition-opacity"
+                        style={{ color: '#F43F5E' }}
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -211,20 +214,20 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({ flashcards, onDele
 
                   <div className="grid md:grid-cols-2 gap-4 mb-4">
                     <div>
-                      <div className="text-sm font-medium text-gray-700 mb-1">Front:</div>
-                      <div className="text-gray-900 bg-gray-50 p-3 rounded-md min-h-[60px] flex items-center">
+                      <div className="text-sm font-medium mb-1" style={{ color: '#1F2937' }}>Front:</div>
+                      <div className="p-3 rounded-md min-h-[60px] flex items-center" style={{ backgroundColor: '#F9FAFB', color: '#1F2937' }}>
                         <LaTeXContent content={card.front} isLatex={card.isLatex} />
                       </div>
                     </div>
                     <div>
-                      <div className="text-sm font-medium text-gray-700 mb-1">Back:</div>
-                      <div className="text-gray-900 bg-gray-50 p-3 rounded-md min-h-[60px] flex items-center">
+                      <div className="text-sm font-medium mb-1" style={{ color: '#1F2937' }}>Back:</div>
+                      <div className="p-3 rounded-md min-h-[60px] flex items-center" style={{ backgroundColor: '#F9FAFB', color: '#1F2937' }}>
                         <LaTeXContent content={card.back} isLatex={card.isLatex} />
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between text-sm text-gray-600">
+                  <div className="flex items-center justify-between text-sm" style={{ color: '#6B7280' }}>
                     <div className="flex items-center gap-4">
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
@@ -238,7 +241,7 @@ export const FlashcardList: React.FC<FlashcardListProps> = ({ flashcards, onDele
                       )}
                     </div>
                     <div className="flex items-center gap-1">
-                      <Target className="w-4 h-4" />
+                      <ChartBarIcon className="w-4 h-4" />
                       <span>Accuracy: {getAccuracy(card)}%</span>
                     </div>
                   </div>
