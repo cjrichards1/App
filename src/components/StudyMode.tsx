@@ -110,15 +110,17 @@ export const StudyMode: React.FC<StudyModeProps> = ({
 
   if (shuffledCards.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#F3F4F6' }}>
-        <div className="bg-white rounded-2xl shadow-xl p-8 text-center max-w-md w-full">
-          <Trophy className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold mb-2" style={{ color: '#1F2937' }}>No Cards to Study</h2>
-          <p className="mb-6" style={{ color: '#6B7280' }}>Create some flashcards first to start studying!</p>
+      <div className="min-h-screen gradient-bg flex items-center justify-center p-4">
+        <div className="gradient-card rounded-3xl shadow-strong p-10 text-center max-w-lg w-full">
+          <div className="p-4 rounded-2xl gradient-secondary shadow-colored-secondary mx-auto mb-6 w-fit">
+            <Trophy className="w-20 h-20 text-white" />
+          </div>
+          <h2 className="text-3xl font-bold mb-4 text-gradient">No Cards to Study</h2>
+          <p className="mb-8 text-lg" style={{ color: '#6B7280' }}>Create some flashcards first to start studying!</p>
           <button
             onClick={onBack}
-            className="text-white px-6 py-3 rounded-lg hover:opacity-90 transition-opacity"
-            style={{ backgroundColor: '#3B82F6' }}
+            className="text-white px-8 py-4 rounded-xl transition-all duration-300 btn-scale shadow-colored-primary text-lg font-semibold"
+            style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)' }}
           >
             Go Back
           </button>
@@ -129,46 +131,48 @@ export const StudyMode: React.FC<StudyModeProps> = ({
 
   if (isComplete) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#F3F4F6' }}>
-        <div className="bg-white rounded-2xl shadow-xl p-8 text-center max-w-md w-full">
-          <Trophy className="w-16 h-16 mx-auto mb-4" style={{ color: '#10B981' }} />
-          <h2 className="text-2xl font-bold mb-2" style={{ color: '#1F2937' }}>Session Complete!</h2>
-          <p className="mb-6" style={{ color: '#6B7280' }}>Great job studying your flashcards!</p>
+      <div className="min-h-screen gradient-bg flex items-center justify-center p-4">
+        <div className="gradient-card rounded-3xl shadow-strong p-10 text-center max-w-lg w-full">
+          <div className="p-4 rounded-2xl gradient-accent shadow-colored-accent mx-auto mb-6 w-fit float">
+            <Trophy className="w-20 h-20 text-white" />
+          </div>
+          <h2 className="text-3xl font-bold mb-4 text-gradient">Session Complete!</h2>
+          <p className="mb-8 text-lg" style={{ color: '#6B7280' }}>Great job studying your flashcards!</p>
           
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="p-4 rounded-lg" style={{ backgroundColor: '#d1fae5' }}>
-              <div className="text-2xl font-bold" style={{ color: '#10B981' }}>{session.correctAnswers}</div>
-              <div className="text-sm" style={{ color: '#10B981' }}>Correct</div>
+          <div className="grid grid-cols-2 gap-6 mb-8">
+            <div className="p-6 rounded-2xl shadow-soft" style={{ backgroundColor: '#d1fae5' }}>
+              <div className="text-3xl font-bold" style={{ color: '#10B981' }}>{session.correctAnswers}</div>
+              <div className="text-sm font-medium" style={{ color: '#10B981' }}>Correct</div>
             </div>
-            <div className="p-4 rounded-lg" style={{ backgroundColor: '#fdf2f8' }}>
-              <div className="text-2xl font-bold" style={{ color: '#F43F5E' }}>{session.incorrectAnswers}</div>
-              <div className="text-sm" style={{ color: '#F43F5E' }}>Incorrect</div>
+            <div className="p-6 rounded-2xl shadow-soft" style={{ backgroundColor: '#fdf2f8' }}>
+              <div className="text-3xl font-bold" style={{ color: '#F43F5E' }}>{session.incorrectAnswers}</div>
+              <div className="text-sm font-medium" style={{ color: '#F43F5E' }}>Incorrect</div>
             </div>
-            <div className="p-4 rounded-lg" style={{ backgroundColor: '#dbeafe' }}>
-              <div className="text-2xl font-bold" style={{ color: '#3B82F6' }}>{getAccuracy()}%</div>
-              <div className="text-sm" style={{ color: '#3B82F6' }}>Accuracy</div>
+            <div className="p-6 rounded-2xl shadow-soft" style={{ backgroundColor: '#dbeafe' }}>
+              <div className="text-3xl font-bold" style={{ color: '#3B82F6' }}>{getAccuracy()}%</div>
+              <div className="text-sm font-medium" style={{ color: '#3B82F6' }}>Accuracy</div>
             </div>
-            <div className="p-4 rounded-lg" style={{ backgroundColor: '#fbcfe8' }}>
-              <div className="text-2xl font-bold" style={{ color: '#F43F5E' }}>{getSessionDuration()}</div>
-              <div className="text-sm" style={{ color: '#F43F5E' }}>Minutes</div>
+            <div className="p-6 rounded-2xl shadow-soft" style={{ backgroundColor: '#fbcfe8' }}>
+              <div className="text-3xl font-bold" style={{ color: '#F43F5E' }}>{getSessionDuration()}</div>
+              <div className="text-sm font-medium" style={{ color: '#F43F5E' }}>Minutes</div>
             </div>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex gap-4">
             <button
               onClick={resetSession}
-              className="flex-1 text-white px-4 py-3 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
-              style={{ backgroundColor: '#3B82F6' }}
+              className="flex-1 text-white px-6 py-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 btn-scale shadow-colored-primary font-semibold"
+              style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)' }}
             >
-              <RotateCcw className="w-4 h-4" />
+              <RotateCcw className="w-5 h-5" />
               Study Again
             </button>
             <button
               onClick={onBack}
-              className="flex-1 px-4 py-3 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
-              style={{ backgroundColor: '#F3F4F6', color: '#1F2937' }}
+              className="flex-1 px-6 py-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 btn-scale shadow-soft font-semibold"
+              style={{ backgroundColor: '#F8FAFC', color: '#1F2937' }}
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-5 h-5" />
               Back to Library
             </button>
           </div>
@@ -178,72 +182,76 @@ export const StudyMode: React.FC<StudyModeProps> = ({
   }
 
   return (
-    <div className="min-h-screen p-4" style={{ backgroundColor: '#F3F4F6' }}>
+    <div className="min-h-screen gradient-bg p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-8">
           <button
             onClick={onBack}
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+            className="flex items-center gap-3 hover:opacity-80 transition-all duration-300 btn-scale px-4 py-2 rounded-xl"
             style={{ color: '#6B7280' }}
           >
-            <ArrowLeft className="w-5 h-5" />
-            Back to Library
+            <ArrowLeft className="w-6 h-6" />
+            <span className="font-medium">Back to Library</span>
           </button>
           
-          <div className="flex items-center gap-6 text-sm" style={{ color: '#6B7280' }}>
-            <div className="flex items-center gap-1">
-              <Target className="w-4 h-4" />
+          <div className="flex items-center gap-8 text-lg font-medium" style={{ color: '#6B7280' }}>
+            <div className="flex items-center gap-2">
+              <Target className="w-5 h-5" />
               <span>{getAccuracy()}% accuracy</span>
             </div>
-            <div className="flex items-center gap-1">
-              <Clock className="w-4 h-4" />
+            <div className="flex items-center gap-2">
+              <Clock className="w-5 h-5" />
               <span>{getSessionDuration()} min</span>
             </div>
           </div>
         </div>
 
         {/* Progress Bar */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium" style={{ color: '#1F2937' }}>
+        <div className="mb-10">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-lg font-semibold" style={{ color: '#1F2937' }}>
               Card {currentIndex + 1} of {shuffledCards.length}
             </span>
-            <span className="text-sm" style={{ color: '#6B7280' }}>
+            <span className="text-lg font-medium" style={{ color: '#6B7280' }}>
               {session.correctAnswers} correct, {session.incorrectAnswers} incorrect
             </span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 rounded-full h-3 shadow-soft">
             <div
-              className="h-2 rounded-full transition-all duration-300"
-              style={{ backgroundColor: '#3B82F6' }}
+              className="h-3 rounded-full progress-bar shadow-colored-primary"
+              style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)' }}
               style={{ width: `${((currentIndex + 1) / shuffledCards.length) * 100}%` }}
             />
           </div>
         </div>
 
         {/* Flashcard */}
-        <div className="relative mb-8">
+        <div className="relative mb-10">
           <div
-            className={`bg-white rounded-2xl shadow-xl p-8 min-h-[400px] cursor-pointer transition-transform duration-300 ${
+            className={`gradient-card rounded-3xl shadow-strong p-10 min-h-[450px] cursor-pointer transition-all duration-500 card-hover ${
               isFlipped ? 'transform rotateY-180' : ''
             }`}
             onClick={() => setIsFlipped(!isFlipped)}
           >
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-3">
                 {currentCard?.isLatex ? (
-                  <FunctionSquare className="w-5 h-5" style={{ color: '#F43F5E' }} />
+                  <div className="p-2 rounded-lg gradient-secondary shadow-colored-secondary">
+                    <FunctionSquare className="w-6 h-6 text-white" />
+                  </div>
                 ) : (
-                  <Type className="w-5 h-5" style={{ color: '#6B7280' }} />
+                  <div className="p-2 rounded-lg" style={{ backgroundColor: '#F8FAFC' }}>
+                    <Type className="w-6 h-6" style={{ color: '#6B7280' }} />
+                  </div>
                 )}
-                <span className="text-sm font-medium" style={{ color: '#6B7280' }}>
+                <span className="text-lg font-semibold" style={{ color: '#6B7280' }}>
                   {isFlipped ? 'Answer' : 'Question'}
                 </span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <span 
-                  className="px-3 py-1 rounded-full text-xs font-medium"
+                  className="px-4 py-2 rounded-full text-sm font-semibold shadow-soft"
                   style={
                     currentCard?.difficulty === 'easy' 
                       ? { backgroundColor: '#d1fae5', color: '#10B981' }
@@ -254,14 +262,14 @@ export const StudyMode: React.FC<StudyModeProps> = ({
                 >
                   {currentCard?.difficulty}
                 </span>
-                <span className="px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F3F4F6', color: '#1F2937' }}>
+                <span className="px-4 py-2 rounded-full text-sm font-semibold shadow-soft" style={{ backgroundColor: '#F8FAFC', color: '#1F2937' }}>
                   {currentCard?.category}
                 </span>
               </div>
             </div>
 
             <div className="flex items-center justify-center min-h-[250px] text-center">
-              <div className="text-xl leading-relaxed">
+              <div className="text-2xl leading-relaxed">
                 {currentCard && (
                   <LaTeXContent 
                     content={isFlipped ? currentCard.back : currentCard.front}
@@ -272,7 +280,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({
               </div>
             </div>
 
-            <div className="text-center text-sm text-gray-500 mt-6">
+            <div className="text-center text-lg font-medium mt-8" style={{ color: '#6B7280' }}>
               {isFlipped ? 'Rate your answer' : 'Click to reveal answer'}
             </div>
           </div>
@@ -280,21 +288,21 @@ export const StudyMode: React.FC<StudyModeProps> = ({
 
         {/* Answer Buttons */}
         {isFlipped && (
-          <div className="flex gap-4 justify-center">
+          <div className="flex gap-6 justify-center">
             <button
               onClick={() => handleAnswer(false)}
-              className="flex items-center gap-2 text-white px-8 py-4 rounded-xl hover:opacity-90 transition-opacity text-lg font-medium"
-              style={{ backgroundColor: '#F43F5E' }}
+              className="flex items-center gap-3 text-white px-10 py-5 rounded-2xl transition-all duration-300 text-xl font-semibold btn-scale shadow-colored-secondary"
+              style={{ background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)' }}
             >
-              <XCircle className="w-6 h-6" />
+              <XCircle className="w-7 h-7" />
               Incorrect
             </button>
             <button
               onClick={() => handleAnswer(true)}
-              className="flex items-center gap-2 text-white px-8 py-4 rounded-xl hover:opacity-90 transition-opacity text-lg font-medium"
-              style={{ backgroundColor: '#10B981' }}
+              className="flex items-center gap-3 text-white px-10 py-5 rounded-2xl transition-all duration-300 text-xl font-semibold btn-scale shadow-colored-accent"
+              style={{ background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)' }}
             >
-              <CheckCircle className="w-6 h-6" />
+              <CheckCircle className="w-7 h-7" />
               Correct
             </button>
           </div>
