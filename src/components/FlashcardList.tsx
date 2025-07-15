@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Trash2, Edit3, BookOpen, Calendar, Target, Function, Type } from 'lucide-react';
+import { Trash2, Edit3, BookOpen, Calendar, Target, FunctionSquare, Type } from 'lucide-react';
 import { Flashcard } from '../types/flashcard';
 import { InlineMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
