@@ -1,4 +1,13 @@
 {
+  "name": "flashcard-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@types/katex": "^0.16.7",
     "katex": "^0.16.22",
