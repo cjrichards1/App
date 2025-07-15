@@ -27,7 +27,9 @@ function App() {
     deleteFolder,
     moveCardToFolder,
     addCategory,
-    deleteCategory
+    deleteCategory,
+    markAnswer,
+    saveStudySession
   } = useFlashcards();
 
   const [showCategoryForm, setShowCategoryForm] = useState(false);
