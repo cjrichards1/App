@@ -118,9 +118,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <div className="container">
           {/* Welcome Message */}
           <div className={`hero-welcome ${isVisible ? 'animate-in' : ''}`}>
-            <div className="welcome-icon">
-              <SparklesIcon className="icon" />
-            </div>
             <h1 className="welcome-title">
               Welcome back, <span className="name-highlight">{userName}</span>!
             </h1>
