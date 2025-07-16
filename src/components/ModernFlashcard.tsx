@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { 
   SparklesIcon, 
   CommandLineIcon, 
   DocumentTextIcon,
   CheckCircleIcon,
   XCircleIcon,
-  LightBulbIcon
+  LightBulbIcon,
+  ArrowPathIcon
 } from '@heroicons/react/24/outline';
 import { InlineMath, BlockMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
@@ -21,41 +22,9 @@ interface ModernFlashcardProps {
   className?: string;
 }
 
-interface LaTeXContentProps {
-  content: string;
-  isLatex?: boolean;
-  isBlock?: boolean;
-}
-
-interface DifficultyStyles {
-  bg: string;
-  border: string;
-  text: string;
-  glow: string;
-}
-
-const LaTeXContent = ({ 
-  content, 
-  isLatex = false,
-  isBlock = false 
-}: LaTeXContentProps) => {
-  if (!isLatex) return <div>{content}</div>;
-  return isBlock ? <BlockMath>{content}</BlockMath> : <InlineMath>{content}</InlineMath>;
-};
-
-export const ModernFlashcard = ({
-  front,
-  back,
-  category,
-  difficulty,
-  isLatex = false,
-  onAnswer,
-  className = ""
-}: ModernFlashcardProps) => {
-  const [isFlipped, setIsFlipped] = useState(false);
-  const [isAnswered, setIsAnswered] = useState(false);
-
-  const getDifficultyStyles = (): DifficultyStyles => {
+// Memoized difficulty styles
+const useDifficultyStyles = (difficulty: 'easy' | 'medium' | 'hard') => {
+  return useMemo(() => {
     switch (difficulty) {
       case 'easy':
         return {
@@ -86,29 +55,82 @@ export const ModernFlashcard = ({
           glow: 'shadow-glow-primary'
         };
     }
-  };
+  }, [difficulty]);
+};
 
-  const difficultyStyles = getDifficultyStyles();
+// Memoized content component
+const CardContent = React.memo(({ content, isLatex }: { content: string; isLatex: boolean }) => (
+  <div className="text-xl font-medium text-gray-800">
+    {isLatex ? <InlineMath math={content} /> : content}
+  </div>
+));
 
-  const handleAnswer = (correct: boolean) => {
-    setIsAnswered(true);
-    onAnswer?.(correct);
-    
-    // Reset after animation
-    setTimeout(() => {
-      setIsAnswered(false);
-      setIsFlipped(false);
-    }, 1500);
-  };
+// Memoized icon component
+const CardIcon = React.memo(({ isLatex }: { isLatex: boolean }) => (
+  isLatex ? (
+    <div className="type-icon latex-icon pulse-gentle">
+      <CommandLineIcon className="icon" />
+    </div>
+  ) : (
+    <div className="type-icon text-icon pulse-gentle">
+      <DocumentTextIcon className="icon" />
+    </div>
+  )
+));
 
-  const handleCardClick = () => {
+export const ModernFlashcard = ({
+  front,
+  back,
+  category,
+  difficulty,
+  isLatex = false,
+  onAnswer,
+  className = ""
+}: ModernFlashcardProps) => {
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [isAnswered, setIsAnswered] = useState(false);
+  const [isFlipping, setIsFlipping] = useState(false);
+
+  const difficultyStyles = useDifficultyStyles(difficulty);
+
+  const handleCardClick = useCallback(() => {
     if (!isAnswered) {
+      setIsFlipping(true);
       setIsFlipped(!isFlipped);
+      // Reset flipping state after animation completes
+      setTimeout(() => setIsFlipping(false), 800);
     }
-  };
+  }, [isAnswered, isFlipped]);
+
+  const handleAnswer = useCallback((correct: boolean) => {
+    // Batch state updates
+    const batchUpdate = () => {
+      setIsAnswered(true);
+      onAnswer?.(correct);
+      
+      // Reset after animation
+      setTimeout(() => {
+        setIsAnswered(false);
+        setIsFlipped(false);
+      }, 1500);
+    };
+
+    // Use requestAnimationFrame for smoother transitions
+    requestAnimationFrame(batchUpdate);
+  }, [onAnswer]);
 
   return (
-    <div className={`flip-card-container ${className}`}>
+    <div 
+      className={`flip-card-container ${className} ${isFlipping ? 'no-hover' : ''}`}
+      role="button"
+      aria-label={isFlipped ? "Click to see question" : "Click to see answer"}
+      tabIndex={0}
+      onKeyPress={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          handleCardClick();
+        }
+      }}
+    >
       <div 
         className={`flip-card hardware-accelerated ${isFlipped ? 'flipped' : ''} ${isAnswered ? 'pulse-gentle' : ''}`}
         onClick={handleCardClick}
@@ -117,15 +139,7 @@ export const ModernFlashcard = ({
         <div className="flip-card-face hover-lift shine">
           <div className="flashcard-header">
             <div className="flashcard-type-indicator">
-              {isLatex ? (
-                <div className="type-icon latex-icon pulse-gentle">
-                  <CommandLineIcon className="icon" />
-                </div>
-              ) : (
-                <div className="type-icon text-icon pulse-gentle">
-                  <DocumentTextIcon className="icon" />
-                </div>
-              )}
+              <CardIcon isLatex={isLatex} />
               <span className="badge type-label">Question</span>
             </div>
             
@@ -142,9 +156,7 @@ export const ModernFlashcard = ({
           </div>
 
           <div className="flashcard-content">
-            <div className={`content-text ${isLatex ? 'latex-content' : 'flashcard-question'}`}>
-              <LaTeXContent content={front} isLatex={isLatex} />
-            </div>
+            <CardContent content={front} isLatex={isLatex} />
           </div>
 
           <div className="flashcard-footer">
@@ -152,8 +164,8 @@ export const ModernFlashcard = ({
               {category}
             </div>
             <div className="flip-hint pulse-gentle">
-              <SparklesIcon className="icon" />
-              <span>Click to reveal</span>
+              <ArrowPathIcon className="icon rotate-animation" />
+              <span>Tap to flip</span>
             </div>
           </div>
         </div>
@@ -174,8 +186,13 @@ export const ModernFlashcard = ({
           </div>
 
           <div className="flashcard-content">
-            <div className="content-text">
-              <LaTeXContent content={back} isLatex={isLatex} />
+            <CardContent content={back} isLatex={isLatex} />
+          </div>
+
+          <div className="flashcard-footer">
+            <div className="flip-hint pulse-gentle">
+              <ArrowPathIcon className="icon rotate-animation" />
+              <span>Tap to flip back</span>
             </div>
           </div>
 

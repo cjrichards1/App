@@ -71,6 +71,13 @@
   perspective: 1000px;
   width: 100%;
   height: 100%;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.flip-card-container.no-hover {
+  pointer-events: none;
 }
 
 .flip-card {
@@ -92,10 +99,25 @@
   height: 100%;
   backface-visibility: hidden;
   transform: translateZ(0); /* Hardware acceleration */
+  transition: all 0.3s ease;
 }
 
 .flip-card-back {
   transform: rotateY(180deg);
+}
+
+/* Rotate animation for flip icon */
+.rotate-animation {
+  animation: rotate 2s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(180deg); }
+  50% { transform: rotate(180deg); }
+  75% { transform: rotate(360deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Enhanced flip with scale */

@@ -4,14 +4,21 @@ import { Dashboard } from './components/Dashboard';
 import { FlashcardForm } from './components/FlashcardForm';
 import { StudyMode } from './components/StudyMode';
 import { FolderView } from './components/FolderView';
+import { Auth } from './components/Auth';
 import { useFlashcards } from './hooks/useFlashcards';
 import { Flashcard, Folder } from './types/flashcard';
 
 type View = 'dashboard' | 'create' | 'study' | 'folder';
 
+interface User {
+  name?: string;
+  email: string;
+}
+
 function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
   const [selectedFolderId, setSelectedFolderId] = useState<string>('');
+  const [user, setUser] = useState<User | null>(null);
   
   const {
     flashcards,
@@ -33,6 +40,14 @@ function App() {
   const handleBackToHome = () => {
     setCurrentView('dashboard');
     setSelectedFolderId('');
+  };
+
+  const handleAuthSuccess = (userData: User) => {
+    setUser(userData);
+  };
+
+  const handleLogout = () => {
+    setUser(null);
   };
 
   const renderCurrentView = () => {
@@ -84,6 +99,10 @@ function App() {
     }
   };
 
+  if (!user) {
+    return <Auth onAuthSuccess={handleAuthSuccess} />;
+  }
+
   return (
     <div className="flex flex-col h-screen bg-gray-100">
       <Header
@@ -94,6 +113,8 @@ function App() {
         onAddFolder={addFolder}
         onUpdateFolder={updateFolder}
         onDeleteFolder={deleteFolder}
+        user={user}
+        onLogout={handleLogout}
       />
       {renderCurrentView()}
     </div>

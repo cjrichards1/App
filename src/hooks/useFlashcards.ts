@@ -1,10 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Flashcard, StudySession, FlashcardStats, Folder } from '../types/flashcard';
+
+// Simple debounce implementation
+function debounce<T extends (...args: any[]) => void>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: ReturnType<typeof setTimeout> | null = null;
+  return (...args: Parameters<T>) => {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
 
 const STORAGE_KEY = 'flashcards';
 const SESSIONS_KEY = 'study-sessions';
 const FOLDERS_KEY = 'folders';
 const CATEGORIES_KEY = 'categories';
+const BATCH_SIZE = 20;
 
 export const useFlashcards = () => {
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
@@ -18,20 +31,39 @@ export const useFlashcards = () => {
     'history'
   ]);
 
-  useEffect(() => {
+  // Memoize storage operations
+  const debouncedSave = useMemo(() => 
+    debounce((data: unknown, key: string) => {
+      localStorage.setItem(key, JSON.stringify(data));
+    }, 1000),
+    []
+  );
+
+  // Progressive loading of flashcards
+  const loadFlashcards = useCallback(async () => {
     const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const allCards = JSON.parse(stored);
+      // Load cards in batches
+      for (let i = 0; i < allCards.length; i += BATCH_SIZE) {
+        const batch = allCards.slice(i, i + BATCH_SIZE).map((card: any) => ({
+          ...card,
+          createdAt: new Date(card.createdAt),
+          lastStudied: card.lastStudied ? new Date(card.lastStudied) : undefined,
+        }));
+        setFlashcards((prev: Flashcard[]) => [...prev, ...batch]);
+        await new Promise(resolve => setTimeout(resolve, 0));
+      }
+    }
+  }, []);
+
+  // Initial data loading
+  useEffect(() => {
+    loadFlashcards();
+    
     const storedSessions = localStorage.getItem(SESSIONS_KEY);
     const storedFolders = localStorage.getItem(FOLDERS_KEY);
     const storedCategories = localStorage.getItem(CATEGORIES_KEY);
-    
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      setFlashcards(parsed.map((card: any) => ({
-        ...card,
-        createdAt: new Date(card.createdAt),
-        lastStudied: card.lastStudied ? new Date(card.lastStudied) : undefined,
-      })));
-    }
     
     if (storedSessions) {
       const parsed = JSON.parse(storedSessions);
@@ -53,23 +85,24 @@ export const useFlashcards = () => {
     if (storedCategories) {
       setCategories(JSON.parse(storedCategories));
     }
-  }, []);
+  }, [loadFlashcards]);
 
-  const saveCategories = (newCategories: string[]) => {
-    localStorage.setItem(CATEGORIES_KEY, JSON.stringify(newCategories));
+  const saveCategories = useCallback((newCategories: string[]) => {
+    debouncedSave(newCategories, CATEGORIES_KEY);
     setCategories(newCategories);
-  };
-  const saveFolders = (newFolders: Folder[]) => {
-    localStorage.setItem(FOLDERS_KEY, JSON.stringify(newFolders));
+  }, [debouncedSave]);
+
+  const saveFolders = useCallback((newFolders: Folder[]) => {
+    debouncedSave(newFolders, FOLDERS_KEY);
     setFolders(newFolders);
-  };
+  }, [debouncedSave]);
 
-  const saveFlashcards = (cards: Flashcard[]) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+  const saveFlashcards = useCallback((cards: Flashcard[]) => {
+    debouncedSave(cards, STORAGE_KEY);
     setFlashcards(cards);
-  };
+  }, [debouncedSave]);
 
-  const addFlashcard = (flashcard: Omit<Flashcard, 'id' | 'createdAt' | 'correctCount' | 'incorrectCount'>) => {
+  const addFlashcard = useCallback((flashcard: Omit<Flashcard, 'id' | 'createdAt' | 'correctCount' | 'incorrectCount'>) => {
     const newCard: Flashcard = {
       ...flashcard,
       id: crypto.randomUUID(),
@@ -78,23 +111,32 @@ export const useFlashcards = () => {
       incorrectCount: 0,
     };
     
-    const updated = [...flashcards, newCard];
-    saveFlashcards(updated);
-  };
+    setFlashcards((prev: Flashcard[]) => {
+      const updated = [...prev, newCard];
+      debouncedSave(updated, STORAGE_KEY);
+      return updated;
+    });
+  }, [debouncedSave]);
 
-  const updateFlashcard = (id: string, updates: Partial<Flashcard>) => {
-    const updated = flashcards.map(card => 
-      card.id === id ? { ...card, ...updates } : card
-    );
-    saveFlashcards(updated);
-  };
+  const updateFlashcard = useCallback((id: string, updates: Partial<Flashcard>) => {
+    setFlashcards((prev: Flashcard[]) => {
+      const updated = prev.map((card: Flashcard) => 
+        card.id === id ? { ...card, ...updates } : card
+      );
+      debouncedSave(updated, STORAGE_KEY);
+      return updated;
+    });
+  }, [debouncedSave]);
 
-  const deleteFlashcard = (id: string) => {
-    const updated = flashcards.filter(card => card.id !== id);
-    saveFlashcards(updated);
-  };
+  const deleteFlashcard = useCallback((id: string) => {
+    setFlashcards((prev: Flashcard[]) => {
+      const updated = prev.filter((card: Flashcard) => card.id !== id);
+      debouncedSave(updated, STORAGE_KEY);
+      return updated;
+    });
+  }, [debouncedSave]);
 
-  const addFolder = (name: string, color: string) => {
+  const addFolder = useCallback((name: string, color: string) => {
     const newFolder: Folder = {
       id: crypto.randomUUID(),
       name,
@@ -103,113 +145,143 @@ export const useFlashcards = () => {
       cardCount: 0,
     };
     
-    const updated = [...folders, newFolder];
-    saveFolders(updated);
+    setFolders((prev: Folder[]) => {
+      const updated = [...prev, newFolder];
+      debouncedSave(updated, FOLDERS_KEY);
+      return updated;
+    });
     return newFolder.id;
-  };
+  }, [debouncedSave]);
 
-  const updateFolder = (id: string, updates: Partial<Folder>) => {
-    const updated = folders.map(folder => 
-      folder.id === id ? { ...folder, ...updates } : folder
-    );
-    saveFolders(updated);
-  };
+  const updateFolder = useCallback((id: string, updates: Partial<Folder>) => {
+    setFolders((prev: Folder[]) => {
+      const updated = prev.map((folder: Folder) => 
+        folder.id === id ? { ...folder, ...updates } : folder
+      );
+      debouncedSave(updated, FOLDERS_KEY);
+      return updated;
+    });
+  }, [debouncedSave]);
 
-  const deleteFolder = (id: string) => {
+  const deleteFolder = useCallback((id: string) => {
     // Move all cards from this folder to "uncategorized"
-    const updatedCards = flashcards.map(card => 
-      card.folderId === id ? { ...card, folderId: undefined } : card
-    );
-    saveFlashcards(updatedCards);
+    setFlashcards((prev: Flashcard[]) => {
+      const updatedCards = prev.map((card: Flashcard) => 
+        card.folderId === id ? { ...card, folderId: undefined } : card
+      );
+      debouncedSave(updatedCards, STORAGE_KEY);
+      return updatedCards;
+    });
     
     // Delete the folder
-    const updated = folders.filter(folder => folder.id !== id);
-    saveFolders(updated);
-  };
+    setFolders((prev: Folder[]) => {
+      const updated = prev.filter((folder: Folder) => folder.id !== id);
+      debouncedSave(updated, FOLDERS_KEY);
+      return updated;
+    });
+  }, [debouncedSave]);
 
-  const addCategory = (name: string) => {
+  const addCategory = useCallback((name: string) => {
     if (!categories.includes(name)) {
-      const updated = [...categories, name];
-      saveCategories(updated);
+      setCategories((prev: string[]) => {
+        const updated = [...prev, name];
+        debouncedSave(updated, CATEGORIES_KEY);
+        return updated;
+      });
     }
-  };
+  }, [categories, debouncedSave]);
 
-  const deleteCategory = (categoryToDelete: string) => {
+  const deleteCategory = useCallback((categoryToDelete: string) => {
     // Move all cards from this category to "general"
-    const updatedCards = flashcards.map(card => 
-      card.category === categoryToDelete ? { ...card, category: 'general' } : card
-    );
-    saveFlashcards(updatedCards);
+    setFlashcards((prev: Flashcard[]) => {
+      const updatedCards = prev.map((card: Flashcard) => 
+        card.category === categoryToDelete ? { ...card, category: 'general' } : card
+      );
+      debouncedSave(updatedCards, STORAGE_KEY);
+      return updatedCards;
+    });
     
     // Delete the category
-    const updated = categories.filter(category => category !== categoryToDelete);
-    saveCategories(updated);
-  };
-  const moveCardToFolder = (cardId: string, folderId?: string) => {
-    const updated = flashcards.map(card => 
-      card.id === cardId ? { ...card, folderId } : card
-    );
-    saveFlashcards(updated);
-    
-    // Update folder card counts
-    updateFolderCounts();
-  };
+    setCategories((prev: string[]) => {
+      const updated = prev.filter(category => category !== categoryToDelete);
+      debouncedSave(updated, CATEGORIES_KEY);
+      return updated;
+    });
+  }, [debouncedSave]);
 
-  const updateFolderCounts = () => {
-    const updated = folders.map(folder => ({
-      ...folder,
-      cardCount: flashcards.filter(card => card.folderId === folder.id).length,
-    }));
-    saveFolders(updated);
-  };
+  const moveCardToFolder = useCallback((cardId: string, folderId?: string) => {
+    setFlashcards((prev: Flashcard[]) => {
+      const updated = prev.map((card: Flashcard) => 
+        card.id === cardId ? { ...card, folderId } : card
+      );
+      debouncedSave(updated, STORAGE_KEY);
+      return updated;
+    });
+  }, [debouncedSave]);
 
-  // Update folder counts whenever flashcards change
+  const updateFolderCounts = useCallback(() => {
+    setFolders((prev: Folder[]) => {
+      const updated = prev.map(folder => ({
+        ...folder,
+        cardCount: flashcards.filter(card => card.folderId === folder.id).length,
+      }));
+      debouncedSave(updated, FOLDERS_KEY);
+      return updated;
+    });
+  }, [flashcards, debouncedSave]);
+
+  // Update folder counts when flashcards change
   useEffect(() => {
     if (folders.length > 0) {
       updateFolderCounts();
     }
-  }, [flashcards.length]);
+  }, [folders.length, updateFolderCounts]);
 
-  const markAnswer = (id: string, correct: boolean) => {
-    const updated = flashcards.map(card => {
-      if (card.id === id) {
-        return {
-          ...card,
-          lastStudied: new Date(),
-          correctCount: correct ? card.correctCount + 1 : card.correctCount,
-          incorrectCount: correct ? card.incorrectCount : card.incorrectCount + 1,
-        };
-      }
-      return card;
+  const markAnswer = useCallback((id: string, correct: boolean) => {
+    setFlashcards((prev: Flashcard[]) => {
+      const updated = prev.map((card: Flashcard) => {
+        if (card.id === id) {
+          return {
+            ...card,
+            lastStudied: new Date(),
+            correctCount: correct ? card.correctCount + 1 : card.correctCount,
+            incorrectCount: correct ? card.incorrectCount : card.incorrectCount + 1,
+          };
+        }
+        return card;
+      });
+      debouncedSave(updated, STORAGE_KEY);
+      return updated;
     });
-    saveFlashcards(updated);
-  };
+  }, [debouncedSave]);
 
-  const saveStudySession = (session: StudySession) => {
-    const updated = [...studySessions, session];
-    localStorage.setItem(SESSIONS_KEY, JSON.stringify(updated));
-    setStudySessions(updated);
-  };
+  const saveStudySession = useCallback((session: StudySession) => {
+    setStudySessions((prev: StudySession[]) => {
+      const updated = [...prev, session];
+      debouncedSave(updated, SESSIONS_KEY);
+      return updated;
+    });
+  }, [debouncedSave]);
 
-  const getStats = (): FlashcardStats => {
+  const getStats = useCallback((): FlashcardStats => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    const studiedToday = flashcards.filter(card => 
+    const studiedToday = flashcards.filter((card: Flashcard) => 
       card.lastStudied && card.lastStudied >= today
     ).length;
 
-    const totalAttempts = flashcards.reduce((sum, card) => 
+    const totalAttempts = flashcards.reduce((sum: number, card: Flashcard) => 
       sum + card.correctCount + card.incorrectCount, 0
     );
     
-    const totalCorrect = flashcards.reduce((sum, card) => 
+    const totalCorrect = flashcards.reduce((sum: number, card: Flashcard) => 
       sum + card.correctCount, 0
     );
 
     const averageAccuracy = totalAttempts > 0 ? (totalCorrect / totalAttempts) * 100 : 0;
 
-    const categoryBreakdown = flashcards.reduce((acc, card) => {
+    const categoryBreakdown = flashcards.reduce((acc: Record<string, number>, card: Flashcard) => {
       acc[card.category] = (acc[card.category] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
@@ -220,7 +292,7 @@ export const useFlashcards = () => {
       averageAccuracy,
       categoryBreakdown,
     };
-  };
+  }, [flashcards]);
 
   return {
     flashcards,
