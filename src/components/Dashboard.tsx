@@ -11,6 +11,7 @@ interface DashboardProps {
   onCreateCard: () => void;
   onCreateFolder: () => void;
   onStudy: () => void;
+  user: { name?: string; email: string };
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({
@@ -19,7 +20,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
   onNavigateToFolder,
   onCreateCard,
   onCreateFolder,
-  onStudy
+  onStudy,
+  user
 }: DashboardProps) => {
   // Calculate statistics
   const totalCards = flashcards.length;
@@ -30,6 +32,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const accuracyRate = totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 100) : 0;
   const masteredCards = flashcards.filter(card => card.correctCount >= 3).length; // Consider a card mastered if correctly answered 3+ times
 
+  // Get display name - use name if available, otherwise use email
+  const displayName = user.name || user.email.split('@')[0];
   return (
     <div className="dashboard-container flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8">
       {/* FlashVibe Title */}
@@ -41,7 +45,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
       
       {/* Hero Section */}
       <HeroSection
-        userName="Alex"
+        userName={displayName}
         studyStreak={15}
         totalCards={totalCards}
         cardsStudied={studiedCards}

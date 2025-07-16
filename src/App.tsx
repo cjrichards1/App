@@ -104,6 +104,7 @@ function App() {
             onCreateCard={() => setCurrentView('create')}
             onStudy={() => setCurrentView('study')}
             onCreateFolder={handleCreateFolder}
+            user={user}
           />
         );
       case 'create':
