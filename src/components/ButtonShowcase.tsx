@@ -9,7 +9,7 @@ import {
   SparklesIcon,
   BookmarkIcon,
   ShareIcon,
-  DownloadIcon,
+  ArrowDownTrayIcon,
   PlayIcon,
   PauseIcon,
   StopIcon,
@@ -96,7 +96,7 @@ export const ButtonShowcase: React.FC = () => {
                 Large
               </button>
               <button className="btn btn-secondary btn-xl">
-                <DownloadIcon className="w-6 h-6" />
+                <ArrowDownTrayIcon className="w-6 h-6" />
                 Extra Large
               </button>
             </div>
@@ -170,7 +170,7 @@ export const ButtonShowcase: React.FC = () => {
                 Share
               </button>
               <button className="btn btn-ghost btn-md" disabled>
-                <DownloadIcon className="w-4 h-4" />
+                <ArrowDownTrayIcon className="w-4 h-4" />
                 Disabled
               </button>
             </div>
@@ -241,7 +241,7 @@ export const ButtonShowcase: React.FC = () => {
                 className={`btn btn-outline btn-md ${loadingStates.outline ? 'btn-loading' : ''}`}
                 onClick={() => toggleLoading('outline')}
               >
-                {!loadingStates.outline && <DownloadIcon className="w-4 h-4" />}
+                {!loadingStates.outline && <ArrowDownTrayIcon className="w-4 h-4" />}
                 Outline Loading
               </button>
               <button 
