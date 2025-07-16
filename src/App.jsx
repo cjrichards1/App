@@ -8,7 +8,6 @@ interface FlashcardFormProps {
   folders: Folder[];
   categories: string[];
   onBack: () => void;
-  onBack: () => void;
   onAdd: (flashcard: {
     front: string;
     back: string;
@@ -86,11 +85,6 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categorie
 
   return (
     <div className="flex-1 p-8 bg-gray-50 overflow-y-auto">
-      <div className="animate-fade-in max-w-5xl mx-auto">
-        {/* Back Button */}
-        <div className="mb-8">
-          <button
-            onClick={onBack}
       <div className="animate-fade-in max-w-5xl mx-auto">
         {/* Back Button */}
         <div className="mb-8">
