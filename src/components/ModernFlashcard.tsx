@@ -9,6 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { InlineMath, BlockMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
+import '../styles/enhanced-animations.css';
 
 interface ModernFlashcardProps {
   front: string;
@@ -20,25 +21,29 @@ interface ModernFlashcardProps {
   className?: string;
 }
 
-const LaTeXContent: React.FC<{ content: string; isLatex: boolean }> = ({ content, isLatex }) => {
-  if (!isLatex) {
-    return <span className="whitespace-pre-wrap">{content}</span>;
-  }
+interface LaTeXContentProps {
+  content: string;
+  isLatex?: boolean;
+  isBlock?: boolean;
+}
 
-  try {
-    // Check if content should be displayed as block math (contains display math indicators)
-    const isBlockMath = content.includes('\\[') || content.includes('\\begin{') || content.includes('$$');
-    
-    if (isBlockMath) {
-      return <BlockMath math={content} />;
-    }
-    return <InlineMath math={content} />;
-  } catch (error) {
-    return <span className="text-red-500 text-sm">Invalid LaTeX: {content}</span>;
-  }
+interface DifficultyStyles {
+  bg: string;
+  border: string;
+  text: string;
+  glow: string;
+}
+
+const LaTeXContent = ({ 
+  content, 
+  isLatex = false,
+  isBlock = false 
+}: LaTeXContentProps) => {
+  if (!isLatex) return <div>{content}</div>;
+  return isBlock ? <BlockMath>{content}</BlockMath> : <InlineMath>{content}</InlineMath>;
 };
 
-export const ModernFlashcard: React.FC<ModernFlashcardProps> = ({
+export const ModernFlashcard = ({
   front,
   back,
   category,
@@ -46,11 +51,11 @@ export const ModernFlashcard: React.FC<ModernFlashcardProps> = ({
   isLatex = false,
   onAnswer,
   className = ""
-}) => {
+}: ModernFlashcardProps) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnswered, setIsAnswered] = useState(false);
 
-  const getDifficultyStyles = () => {
+  const getDifficultyStyles = (): DifficultyStyles => {
     switch (difficulty) {
       case 'easy':
         return {
@@ -103,29 +108,29 @@ export const ModernFlashcard: React.FC<ModernFlashcardProps> = ({
   };
 
   return (
-    <div className={`modern-flashcard-container ${className}`}>
+    <div className={`flip-card-container ${className}`}>
       <div 
-        className={`modern-flashcard ${isFlipped ? 'flipped' : ''} ${isAnswered ? 'answered' : ''}`}
+        className={`flip-card hardware-accelerated ${isFlipped ? 'flipped' : ''} ${isAnswered ? 'pulse-gentle' : ''}`}
         onClick={handleCardClick}
       >
         {/* Front of Card */}
-        <div className="flashcard-face flashcard-front">
+        <div className="flip-card-face hover-lift shine">
           <div className="flashcard-header">
             <div className="flashcard-type-indicator">
               {isLatex ? (
-                <div className="type-icon latex-icon">
+                <div className="type-icon latex-icon pulse-gentle">
                   <CommandLineIcon className="icon" />
                 </div>
               ) : (
-                <div className="type-icon text-icon">
+                <div className="type-icon text-icon pulse-gentle">
                   <DocumentTextIcon className="icon" />
                 </div>
               )}
-              <span className="type-label">Question</span>
+              <span className="badge type-label">Question</span>
             </div>
             
             <div 
-              className="difficulty-badge"
+              className="badge difficulty-badge hover-scale"
               style={{
                 backgroundColor: difficultyStyles.bg,
                 borderColor: difficultyStyles.border,
@@ -137,33 +142,33 @@ export const ModernFlashcard: React.FC<ModernFlashcardProps> = ({
           </div>
 
           <div className="flashcard-content">
-            <div className="content-text">
+            <div className={`content-text ${isLatex ? 'latex-content' : 'flashcard-question'}`}>
               <LaTeXContent content={front} isLatex={isLatex} />
             </div>
           </div>
 
           <div className="flashcard-footer">
-            <div className="category-tag">
+            <div className="category-tag hover-scale">
               {category}
             </div>
-            <div className="flip-hint">
-              <SparklesIcon className="hint-icon" />
+            <div className="flip-hint pulse-gentle">
+              <SparklesIcon className="icon" />
               <span>Click to reveal</span>
             </div>
           </div>
         </div>
 
         {/* Back of Card */}
-        <div className="flashcard-face flashcard-back">
+        <div className="flip-card-face flip-card-back hover-lift shine">
           <div className="flashcard-header">
             <div className="flashcard-type-indicator">
-              <div className="type-icon answer-icon">
+              <div className="type-icon answer-icon pulse-gentle">
                 <LightBulbIcon className="icon" />
               </div>
               <span className="type-label">Answer</span>
             </div>
             
-            <div className="category-tag-back">
+            <div className="category-tag-back hover-scale">
               {category}
             </div>
           </div>
@@ -177,7 +182,7 @@ export const ModernFlashcard: React.FC<ModernFlashcardProps> = ({
           {onAnswer && (
             <div className="flashcard-actions">
               <button
-                className="action-button incorrect-button"
+                className="action-button incorrect-button btn-hover"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleAnswer(false);
@@ -188,7 +193,7 @@ export const ModernFlashcard: React.FC<ModernFlashcardProps> = ({
               </button>
               
               <button
-                className="action-button correct-button"
+                className="action-button correct-button btn-hover"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleAnswer(true);

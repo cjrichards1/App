@@ -1,26 +1,24 @@
 import React, { useState } from 'react';
-import { 
-  FolderIcon, 
-  PlusIcon, 
-  PencilIcon, 
-  TrashIcon,
-  HomeIcon,
-  BookOpenIcon,
-  AcademicCapIcon,
-  ChevronDownIcon,
+import {
   Bars3Icon,
-  SparklesIcon
+  ChevronDownIcon,
+  HomeIcon,
+  PlusIcon,
+  AcademicCapIcon,
+  FolderIcon,
+  PencilIcon,
+  TrashIcon
 } from '@heroicons/react/24/outline';
 import { Folder } from '../types/flashcard';
 
 interface HeaderProps {
   folders: Folder[];
-  currentView: string;
-  onNavigate: (view: string) => void;
+  currentView: 'dashboard' | 'create' | 'study' | 'folder';
+  onNavigate: (view: 'dashboard' | 'create' | 'study' | 'folder') => void;
   onNavigateToFolder: (folderId: string) => void;
-  onAddFolder: (name: string, color: string) => void;
-  onUpdateFolder: (id: string, updates: Partial<Folder>) => void;
-  onDeleteFolder: (id: string) => void;
+  onAddFolder: (folder: Folder) => void;
+  onUpdateFolder: (folder: Folder) => void;
+  onDeleteFolder: (folderId: string) => void;
 }
 
 const folderColors = [
@@ -41,18 +39,18 @@ export const Header: React.FC<HeaderProps> = ({
   onNavigateToFolder,
   onAddFolder,
   onUpdateFolder,
-  onDeleteFolder,
+  onDeleteFolder
 }) => {
   const [showMainMenu, setShowMainMenu] = useState(false);
   const [showFolderMenu, setShowFolderMenu] = useState(false);
   const [showAddFolder, setShowAddFolder] = useState(false);
-  const [editingFolder, setEditingFolder] = useState<string | null>(null);
+  const [editingFolderId, setEditingFolderId] = useState<string | null>(null);
   const [newFolderName, setNewFolderName] = useState('');
   const [newFolderColor, setNewFolderColor] = useState(folderColors[0]);
 
   const handleAddFolder = () => {
     if (newFolderName.trim()) {
-      onAddFolder(newFolderName.trim(), newFolderColor);
+      onAddFolder({ name: newFolderName.trim(), color: newFolderColor });
       setNewFolderName('');
       setNewFolderColor(folderColors[0]);
       setShowAddFolder(false);
@@ -61,28 +59,28 @@ export const Header: React.FC<HeaderProps> = ({
 
   const handleUpdateFolder = (folderId: string) => {
     if (newFolderName.trim()) {
-      onUpdateFolder(folderId, { name: newFolderName.trim(), color: newFolderColor });
-      setEditingFolder(null);
+      onUpdateFolder({ id: folderId, name: newFolderName.trim(), color: newFolderColor });
+      setEditingFolderId(null);
       setNewFolderName('');
       setNewFolderColor(folderColors[0]);
     }
   };
 
   const startEditing = (folder: Folder) => {
-    setEditingFolder(folder.id);
+    setEditingFolderId(folder.id);
     setNewFolderName(folder.name);
     setNewFolderColor(folder.color);
   };
 
   const cancelEditing = () => {
-    setEditingFolder(null);
+    setEditingFolderId(null);
     setNewFolderName('');
     setNewFolderColor(folderColors[0]);
   };
 
   const getCurrentViewTitle = () => {
-    if (currentView === 'folder' && selectedFolderId) {
-      const folder = folders.find(f => f.id === selectedFolderId);
+    if (currentView === 'folder' && editingFolderId) {
+      const folder = folders.find(f => f.id === editingFolderId);
       return folder ? folder.name : 'Folder';
     }
     
@@ -166,84 +164,6 @@ export const Header: React.FC<HeaderProps> = ({
                   <AcademicCapIcon className="w-5 h-5" />
                   <span>Study Mode</span>
                 </button>
-
-                <button
-                  onClick={() => {
-                    onNavigate('demo');
-                    setShowMainMenu(false);
-                  }}
-                  className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-flashvibe-gray transition-colors ${
-                    currentView === 'demo' ? 'bg-blue-50 text-flashvibe-blue font-semibold' : 'text-flashvibe-slate'
-                  }`}
-                >
-                  <SparklesIcon className="w-5 h-5" />
-                  <span>Color Demo</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    onNavigate('buttons');
-                    setShowMainMenu(false);
-                  }}
-                  className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-flashvibe-gray transition-colors ${
-                    currentView === 'buttons' ? 'bg-blue-50 text-flashvibe-blue font-semibold' : 'text-flashvibe-slate'
-                  }`}
-                >
-                  <SparklesIcon className="w-5 h-5" />
-                  <span>Button Demo</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    onNavigate('animations');
-                    setShowMainMenu(false);
-                  }}
-                  className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-flashvibe-gray transition-colors ${
-                    currentView === 'animations' ? 'bg-blue-50 text-flashvibe-blue font-semibold' : 'text-flashvibe-slate'
-                  }`}
-                >
-                  <SparklesIcon className="w-5 h-5" />
-                  <span>Animation Demo</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    onNavigate('layout');
-                    setShowMainMenu(false);
-                  }}
-                  className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-flashvibe-gray transition-colors ${
-                    currentView === 'layout' ? 'bg-blue-50 text-flashvibe-blue font-semibold' : 'text-flashvibe-slate'
-                  }`}
-                >
-                  <SparklesIcon className="w-5 h-5" />
-                  <span>Layout Demo</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    onNavigate('progress');
-                    setShowMainMenu(false);
-                  }}
-                  className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-flashvibe-gray transition-colors ${
-                    currentView === 'progress' ? 'bg-blue-50 text-flashvibe-blue font-semibold' : 'text-flashvibe-slate'
-                  }`}
-                >
-                  <SparklesIcon className="w-5 h-5" />
-                  <span>Progress Cards</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    onNavigate('decks');
-                    setShowMainMenu(false);
-                  }}
-                  className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-flashvibe-gray transition-colors ${
-                    currentView === 'decks' ? 'bg-blue-50 text-flashvibe-blue font-semibold' : 'text-flashvibe-slate'
-                  }`}
-                >
-                  <SparklesIcon className="w-5 h-5" />
-                  <span>Study Deck Tiles</span>
-                </button>
               </div>
             )}
           </div>
@@ -324,7 +244,7 @@ export const Header: React.FC<HeaderProps> = ({
                   ) : (
                     folders.map((folder) => (
                       <div key={folder.id} className="group">
-                        {editingFolder === folder.id ? (
+                        {editingFolderId === folder.id ? (
                           <div className="px-4 py-2 bg-flashvibe-gray">
                             <input
                               type="text"
@@ -366,7 +286,7 @@ export const Header: React.FC<HeaderProps> = ({
                               setShowFolderMenu(false);
                             }}
                             className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-flashvibe-gray transition-colors ${
-                              currentView === 'folder' && selectedFolderId === folder.id
+                              currentView === 'folder' && editingFolderId === folder.id
                                 ? 'bg-blue-50 text-flashvibe-blue font-semibold'
                                 : 'text-flashvibe-slate'
                             }`}

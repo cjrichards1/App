@@ -5,15 +5,9 @@ import { FlashcardForm } from './components/FlashcardForm';
 import { StudyMode } from './components/StudyMode';
 import { FolderView } from './components/FolderView';
 import { useFlashcards } from './hooks/useFlashcards';
-import { ColorSystemDemo } from './components/ColorSystemDemo';
-import { ButtonShowcase } from './components/ButtonShowcase';
-import { AnimationDemo } from './components/AnimationDemo';
-import { DynamicDashboard } from './components/DynamicDashboard';
-import { LayoutShowcase } from './components/LayoutShowcase';
-import { ProgressDemo } from './components/ProgressDemo';
-import { StudyDeckDemo } from './components/StudyDeckDemo';
+import { Flashcard, Folder } from './types/flashcard';
 
-type View = 'dashboard' | 'create' | 'study' | 'folder' | 'demo' | 'buttons' | 'animations' | 'dynamic' | 'layout' | 'progress' | 'decks';
+type View = 'dashboard' | 'create' | 'study' | 'folder';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
@@ -45,7 +39,7 @@ function App() {
     switch (currentView) {
       case 'dashboard':
         return (
-          <DynamicDashboard
+          <Dashboard
             flashcards={flashcards}
             folders={folders}
             onNavigateToFolder={handleNavigateToFolder}
@@ -59,7 +53,7 @@ function App() {
             folders={folders}
             categories={categories}
             onBack={handleBackToHome}
-            onAdd={(flashcard) => {
+            onAdd={(flashcard: Flashcard) => {
               addFlashcard(flashcard);
               handleBackToHome();
             }}
@@ -74,8 +68,8 @@ function App() {
           />
         );
       case 'folder':
-        const selectedFolder = folders.find(f => f.id === selectedFolderId);
-        const folderFlashcards = flashcards.filter(f => f.folderId === selectedFolderId);
+        const selectedFolder = folders.find((f: Folder) => f.id === selectedFolderId);
+        const folderFlashcards = flashcards.filter((f: Flashcard) => f.folderId === selectedFolderId);
         return (
           <FolderView
             folder={selectedFolder}
@@ -85,28 +79,6 @@ function App() {
             onDeleteFlashcard={deleteFlashcard}
           />
         );
-      case 'demo':
-        return <ColorSystemDemo />;
-      case 'buttons':
-        return <ButtonShowcase />;
-      case 'animations':
-        return <AnimationDemo />;
-      case 'dynamic':
-        return (
-          <DynamicDashboard
-            flashcards={flashcards}
-            folders={folders}
-            onNavigateToFolder={handleNavigateToFolder}
-            onCreateCard={() => setCurrentView('create')}
-            onStudy={() => setCurrentView('study')}
-          />
-        );
-      case 'layout':
-        return <LayoutShowcase />;
-      case 'progress':
-        return <ProgressDemo />;
-      case 'decks':
-        return <StudyDeckDemo />;
       default:
         return null;
     }

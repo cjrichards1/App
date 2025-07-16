@@ -1,0 +1,191 @@
+/* Modern Typography System */
+
+/* Base Font Settings */
+:root {
+  /* Font Scale - Major Third (1.25) */
+  --font-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);    /* 12-14px */
+  --font-sm: clamp(0.875rem, 0.8rem + 0.25vw, 1rem);       /* 14-16px */
+  --font-base: clamp(1rem, 0.9rem + 0.25vw, 1.125rem);     /* 16-18px */
+  --font-md: clamp(1.25rem, 1.1rem + 0.25vw, 1.375rem);    /* 20-22px */
+  --font-lg: clamp(1.5rem, 1.3rem + 0.5vw, 1.75rem);       /* 24-28px */
+  --font-xl: clamp(2rem, 1.8rem + 0.75vw, 2.5rem);         /* 32-40px */
+  --font-2xl: clamp(2.5rem, 2.2rem + 1vw, 3.25rem);        /* 40-52px */
+  --font-3xl: clamp(3rem, 2.6rem + 1.5vw, 4rem);           /* 48-64px */
+
+  /* Line Heights */
+  --leading-none: 1;
+  --leading-tight: 1.2;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+
+  /* Letter Spacing */
+  --tracking-tighter: -0.05em;
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
+
+  /* Paragraph Spacing */
+  --space-paragraph: 1.5em;
+}
+
+/* Core Typography */
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: var(--font-base);
+  line-height: var(--leading-normal);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 0.5em;
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+h1 {
+  font-size: var(--font-3xl);
+  font-weight: 800;
+}
+
+h2 {
+  font-size: var(--font-2xl);
+  font-weight: 700;
+}
+
+h3 {
+  font-size: var(--font-xl);
+  font-weight: 700;
+}
+
+h4 {
+  font-size: var(--font-lg);
+  font-weight: 600;
+}
+
+h5 {
+  font-size: var(--font-md);
+  font-weight: 600;
+}
+
+h6 {
+  font-size: var(--font-base);
+  font-weight: 600;
+}
+
+/* Paragraphs and Body Text */
+p {
+  margin: 0 0 var(--space-paragraph);
+  max-width: 70ch; /* Optimal line length for readability */
+}
+
+/* Links */
+a {
+  color: var(--primary-600);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--primary-700);
+  text-decoration: underline;
+}
+
+/* Lists */
+ul, ol {
+  margin: 0 0 var(--space-paragraph);
+  padding-left: 1.5em;
+}
+
+li {
+  margin-bottom: 0.5em;
+}
+
+/* LaTeX Content */
+.latex-content {
+  font-family: 'Roboto Mono', monospace;
+  font-size: var(--font-base);
+  line-height: var(--leading-relaxed);
+  letter-spacing: -0.01em;
+}
+
+/* Flashcard Typography */
+.flashcard-question {
+  font-size: var(--font-md);
+  font-weight: 500;
+  line-height: var(--leading-normal);
+  margin-bottom: 1em;
+}
+
+.flashcard-answer {
+  font-size: var(--font-base);
+  line-height: var(--leading-relaxed);
+}
+
+/* UI Elements */
+.badge {
+  font-size: var(--font-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+}
+
+.button-text {
+  font-size: var(--font-sm);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+}
+
+.nav-text {
+  font-size: var(--font-sm);
+  font-weight: 500;
+  letter-spacing: var(--tracking-normal);
+}
+
+/* Helper Classes */
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Responsive Typography Adjustments */
+@media (max-width: 640px) {
+  :root {
+    /* Slightly smaller scale for mobile */
+    --space-paragraph: 1.25em;
+  }
+  
+  h1 {
+    letter-spacing: var(--tracking-normal);
+  }
+}
+
+/* High Contrast & Accessibility */
+@media (prefers-contrast: high) {
+  body {
+    --leading-normal: 1.6; /* Increased line height for better readability */
+  }
+  
+  a {
+    text-decoration: underline; /* Always show underlines */
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0s !important;
+  }
+} 
