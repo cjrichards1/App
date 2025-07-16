@@ -108,7 +108,6 @@ export const Header: React.FC<HeaderProps> = ({
               <p className="text-blue-100 text-sm font-medium">Learn Fast, Vibe Smart</p>
             </div>
           </div>
-          <span className="text-blue-200">•</span>
           <span className="text-lg text-blue-100 font-medium">{getCurrentViewTitle()}</span>
         </div>
 
