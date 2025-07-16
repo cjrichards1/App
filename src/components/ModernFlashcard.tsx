@@ -7,6 +7,8 @@ import {
   XCircleIcon,
   LightBulbIcon
 } from '@heroicons/react/24/outline';
+import { InlineMath, BlockMath } from 'react-katex';
+import 'katex/dist/katex.min.css';
 
 interface ModernFlashcardProps {
   front: string;
@@ -15,7 +17,26 @@ interface ModernFlashcardProps {
   difficulty: 'easy' | 'medium' | 'hard';
   isLatex?: boolean;
   onAnswer?: (correct: boolean) => void;
+  className?: string;
 }
+
+const LaTeXContent: React.FC<{ content: string; isLatex: boolean }> = ({ content, isLatex }) => {
+  if (!isLatex) {
+    return <span className="whitespace-pre-wrap">{content}</span>;
+  }
+
+  try {
+    // Check if content should be displayed as block math (contains display math indicators)
+    const isBlockMath = content.includes('\\[') || content.includes('\\begin{') || content.includes('$$');
+    
+    if (isBlockMath) {
+      return <BlockMath math={content} />;
+    }
+    return <InlineMath math={content} />;
+  } catch (error) {
+    return <span className="text-red-500 text-sm">Invalid LaTeX: {content}</span>;
+  }
+};
 
 export const ModernFlashcard: React.FC<ModernFlashcardProps> = ({
   front,
@@ -23,7 +44,8 @@ export const ModernFlashcard: React.FC<ModernFlashcardProps> = ({
   category,
   difficulty,
   isLatex = false,
-  onAnswer
+  onAnswer,
+  className = ""
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnswered, setIsAnswered] = useState(false);
@@ -74,11 +96,17 @@ export const ModernFlashcard: React.FC<ModernFlashcardProps> = ({
     }, 1500);
   };
 
+  const handleCardClick = () => {
+    if (!isAnswered) {
+      setIsFlipped(!isFlipped);
+    }
+  };
+
   return (
-    <div className="modern-flashcard-container">
+    <div className={`modern-flashcard-container ${className}`}>
       <div 
         className={`modern-flashcard ${isFlipped ? 'flipped' : ''} ${isAnswered ? 'answered' : ''}`}
-        onClick={() => !isAnswered && setIsFlipped(!isFlipped)}
+        onClick={handleCardClick}
       >
         {/* Front of Card */}
         <div className="flashcard-face flashcard-front">
@@ -110,7 +138,7 @@ export const ModernFlashcard: React.FC<ModernFlashcardProps> = ({
 
           <div className="flashcard-content">
             <div className="content-text">
-              {front}
+              <LaTeXContent content={front} isLatex={isLatex} />
             </div>
           </div>
 
@@ -142,7 +170,7 @@ export const ModernFlashcard: React.FC<ModernFlashcardProps> = ({
 
           <div className="flashcard-content">
             <div className="content-text">
-              {back}
+              <LaTeXContent content={back} isLatex={isLatex} />
             </div>
           </div>
 
