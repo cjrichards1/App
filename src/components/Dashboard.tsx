@@ -32,6 +32,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
   return (
     <div className="dashboard-container flex-1 overflow-y-auto">
+      {/* FlashVibe Title */}
+      <div className="text-center py-8">
+        <h1 className="text-6xl font-bold bg-gradient-to-r from-flashvibe-blue to-flashvibe-coral bg-clip-text text-transparent">
+          FlashVibe
+        </h1>
+      </div>
+      
       {/* Hero Section */}
       <HeroSection
         userName="Alex"
