@@ -2,6 +2,7 @@ import React from 'react';
 import { PlusIcon, BookOpenIcon, FolderIcon, AcademicCapIcon, SparklesIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import { HeroSection } from './HeroSection';
 import { Flashcard, Folder } from '../types/flashcard';
+import { ProgressCards } from './ProgressCards';
 
 interface DashboardProps {
   flashcards: Flashcard[];
@@ -21,6 +22,16 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const totalCards = flashcards.length;
   const studiedCards = flashcards.filter(card => card.lastStudied).length;
   const studyProgress = totalCards > 0 ? Math.round((studiedCards / totalCards) * 100) : 0;
+  
+  // Calculate additional metrics for progress cards
+  const totalCorrect = flashcards.reduce((sum, card) => sum + card.correctCount, 0);
+  const totalAttempts = flashcards.reduce((sum, card) => sum + card.correctCount + card.incorrectCount, 0);
+  const accuracyRate = totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 100) : 0;
+  
+  const masteredCards = flashcards.filter(card => {
+    const attempts = card.correctCount + card.incorrectCount;
+    return attempts >= 3 && (card.correctCount / attempts) >= 0.8;
+  }).length;
 
   return (
     <div className="flex-1 overflow-y-auto">
@@ -38,6 +49,23 @@ export const Dashboard: React.FC<DashboardProps> = ({
       {/* Rest of Dashboard */}
       <div className="p-8 animate-fade-in">
       <div className="max-w-6xl mx-auto">
+
+        {/* Progress Cards Section */}
+        {totalCards > 0 && (
+          <div className="mb-12">
+            <ProgressCards
+              studyProgress={studyProgress}
+              accuracyRate={accuracyRate}
+              dailyGoal={20}
+              dailyCompleted={Math.min(studiedCards, 20)}
+              weeklyStreak={5}
+              totalCards={totalCards}
+              masteredCards={masteredCards}
+              studyTime={35}
+              targetStudyTime={60}
+            />
+          </div>
+        )}
 
         {/* Folders Section */}
         {folders.length > 0 && (

@@ -9,6 +9,7 @@
 @import './styles/enhanced-animations.css';
 @import './styles/dynamic-layout.css';
 @import './styles/hero-section.css';
+@import './styles/progress-cards.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

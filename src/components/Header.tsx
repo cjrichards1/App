@@ -219,6 +219,19 @@ export const Header: React.FC<HeaderProps> = ({
                   <span>Layout Demo</span>
                 </button>
               </div>
+                <button
+                  onClick={() => {
+                    onNavigate('progress');
+                    setShowMainMenu(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-flashvibe-gray transition-colors ${
+                    currentView === 'progress' ? 'bg-blue-50 text-flashvibe-blue font-semibold' : 'text-flashvibe-slate'
+                  }`}
+                >
+                  <SparklesIcon className="w-5 h-5" />
+                  <span>Progress Cards</span>
+                </button>
+
             )}
           </div>
 

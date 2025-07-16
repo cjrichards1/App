@@ -10,8 +10,9 @@ import { ButtonShowcase } from './components/ButtonShowcase';
 import { AnimationDemo } from './components/AnimationDemo';
 import { DynamicDashboard } from './components/DynamicDashboard';
 import { LayoutShowcase } from './components/LayoutShowcase';
+import { ProgressDemo } from './components/ProgressDemo';
 
-type View = 'dashboard' | 'create' | 'study' | 'folder' | 'demo' | 'buttons' | 'animations' | 'dynamic' | 'layout';
+type View = 'dashboard' | 'create' | 'study' | 'folder' | 'demo' | 'buttons' | 'animations' | 'dynamic' | 'layout' | 'progress';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
@@ -101,6 +102,8 @@ function App() {
         );
       case 'layout':
         return <LayoutShowcase />;
+      case 'progress':
+        return <ProgressDemo />;
       default:
         return null;
     }
