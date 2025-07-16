@@ -6,8 +6,9 @@ import { StudyMode } from './components/StudyMode';
 import { FolderView } from './components/FolderView';
 import { useFlashcards } from './hooks/useFlashcards';
 import { ColorSystemDemo } from './components/ColorSystemDemo';
+import { ButtonShowcase } from './components/ButtonShowcase';
 
-type View = 'dashboard' | 'create' | 'study' | 'folder' | 'demo';
+type View = 'dashboard' | 'create' | 'study' | 'folder' | 'demo' | 'buttons';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
@@ -81,6 +82,8 @@ function App() {
         );
       case 'demo':
         return <ColorSystemDemo />;
+      case 'buttons':
+        return <ButtonShowcase />;
       default:
         return null;
     }

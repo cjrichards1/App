@@ -3,6 +3,8 @@
 @import './styles/colors.css';
 @import './styles/flashcard.css';
 @import './styles/demo.css';
+@import './styles/buttons.css';
+@import './styles/button-showcase.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
