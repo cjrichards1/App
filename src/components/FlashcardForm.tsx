@@ -90,6 +90,14 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categorie
         <div className="mb-8">
           <button
             onClick={onBack}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 border-2 focus-ring"
+            style={{ backgroundColor: '#F3F4F6', color: '#1F2937', borderColor: '#E5E7EB' }}
+          >
+            <ArrowLeftIcon className="w-4 h-4" />
+            Back to Dashboard
+          </button>
+        </div>
+
       <div className="rounded-xl shadow-md p-8 border-gradient bg-white">
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-4">
