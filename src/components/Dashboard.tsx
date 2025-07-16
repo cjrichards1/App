@@ -2,14 +2,7 @@ import React from 'react';
 import { FolderIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { HeroSection } from './HeroSection';
 import { ProgressCards } from './ProgressCards';
-
-interface Flashcard {
-  id: string;
-  folderId?: string;
-  front: string;
-  back: string;
-  isCorrect?: boolean;
-}
+import { Flashcard } from '../types/flashcard';
 
 interface Folder {
   id: string;
@@ -43,7 +36,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const masteredCards = flashcards.reduce((sum: number, card: Flashcard) => sum + (card.isCorrect ? 1 : 0), 0);
 
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="dashboard-container flex-1 overflow-y-auto">
       {/* Hero Section */}
       <HeroSection
         userName="Alex"

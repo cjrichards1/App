@@ -1,5 +1,11 @@
 /* Component-specific styles with modern, premium aesthetics */
 
+/* Dashboard Background */
+.dashboard-container {
+  background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+  min-height: 100vh;
+}
+
 /* Flashcard Container */
 .flashcard-container {
   --card-padding: clamp(1.5rem, 2vw, 2rem);
