@@ -8,15 +8,16 @@ import {
   BookOpenIcon,
   AcademicCapIcon,
   ChevronDownIcon,
-  Bars3Icon
+  Bars3Icon,
+  SparklesIcon
 } from '@heroicons/react/24/outline';
 import { Folder } from '../types/flashcard';
 
 interface HeaderProps {
   folders: Folder[];
   currentView: string;
-  selectedFolderId?: string;
-  onViewChange: (view: string, folderId?: string) => void;
+  onNavigate: (view: string) => void;
+  onNavigateToFolder: (folderId: string) => void;
   onAddFolder: (name: string, color: string) => void;
   onUpdateFolder: (id: string, updates: Partial<Folder>) => void;
   onDeleteFolder: (id: string) => void;
@@ -36,8 +37,8 @@ const folderColors = [
 export const Header: React.FC<HeaderProps> = ({
   folders,
   currentView,
-  selectedFolderId,
-  onViewChange,
+  onNavigate,
+  onNavigateToFolder,
   onAddFolder,
   onUpdateFolder,
   onDeleteFolder,
@@ -94,13 +95,21 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 px-6 py-4">
+    <header className="bg-gradient-to-r from-flashvibe-blue to-blue-600 shadow-lg px-6 py-4">
       <div className="flex items-center justify-between">
         {/* Logo and Title */}
         <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-bold text-gray-900">FlashVibe</h1>
-          <span className="text-gray-400">•</span>
-          <span className="text-lg text-gray-600">{getCurrentViewTitle()}</span>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+              <SparklesIcon className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-white">FlashVibe</h1>
+              <p className="text-blue-100 text-sm font-medium">Learn Fast, Vibe Smart</p>
+            </div>
+          </div>
+          <span className="text-blue-200">•</span>
+          <span className="text-lg text-blue-100 font-medium">{getCurrentViewTitle()}</span>
         </div>
 
         {/* Navigation */}
@@ -112,7 +121,7 @@ export const Header: React.FC<HeaderProps> = ({
                 setShowMainMenu(!showMainMenu);
                 setShowFolderMenu(false);
               }}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-all duration-300 text-white border border-white/20 backdrop-blur-sm"
             >
               <Bars3Icon className="w-5 h-5" />
               <span>Menu</span>
@@ -120,27 +129,27 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
 
             {showMainMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 animate-scale-in">
                 <button
                   onClick={() => {
-                    onViewChange('home');
+                    onNavigate('dashboard');
                     setShowMainMenu(false);
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-gray-50 transition-colors ${
-                    currentView === 'home' ? 'bg-blue-50 text-blue-700' : 'text-gray-700'
+                  className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-flashvibe-gray transition-colors ${
+                    currentView === 'dashboard' ? 'bg-blue-50 text-flashvibe-blue font-semibold' : 'text-flashvibe-slate'
                   }`}
                 >
                   <HomeIcon className="w-5 h-5" />
-                  <span>Home</span>
+                  <span>Dashboard</span>
                 </button>
 
                 <button
                   onClick={() => {
-                    onViewChange('create');
+                    onNavigate('create');
                     setShowMainMenu(false);
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-gray-50 transition-colors ${
-                    currentView === 'create' ? 'bg-blue-50 text-blue-700' : 'text-gray-700'
+                  className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-flashvibe-gray transition-colors ${
+                    currentView === 'create' ? 'bg-blue-50 text-flashvibe-blue font-semibold' : 'text-flashvibe-slate'
                   }`}
                 >
                   <PlusIcon className="w-5 h-5" />
@@ -149,11 +158,11 @@ export const Header: React.FC<HeaderProps> = ({
 
                 <button
                   onClick={() => {
-                    onViewChange('study');
+                    onNavigate('study');
                     setShowMainMenu(false);
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-gray-50 transition-colors ${
-                    currentView === 'study' ? 'bg-blue-50 text-blue-700' : 'text-gray-700'
+                  className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-flashvibe-gray transition-colors ${
+                    currentView === 'study' ? 'bg-blue-50 text-flashvibe-blue font-semibold' : 'text-flashvibe-slate'
                   }`}
                 >
                   <AcademicCapIcon className="w-5 h-5" />
@@ -170,7 +179,7 @@ export const Header: React.FC<HeaderProps> = ({
                 setShowFolderMenu(!showFolderMenu);
                 setShowMainMenu(false);
               }}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-all duration-300 text-white border border-white/20 backdrop-blur-sm"
             >
               <FolderIcon className="w-5 h-5" />
               <span>Folders</span>
@@ -178,12 +187,12 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
 
             {showFolderMenu && (
-              <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 max-h-96 overflow-y-auto">
+              <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 max-h-96 overflow-y-auto animate-scale-in">
                 {/* Add Folder Button */}
-                <div className="px-4 py-2 border-b border-gray-200">
+                <div className="px-4 py-2 border-b border-gray-100">
                   <button
                     onClick={() => setShowAddFolder(!showAddFolder)}
-                    className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium"
+                    className="flex items-center gap-2 text-flashvibe-blue hover:text-blue-700 text-sm font-semibold transition-colors"
                   >
                     <PlusIcon className="w-4 h-4" />
                     <span>Add Folder</span>
@@ -192,13 +201,13 @@ export const Header: React.FC<HeaderProps> = ({
 
                 {/* Add Folder Form */}
                 {showAddFolder && (
-                  <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+                  <div className="px-4 py-3 border-b border-gray-100 bg-flashvibe-gray">
                     <input
                       type="text"
                       value={newFolderName}
                       onChange={(e) => setNewFolderName(e.target.value)}
                       placeholder="Folder name"
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-3"
+                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-flashvibe-blue focus:border-transparent mb-3 transition-all"
                       autoFocus
                     />
                     <div className="flex gap-2 mb-3">
@@ -216,13 +225,13 @@ export const Header: React.FC<HeaderProps> = ({
                     <div className="flex gap-2">
                       <button
                         onClick={handleAddFolder}
-                        className="flex-1 px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+                        className="flex-1 px-3 py-1 text-sm bg-flashvibe-blue text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                       >
                         Add
                       </button>
                       <button
                         onClick={() => setShowAddFolder(false)}
-                        className="flex-1 px-3 py-1 text-sm bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+                        className="flex-1 px-3 py-1 text-sm bg-gray-200 text-flashvibe-slate rounded-lg hover:bg-gray-300 transition-colors font-medium"
                       >
                         Cancel
                       </button>
@@ -231,21 +240,21 @@ export const Header: React.FC<HeaderProps> = ({
                 )}
 
                 {/* Folders List */}
-                <div className="max-h-64 overflow-y-auto">
+                <div className="max-h-64 overflow-y-auto custom-scrollbar">
                   {folders.length === 0 ? (
-                    <div className="px-4 py-3 text-sm text-gray-500 text-center">
+                    <div className="px-4 py-3 text-sm text-gray-400 text-center">
                       No folders yet
                     </div>
                   ) : (
                     folders.map((folder) => (
                       <div key={folder.id} className="group">
                         {editingFolder === folder.id ? (
-                          <div className="px-4 py-2 bg-gray-50">
+                          <div className="px-4 py-2 bg-flashvibe-gray">
                             <input
                               type="text"
                               value={newFolderName}
                               onChange={(e) => setNewFolderName(e.target.value)}
-                              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 mb-2"
+                              className="w-full px-2 py-1 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-flashvibe-blue mb-2 transition-all"
                             />
                             <div className="flex gap-1 mb-2">
                               {folderColors.map((color) => (
@@ -262,13 +271,13 @@ export const Header: React.FC<HeaderProps> = ({
                             <div className="flex gap-1">
                               <button
                                 onClick={() => handleUpdateFolder(folder.id)}
-                                className="flex-1 px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+                                className="flex-1 px-2 py-1 text-xs bg-flashvibe-blue text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                               >
                                 Save
                               </button>
                               <button
                                 onClick={cancelEditing}
-                                className="flex-1 px-2 py-1 text-xs bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+                                className="flex-1 px-2 py-1 text-xs bg-gray-200 text-flashvibe-slate rounded-lg hover:bg-gray-300 transition-colors font-medium"
                               >
                                 Cancel
                               </button>
@@ -277,13 +286,13 @@ export const Header: React.FC<HeaderProps> = ({
                         ) : (
                           <button
                             onClick={() => {
-                              onViewChange('folder', folder.id);
+                              onNavigateToFolder(folder.id);
                               setShowFolderMenu(false);
                             }}
-                            className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-gray-50 transition-colors ${
+                            className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-flashvibe-gray transition-colors ${
                               currentView === 'folder' && selectedFolderId === folder.id
-                                ? 'bg-blue-50 text-blue-700'
-                                : 'text-gray-700'
+                                ? 'bg-blue-50 text-flashvibe-blue font-semibold'
+                                : 'text-flashvibe-slate'
                             }`}
                           >
                             <div
@@ -291,14 +300,14 @@ export const Header: React.FC<HeaderProps> = ({
                               style={{ backgroundColor: folder.color }}
                             />
                             <span className="font-medium truncate flex-1">{folder.name}</span>
-                            <span className="text-xs text-gray-500">{folder.cardCount}</span>
+                            <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">{folder.cardCount}</span>
                             <div className="opacity-0 group-hover:opacity-100 flex gap-1">
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   startEditing(folder);
                                 }}
-                                className="p-1 rounded hover:bg-gray-200 text-gray-400 hover:text-gray-600"
+                                className="p-1 rounded-lg hover:bg-gray-200 text-gray-400 hover:text-flashvibe-blue transition-colors"
                                 title="Edit folder"
                               >
                                 <PencilIcon className="w-3 h-3" />
@@ -310,7 +319,7 @@ export const Header: React.FC<HeaderProps> = ({
                                     onDeleteFolder(folder.id);
                                   }
                                 }}
-                                className="p-1 rounded hover:bg-gray-200 text-gray-400 hover:text-red-600"
+                                className="p-1 rounded-lg hover:bg-red-50 text-gray-400 hover:text-flashvibe-coral transition-colors"
                                 title="Delete folder"
                               >
                                 <TrashIcon className="w-3 h-3" />

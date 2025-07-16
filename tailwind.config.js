@@ -11,6 +11,12 @@ export default {
         mono: ['Roboto Mono', 'ui-monospace', 'SFMono-Regular', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],
       },
       colors: {
+        'flashvibe-blue': '#3B82F6',
+        'flashvibe-coral': '#F43F5E',
+        'flashvibe-gray': '#F3F4F6',
+        'flashvibe-white': '#FFFFFF',
+        'flashvibe-slate': '#1F2937',
+        'flashvibe-green': '#10B981',
         blue: {
           50: '#eff6ff',
           100: '#dbeafe',

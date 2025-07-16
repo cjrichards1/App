@@ -84,48 +84,46 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categorie
   ];
 
   return (
-    <div className="flex-1 p-8 bg-gray-50 overflow-y-auto">
-      <div className="animate-fade-in max-w-5xl mx-auto">
+    <div className="flex-1 p-8 overflow-y-auto animate-fade-in">
+      <div className="max-w-5xl mx-auto">
         {/* Back Button */}
-        <div className="mb-8">
+        <div className="mb-10">
           <button
             onClick={onBack}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 border-2 focus-ring"
-            style={{ backgroundColor: '#F3F4F6', color: '#1F2937', borderColor: '#E5E7EB' }}
+            className="flex items-center gap-3 px-6 py-3 rounded-xl font-semibold transition-all duration-300 bg-white shadow-lg hover:shadow-xl text-flashvibe-slate border border-gray-100"
           >
-            <ArrowLeftIcon className="w-4 h-4" />
+            <ArrowLeftIcon className="w-5 h-5" />
             Back to Dashboard
           </button>
         </div>
 
-      <div className="rounded-xl shadow-md p-8 border-gradient bg-white">
-        <div className="flex items-center justify-between mb-10">
+      <div className="rounded-2xl shadow-xl p-10 bg-white border border-gray-100">
+        <div className="flex items-center justify-between mb-12">
           <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl" style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)' }}>
-              <PlusIcon className="w-8 h-8 text-white" />
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-flashvibe-blue to-blue-600 shadow-lg">
+              <PlusIcon className="w-10 h-10 text-white" />
             </div>
             <div>
-              <h2 className="text-3xl font-bold" style={{ color: '#1F2937' }}>Create New Flashcard</h2>
-              <p style={{ color: '#6B7280' }}>Build your knowledge, one card at a time</p>
+              <h2 className="text-4xl font-bold text-flashvibe-slate">Create New Flashcard</h2>
+              <p className="text-lg text-gray-600 font-medium">Build your knowledge, one card at a time ✨</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             <button
               type="button"
               onClick={() => setIsLatex(!isLatex)}
-              className={`flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 border-2 focus-ring ${
+              className={`flex items-center gap-3 px-6 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl ${
                 isLatex 
                   ? 'text-white'
                   : ''
               }`}
               style={isLatex 
-                ? { background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)', borderColor: '#F43F5E', boxShadow: '0 4px 15px rgba(244, 63, 94, 0.3)' }
-                : { backgroundColor: '#F3F4F6', color: '#1F2937', borderColor: '#E5E7EB' }
+                ? { background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)' }
+                : { backgroundColor: '#F3F4F6', color: '#1F2937' }
               }
-              aria-label={`Switch to ${isLatex ? 'text' : 'LaTeX'} mode`}
             >
-              {isLatex ? <CommandLineIcon className="w-4 h-4" /> : <DocumentTextIcon className="w-4 h-4" />}
+              {isLatex ? <CommandLineIcon className="w-5 h-5" /> : <DocumentTextIcon className="w-5 h-5" />}
               {isLatex ? 'LaTeX Mode' : 'Text Mode'}
             </button>
             
@@ -133,13 +131,7 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categorie
               <button
                 type="button"
                 onClick={() => setShowPreview(!showPreview)}
-                className="px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 border-2 focus-ring"
-                style={{ 
-                  backgroundColor: 'rgba(59, 130, 246, 0.1)', 
-                  color: '#3B82F6', 
-                  borderColor: 'rgba(59, 130, 246, 0.2)' 
-                }}
-                aria-label={`${showPreview ? 'Hide' : 'Show'} LaTeX preview`}
+                className="px-6 py-4 rounded-xl font-semibold transition-all duration-300 bg-blue-50 text-flashvibe-blue hover:bg-blue-100 shadow-lg hover:shadow-xl"
               >
                 {showPreview ? 'Hide Preview' : 'Show Preview'}
               </button>
@@ -148,26 +140,22 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categorie
         </div>
 
         {isLatex && (
-          <div className="mb-10 p-6 rounded-xl border-2 animate-slide-in" 
-               style={{ 
-                 borderColor: 'rgba(244, 63, 94, 0.2)', 
-                 background: 'linear-gradient(to right, rgba(244, 63, 94, 0.05), rgba(244, 63, 94, 0.1))' 
-               }}>
-            <div className="flex items-center justify-between mb-6">
+          <div className="mb-12 p-8 rounded-2xl border border-rose-200 bg-gradient-to-r from-rose-50 to-rose-100 animate-slide-in shadow-lg">
+            <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
-                <SparklesIcon className="w-6 h-6" style={{ color: '#F43F5E' }} />
-                <h3 className="text-xl font-bold" style={{ color: '#1F2937' }}>LaTeX Quick Reference</h3>
+                <div className="p-2 bg-gradient-to-br from-flashvibe-coral to-rose-600 rounded-xl shadow-lg">
+                  <SparklesIcon className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-flashvibe-slate">LaTeX Quick Reference</h3>
               </div>
-              <div className="text-sm px-3 py-1 rounded-lg font-medium" 
-                   style={{ backgroundColor: 'rgba(244, 63, 94, 0.1)', color: '#F43F5E' }}>
+              <div className="text-sm px-4 py-2 rounded-lg font-bold bg-rose-100 text-flashvibe-coral">
                 Click any example to copy
               </div>
             </div>
             
-            <div className="mb-6 p-4 rounded-lg border" 
-                 style={{ backgroundColor: 'rgba(244, 63, 94, 0.1)', borderColor: 'rgba(244, 63, 94, 0.2)' }}>
-              <h4 className="text-base font-semibold mb-3" style={{ color: '#1F2937' }}>💡 LaTeX Tips:</h4>
-              <ul className="text-sm space-y-1" style={{ color: '#374151' }}>
+            <div className="mb-8 p-6 rounded-xl bg-rose-100 border border-rose-200 shadow-sm">
+              <h4 className="text-lg font-bold mb-4 text-flashvibe-slate">💡 LaTeX Tips:</h4>
+              <ul className="text-sm space-y-2 text-gray-700 font-medium">
                 <li>• Use curly braces {} to group expressions: x^{2+3} not x^2+3</li>
                 <li>• For multi-character subscripts/superscripts: x_{'{max}'} not x_max</li>
                 <li>• Preview your LaTeX before saving to catch syntax errors</li>
@@ -177,34 +165,24 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categorie
             <div className="space-y-6">
               {latexExamples.map((category, categoryIndex) => (
                 <div key={categoryIndex}>
-                  <h4 className="text-base font-bold mb-3 pb-2 border-b" 
-                      style={{ color: '#1F2937', borderColor: 'rgba(244, 63, 94, 0.3)' }}>
+                  <h4 className="text-lg font-bold mb-4 pb-3 border-b border-rose-300 text-flashvibe-slate">
                     {category.category}
                   </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {category.examples.map((example, index) => (
                       <div 
                         key={index} 
-                        className="p-3 rounded-lg border cursor-pointer hover:shadow-sm transition-all duration-200 focus-ring bg-white"
-                        style={{ borderColor: 'rgba(244, 63, 94, 0.2)' }}
+                        className="p-4 rounded-xl border border-rose-200 cursor-pointer hover:shadow-lg transition-all duration-300 bg-white hover:bg-rose-50"
                         onClick={() => {
                           navigator.clipboard.writeText(example.code);
                         }}
                         title="Click to copy"
-                        role="button"
-                        tabIndex={0}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            navigator.clipboard.writeText(example.code);
-                          }
-                        }}
                       >
-                        <div className="flex justify-between items-start mb-1">
-                          <span className="text-sm font-semibold" style={{ color: '#F43F5E' }}>{example.label}</span>
-                          <span className="text-sm" style={{ color: '#6B7280' }}>{example.preview}</span>
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-sm font-bold text-flashvibe-coral">{example.label}</span>
+                          <span className="text-sm text-gray-600 font-medium">{example.preview}</span>
                         </div>
-                        <code className="text-sm px-2 py-1 rounded block overflow-x-auto font-mono" 
-                              style={{ backgroundColor: 'rgba(244, 63, 94, 0.05)', color: '#F43F5E' }}>
+                        <code className="text-sm px-3 py-2 rounded-lg block overflow-x-auto font-mono bg-rose-50 text-flashvibe-coral font-medium">
                           {example.code}
                         </code>
                       </div>
@@ -216,29 +194,24 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categorie
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="grid md:grid-cols-2 gap-8">
+        <form onSubmit={handleSubmit} className="space-y-10">
+          <div className="grid md:grid-cols-2 gap-10">
             <div>
-              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
+              <label className="block text-lg font-bold mb-4 text-flashvibe-slate">
                 Front (Question)
               </label>
               <textarea
                 value={front}
                 onChange={(e) => setFront(e.target.value)}
                 placeholder={isLatex ? "Enter LaTeX: \\frac{d}{dx}[x^2] = ?" : "Enter your question..."}
-                className="input-enhanced w-full p-4 rounded-lg resize-none focus-ring"
-                rows={6}
+                className="w-full p-6 rounded-xl resize-none border-2 border-gray-200 focus:border-flashvibe-blue focus:ring-4 focus:ring-blue-100 transition-all duration-300 font-mono text-lg shadow-sm"
+                rows={8}
                 required
-                aria-label="Flashcard front content"
               />
               {isLatex && showPreview && front && (
-                <div className="mt-4 p-4 rounded-lg border" 
-                     style={{ 
-                       background: 'linear-gradient(to right, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.1))', 
-                       borderColor: 'rgba(59, 130, 246, 0.2)' 
-                     }}>
-                  <div className="text-sm font-medium mb-2" style={{ color: '#374151' }}>Preview:</div>
-                  <div className="card-content text-lg">
+                <div className="mt-6 p-6 rounded-xl bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 shadow-sm">
+                  <div className="text-sm font-bold mb-3 text-gray-700">Preview:</div>
+                  <div className="text-xl">
                     <LaTeXPreview content={front} />
                   </div>
                 </div>
@@ -246,26 +219,21 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categorie
             </div>
 
             <div>
-              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
+              <label className="block text-lg font-bold mb-4 text-flashvibe-slate">
                 Back (Answer)
               </label>
               <textarea
                 value={back}
                 onChange={(e) => setBack(e.target.value)}
                 placeholder={isLatex ? "Enter LaTeX: 2x" : "Enter your answer..."}
-                className="input-enhanced w-full p-4 rounded-lg resize-none focus-ring"
-                rows={6}
+                className="w-full p-6 rounded-xl resize-none border-2 border-gray-200 focus:border-flashvibe-green focus:ring-4 focus:ring-green-100 transition-all duration-300 font-mono text-lg shadow-sm"
+                rows={8}
                 required
-                aria-label="Flashcard back content"
               />
               {isLatex && showPreview && back && (
-                <div className="mt-4 p-4 rounded-lg border" 
-                     style={{ 
-                       background: 'linear-gradient(to right, rgba(16, 185, 129, 0.05), rgba(16, 185, 129, 0.1))', 
-                       borderColor: 'rgba(16, 185, 129, 0.2)' 
-                     }}>
-                  <div className="text-sm font-medium mb-2" style={{ color: '#374151' }}>Preview:</div>
-                  <div className="card-content text-lg">
+                <div className="mt-6 p-6 rounded-xl bg-gradient-to-r from-green-50 to-green-100 border border-green-200 shadow-sm">
+                  <div className="text-sm font-bold mb-3 text-gray-700">Preview:</div>
+                  <div className="text-xl">
                     <LaTeXPreview content={back} />
                   </div>
                 </div>
@@ -273,16 +241,15 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categorie
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-10">
             <div>
-              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
+              <label className="block text-lg font-bold mb-4 text-flashvibe-slate">
                 Folder (Optional)
               </label>
               <select
                 value={selectedFolder}
                 onChange={(e) => setSelectedFolder(e.target.value)}
-                className="input-enhanced w-full p-4 rounded-lg focus-ring"
-                aria-label="Select folder"
+                className="w-full p-6 rounded-xl border-2 border-gray-200 focus:border-flashvibe-coral focus:ring-4 focus:ring-rose-100 transition-all duration-300 text-lg shadow-sm font-semibold"
               >
                 <option value="">No Folder</option>
                 {folders.map((folder) => (
@@ -294,14 +261,13 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categorie
             </div>
 
             <div>
-              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
+              <label className="block text-lg font-bold mb-4 text-flashvibe-slate">
                 Category
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="input-enhanced w-full p-4 rounded-lg focus-ring"
-                aria-label="Select flashcard category"
+                className="w-full p-6 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all duration-300 text-lg shadow-sm font-semibold"
               >
                 {categories.map((cat) => (
                   <option key={cat} value={cat}>
@@ -312,16 +278,15 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categorie
             </div>
           </div>
 
-          <div className="grid md:grid-cols-1 gap-8">
+          <div className="grid md:grid-cols-1 gap-10">
             <div>
-              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
+              <label className="block text-lg font-bold mb-4 text-flashvibe-slate">
                 Difficulty
               </label>
               <select
                 value={difficulty}
                 onChange={(e) => setDifficulty(e.target.value as 'easy' | 'medium' | 'hard')}
-                className="input-enhanced w-full p-4 rounded-lg focus-ring"
-                aria-label="Select flashcard difficulty"
+                className="w-full p-6 rounded-xl border-2 border-gray-200 focus:border-yellow-500 focus:ring-4 focus:ring-yellow-100 transition-all duration-300 text-lg shadow-sm font-semibold"
               >
                 <option value="easy">Easy</option>
                 <option value="medium">Medium</option>
@@ -332,10 +297,9 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categorie
 
           <button
             type="submit"
-            className="w-full py-4 px-6 rounded-lg text-base font-semibold flex items-center justify-center gap-3 focus-ring transition-all duration-300 btn-primary"
-            aria-label="Create flashcard"
+            className="w-full py-6 px-8 rounded-xl text-xl font-bold flex items-center justify-center gap-4 transition-all duration-300 bg-gradient-to-r from-flashvibe-blue to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 shadow-lg hover:shadow-xl"
           >
-            <PlusIcon className="w-5 h-5" />
+            <PlusIcon className="w-6 h-6" />
             Create Flashcard
           </button>
         </form>
