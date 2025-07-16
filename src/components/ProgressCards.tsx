@@ -9,7 +9,7 @@ import {
   StarIcon,
   BoltIcon,
   CheckCircleIcon,
-  TargetIcon
+  FlagIcon
 } from '@heroicons/react/24/outline';
 
 interface ProgressCardProps {
@@ -134,7 +134,7 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
           </div>
           {target && (
             <div className="progress-target">
-              <TargetIcon className="target-icon" />
+              <FlagIcon className="target-icon" />
               <span>Target: {target}{unit}</span>
             </div>
           )}
@@ -174,7 +174,7 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
             </div>
           ) : (
             <div className="status-needs-work">
-              <TargetIcon className="status-icon" />
+              <FlagIcon className="status-icon" />
               <span>Needs Focus</span>
             </div>
           )}
@@ -222,7 +222,7 @@ export const ProgressCards: React.FC<ProgressCardsProps> = ({
       value: dailyCompleted,
       maxValue: dailyGoal,
       unit: ' cards',
-      icon: TargetIcon,
+      icon: FlagIcon,
       gradient: 'from-purple-500 to-purple-600',
       color: 'purple',
       description: 'Today\'s study target',
