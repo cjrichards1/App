@@ -8,8 +8,10 @@ import { useFlashcards } from './hooks/useFlashcards';
 import { ColorSystemDemo } from './components/ColorSystemDemo';
 import { ButtonShowcase } from './components/ButtonShowcase';
 import { AnimationDemo } from './components/AnimationDemo';
+import { DynamicDashboard } from './components/DynamicDashboard';
+import { LayoutShowcase } from './components/LayoutShowcase';
 
-type View = 'dashboard' | 'create' | 'study' | 'folder' | 'demo' | 'buttons' | 'animations';
+type View = 'dashboard' | 'create' | 'study' | 'folder' | 'demo' | 'buttons' | 'animations' | 'dynamic' | 'layout';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
@@ -41,7 +43,7 @@ function App() {
     switch (currentView) {
       case 'dashboard':
         return (
-          <Dashboard
+          <DynamicDashboard
             flashcards={flashcards}
             folders={folders}
             onNavigateToFolder={handleNavigateToFolder}
@@ -87,6 +89,18 @@ function App() {
         return <ButtonShowcase />;
       case 'animations':
         return <AnimationDemo />;
+      case 'dynamic':
+        return (
+          <DynamicDashboard
+            flashcards={flashcards}
+            folders={folders}
+            onNavigateToFolder={handleNavigateToFolder}
+            onCreateCard={() => setCurrentView('create')}
+            onStudy={() => setCurrentView('study')}
+          />
+        );
+      case 'layout':
+        return <LayoutShowcase />;
       default:
         return null;
     }
