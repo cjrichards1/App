@@ -227,13 +227,13 @@ export const StudyMode: React.FC<StudyModeProps> = ({
         {/* Flashcard */}
         <div className="relative mb-16 flex justify-center">
           <div
-            className={`flip-card w-96 h-60 sm:w-80 sm:h-48 md:w-96 md:h-60 cursor-pointer ${
+            className={`flip-card-container w-96 h-60 sm:w-80 sm:h-48 md:w-96 md:h-60 cursor-pointer ${
               isFlipped ? 'flipped' : ''
             }`}
             onClick={() => setIsFlipped(!isFlipped)}
           >
-            <div className="flip-card-inner shadow-2xl hover:shadow-3xl transition-all duration-300">
-              <div className="flip-card-front p-10 flex flex-col bg-gradient-to-br from-white to-gray-50 border border-gray-100">
+            <div className="flip-card shadow-2xl hover:shadow-3xl transition-all duration-300">
+              <div className="flip-card-face flip-card-front p-10 flex flex-col bg-gradient-to-br from-white to-gray-50 border border-gray-100">
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center gap-2">
                     {currentCard?.isLatex ? (
@@ -280,7 +280,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({
                 </div>
               </div>
 
-              <div className="flip-card-back p-10 flex flex-col bg-gradient-to-br from-white to-blue-50 border border-blue-100">
+              <div className="flip-card-face flip-card-back p-10 flex flex-col bg-gradient-to-br from-white to-blue-50 border border-blue-100">
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center gap-2">
                     {currentCard?.isLatex ? (
@@ -331,14 +331,14 @@ export const StudyMode: React.FC<StudyModeProps> = ({
           <div className="flex flex-col sm:flex-row gap-6 justify-center max-w-lg mx-auto">
             <button
               onClick={() => handleAnswer(false)}
-              className="flex items-center justify-center gap-3 px-10 py-5 rounded-xl transition-all duration-300 text-xl font-bold bg-gradient-to-r from-flashvibe-coral to-rose-600 text-white hover:from-rose-600 hover:to-rose-700 shadow-lg hover:shadow-xl"
+              className="btn-enhanced flex items-center justify-center gap-3 px-10 py-5 rounded-xl transition-all duration-300 text-xl font-bold bg-gradient-to-r from-flashvibe-coral to-rose-600 text-white hover:from-rose-600 hover:to-rose-700 shadow-lg hover:shadow-xl"
             >
               <XCircleIcon className="w-6 h-6" />
               Incorrect
             </button>
             <button
               onClick={() => handleAnswer(true)}
-              className="flex items-center justify-center gap-3 px-10 py-5 rounded-xl transition-all duration-300 text-xl font-bold bg-gradient-to-r from-flashvibe-green to-green-600 text-white hover:from-green-600 hover:to-green-700 shadow-lg hover:shadow-xl"
+              className="btn-enhanced flex items-center justify-center gap-3 px-10 py-5 rounded-xl transition-all duration-300 text-xl font-bold bg-gradient-to-r from-flashvibe-green to-green-600 text-white hover:from-green-600 hover:to-green-700 shadow-lg hover:shadow-xl"
             >
               <CheckCircleIcon className="w-6 h-6" />
               Correct

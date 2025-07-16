@@ -193,6 +193,19 @@ export const Header: React.FC<HeaderProps> = ({
                   <span>Button Demo</span>
                 </button>
               </div>
+                <button
+                  onClick={() => {
+                    onNavigate('animations');
+                    setShowMainMenu(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-flashvibe-gray transition-colors ${
+                    currentView === 'animations' ? 'bg-blue-50 text-flashvibe-blue font-semibold' : 'text-flashvibe-slate'
+                  }`}
+                >
+                  <SparklesIcon className="w-5 h-5" />
+                  <span>Animation Demo</span>
+                </button>
+
 
             )}
           </div>
