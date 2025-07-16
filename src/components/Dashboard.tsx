@@ -33,7 +33,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const masteredCards = flashcards.filter(card => card.correctCount >= 3).length; // Consider a card mastered if correctly answered 3+ times
 
   // Get display name - use name if available, otherwise use email
-  const displayName = user.name || user.email.split('@')[0];
+  const displayName = user.name ? user.name.split(' ')[0] : user.email.split('@')[0];
   return (
     <div className="dashboard-container flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8">
       {/* FlashVibe Title */}
