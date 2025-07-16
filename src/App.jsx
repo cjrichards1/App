@@ -1,450 +1,352 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  SparklesIcon, 
-  Bars3Icon, 
-  XMarkIcon,
-  PlusIcon,
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  TrashIcon,
-  EyeIcon,
-  AcademicCapIcon
-} from '@heroicons/react/24/outline';
+import React, { useState } from 'react';
+import { PlusIcon, CommandLineIcon, DocumentTextIcon, SparklesIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { InlineMath, BlockMath } from 'react-katex';
+import { Folder } from '../types/flashcard';
+import 'katex/dist/katex.min.css';
 
-const STORAGE_KEY = 'flashvibe-cards';
+interface FlashcardFormProps {
+  folders: Folder[];
+  categories: string[];
+  onBack: () => void;
+  onBack: () => void;
+  onAdd: (flashcard: {
+    front: string;
+    back: string;
+    category: string;
+    difficulty: 'easy' | 'medium' | 'hard';
+    isLatex: boolean;
+    folderId?: string;
+  }) => void;
+}
 
-function App() {
-  const [flashcards, setFlashcards] = useState([]);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [studyMode, setStudyMode] = useState(false);
-  const [currentCardIndex, setCurrentCardIndex] = useState(0);
-  const [isFlipped, setIsFlipped] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  
-  // Form state
-  const [frontText, setFrontText] = useState('');
-  const [backText, setBackText] = useState('');
-  const [isLatexMode, setIsLatexMode] = useState(false);
 
-  // Load flashcards from localStorage on mount
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      setFlashcards(JSON.parse(stored));
+const LaTeXPreview: React.FC<{ content: string; isBlock?: boolean }> = ({ content, isBlock = false }) => {
+  try {
+    if (isBlock) {
+      return <BlockMath math={content} />;
     }
-  }, []);
+    return <InlineMath math={content} />;
+  } catch (error) {
+    return <span className="text-red-500 text-sm">Invalid LaTeX syntax</span>;
+  }
+};
 
-  // Save flashcards to localStorage whenever flashcards change
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(flashcards));
-  }, [flashcards]);
+export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categories, onBack, onAdd }) => {
+  const [front, setFront] = useState('');
+  const [back, setBack] = useState('');
+  const [category, setCategory] = useState('general');
+  const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
+  const [isLatex, setIsLatex] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [selectedFolder, setSelectedFolder] = useState<string>('');
 
-  const createFlashcard = () => {
-    if (!frontText.trim() || !backText.trim()) return;
-
-    const newCard = {
-      id: Date.now(),
-      front: frontText.trim(),
-      back: backText.trim(),
-      isLatex: isLatexMode,
-      createdAt: new Date().toISOString()
-    };
-
-    setFlashcards(prev => [...prev, newCard]);
-    setFrontText('');
-    setBackText('');
-    
-    // Show success animation
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 1000);
-  };
-
-  const deleteFlashcard = (id) => {
-    setFlashcards(prev => prev.filter(card => card.id !== id));
-    if (studyMode && flashcards.length <= 1) {
-      setStudyMode(false);
-    } else if (studyMode && currentCardIndex >= flashcards.length - 1) {
-      setCurrentCardIndex(0);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (front.trim() && back.trim()) {
+      onAdd({
+        front: front.trim(),
+        back: back.trim(),
+        category,
+        difficulty,
+        isLatex,
+        folderId: selectedFolder || undefined,
+      });
+      setFront('');
+      setBack('');
+      setSelectedFolder('');
     }
   };
 
-  const startStudyMode = () => {
-    if (flashcards.length === 0) return;
-    setStudyMode(true);
-    setCurrentCardIndex(0);
-    setIsFlipped(false);
-  };
-
-  const nextCard = () => {
-    setCurrentCardIndex((prev) => (prev + 1) % flashcards.length);
-    setIsFlipped(false);
-  };
-
-  const prevCard = () => {
-    setCurrentCardIndex((prev) => (prev - 1 + flashcards.length) % flashcards.length);
-    setIsFlipped(false);
-  };
-
-  const flipCard = () => {
-    setIsFlipped(!isFlipped);
-  };
-
-  const LaTeXRenderer = ({ content, isLatex, className = "" }) => {
-    if (!isLatex) {
-      return <div className={`whitespace-pre-wrap ${className}`}>{content}</div>;
+  const latexExamples = [
+    { 
+      category: 'Basic Operations',
+      examples: [
+        { label: 'Fraction', code: '\\frac{a}{b}', preview: 'a/b' },
+        { label: 'Square root', code: '\\sqrt{x}', preview: '√x' },
+        { label: 'Power', code: 'x^{2}', preview: 'x²' },
+        { label: 'Subscript', code: 'x_{1}', preview: 'x₁' },
+      ]
+    },
+    {
+      category: 'Calculus',
+      examples: [
+        { label: 'Derivative', code: '\\frac{d}{dx}f(x)', preview: 'd/dx f(x)' },
+        { label: 'Integral', code: '\\int f(x) dx', preview: '∫ f(x) dx' },
+        { label: 'Limit', code: '\\lim_{x \\to a} f(x)', preview: 'lim(x→a) f(x)' },
+      ]
+    },
+    {
+      category: 'Greek Letters',
+      examples: [
+        { label: 'Common', code: '\\alpha, \\beta, \\gamma', preview: 'α, β, γ' },
+        { label: 'Pi & others', code: '\\pi, \\phi, \\omega', preview: 'π, φ, ω' },
+      ]
     }
-
-    try {
-      return (
-        <div className={className}>
-          <BlockMath math={content} />
-        </div>
-      );
-    } catch (error) {
-      return <div className={`text-red-500 ${className}`}>Invalid LaTeX: {content}</div>;
-    }
-  };
-
-  const LaTeXPreview = ({ content, isLatex }) => {
-    if (!content || !isLatex) return null;
-
-    try {
-      return (
-        <div className="mt-2 p-3 bg-gray-50 rounded-md border">
-          <div className="text-xs text-gray-500 mb-1">LaTeX Preview:</div>
-          <BlockMath math={content} />
-        </div>
-      );
-    } catch (error) {
-      return (
-        <div className="mt-2 p-3 bg-red-50 rounded-md border border-red-200">
-          <div className="text-xs text-red-500">Invalid LaTeX syntax</div>
-        </div>
-      );
-    }
-  };
+  ];
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-gray-100 to-blue-50 animate-fade-in">
-      {/* Mobile menu button */}
-      <button
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="md:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-lg shadow-md focus-ring"
-        aria-label="Toggle menu"
-      >
-        {sidebarOpen ? (
-          <XMarkIcon className="h-6 w-6 text-gray-600" />
-        ) : (
-          <Bars3Icon className="h-6 w-6 text-gray-600" />
-        )}
-      </button>
+    <div className="flex-1 p-8 bg-gray-50 overflow-y-auto">
+      <div className="animate-fade-in max-w-5xl mx-auto">
+        {/* Back Button */}
+        <div className="mb-8">
+          <button
+            onClick={onBack}
+      <div className="animate-fade-in max-w-5xl mx-auto">
+        {/* Back Button */}
+        <div className="mb-8">
+          <button
+            onClick={onBack}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 border-2 focus-ring"
+            style={{ backgroundColor: '#F3F4F6', color: '#1F2937', borderColor: '#E5E7EB' }}
+          >
+            <ArrowLeftIcon className="w-4 h-4" />
+            Back to Dashboard
+          </button>
+        </div>
 
-      {/* Sidebar */}
-      <div className={`
-        fixed md:relative z-40 w-80 h-full bg-white shadow-md
-        transform transition-transform duration-300 ease-in-out
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-      `}>
-        <div className="p-6 h-full flex flex-col custom-scrollbar overflow-y-auto">
-          {/* Logo */}
-          <div className="flex items-center gap-3 mb-8">
-            <SparklesIcon className="h-8 w-8 text-blue-600" />
+      <div className="rounded-xl shadow-md p-8 border-gradient bg-white">
+        <div className="flex items-center justify-between mb-10">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-xl" style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)' }}>
+              <PlusIcon className="w-8 h-8 text-white" />
+            </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">FlashVibe</h1>
-              <p className="text-base text-gray-600">Learn Fast, Vibe Smart</p>
+              <h2 className="text-3xl font-bold" style={{ color: '#1F2937' }}>Create New Flashcard</h2>
+              <p style={{ color: '#6B7280' }}>Build your knowledge, one card at a time</p>
             </div>
           </div>
-
-          {/* Create Form */}
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Create Flashcard</h2>
+          
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => setIsLatex(!isLatex)}
+              className={`flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 border-2 focus-ring ${
+                isLatex 
+                  ? 'text-white'
+                  : ''
+              }`}
+              style={isLatex 
+                ? { background: 'linear-gradient(135deg, #F43F5E 0%, #E11D48 100%)', borderColor: '#F43F5E', boxShadow: '0 4px 15px rgba(244, 63, 94, 0.3)' }
+                : { backgroundColor: '#F3F4F6', color: '#1F2937', borderColor: '#E5E7EB' }
+              }
+              aria-label={`Switch to ${isLatex ? 'text' : 'LaTeX'} mode`}
+            >
+              {isLatex ? <CommandLineIcon className="w-4 h-4" /> : <DocumentTextIcon className="w-4 h-4" />}
+              {isLatex ? 'LaTeX Mode' : 'Text Mode'}
+            </button>
             
-            {/* LaTeX Toggle */}
-            <div className="flex items-center gap-2 mb-4">
-              <input
-                type="checkbox"
-                id="latex-mode"
-                checked={isLatexMode}
-                onChange={(e) => setIsLatexMode(e.target.checked)}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <label htmlFor="latex-mode" className="text-sm text-gray-700">
-                LaTeX Mode
-              </label>
+            {isLatex && (
+              <button
+                type="button"
+                onClick={() => setShowPreview(!showPreview)}
+                className="px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 border-2 focus-ring"
+                style={{ 
+                  backgroundColor: 'rgba(59, 130, 246, 0.1)', 
+                  color: '#3B82F6', 
+                  borderColor: 'rgba(59, 130, 246, 0.2)' 
+                }}
+                aria-label={`${showPreview ? 'Hide' : 'Show'} LaTeX preview`}
+              >
+                {showPreview ? 'Hide Preview' : 'Show Preview'}
+              </button>
+            )}
+          </div>
+        </div>
+
+        {isLatex && (
+          <div className="mb-10 p-6 rounded-xl border-2 animate-slide-in" 
+               style={{ 
+                 borderColor: 'rgba(244, 63, 94, 0.2)', 
+                 background: 'linear-gradient(to right, rgba(244, 63, 94, 0.05), rgba(244, 63, 94, 0.1))' 
+               }}>
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <SparklesIcon className="w-6 h-6" style={{ color: '#F43F5E' }} />
+                <h3 className="text-xl font-bold" style={{ color: '#1F2937' }}>LaTeX Quick Reference</h3>
+              </div>
+              <div className="text-sm px-3 py-1 rounded-lg font-medium" 
+                   style={{ backgroundColor: 'rgba(244, 63, 94, 0.1)', color: '#F43F5E' }}>
+                Click any example to copy
+              </div>
+            </div>
+            
+            <div className="mb-6 p-4 rounded-lg border" 
+                 style={{ backgroundColor: 'rgba(244, 63, 94, 0.1)', borderColor: 'rgba(244, 63, 94, 0.2)' }}>
+              <h4 className="text-base font-semibold mb-3" style={{ color: '#1F2937' }}>💡 LaTeX Tips:</h4>
+              <ul className="text-sm space-y-1" style={{ color: '#374151' }}>
+                <li>• Use curly braces {} to group expressions: x^{2+3} not x^2+3</li>
+                <li>• For multi-character subscripts/superscripts: x_{'{max}'} not x_max</li>
+                <li>• Preview your LaTeX before saving to catch syntax errors</li>
+              </ul>
             </div>
 
-            {/* Front Input */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="space-y-6">
+              {latexExamples.map((category, categoryIndex) => (
+                <div key={categoryIndex}>
+                  <h4 className="text-base font-bold mb-3 pb-2 border-b" 
+                      style={{ color: '#1F2937', borderColor: 'rgba(244, 63, 94, 0.3)' }}>
+                    {category.category}
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {category.examples.map((example, index) => (
+                      <div 
+                        key={index} 
+                        className="p-3 rounded-lg border cursor-pointer hover:shadow-sm transition-all duration-200 focus-ring bg-white"
+                        style={{ borderColor: 'rgba(244, 63, 94, 0.2)' }}
+                        onClick={() => {
+                          navigator.clipboard.writeText(example.code);
+                        }}
+                        title="Click to copy"
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            navigator.clipboard.writeText(example.code);
+                          }
+                        }}
+                      >
+                        <div className="flex justify-between items-start mb-1">
+                          <span className="text-sm font-semibold" style={{ color: '#F43F5E' }}>{example.label}</span>
+                          <span className="text-sm" style={{ color: '#6B7280' }}>{example.preview}</span>
+                        </div>
+                        <code className="text-sm px-2 py-1 rounded block overflow-x-auto font-mono" 
+                              style={{ backgroundColor: 'rgba(244, 63, 94, 0.05)', color: '#F43F5E' }}>
+                          {example.code}
+                        </code>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
                 Front (Question)
               </label>
               <textarea
-                value={frontText}
-                onChange={(e) => setFrontText(e.target.value)}
-                placeholder={isLatexMode ? "Enter LaTeX: \\frac{d}{dx}[x^2] = ?" : "Enter question (text or LaTeX)"}
-                className="w-full p-3 border border-gray-300 rounded-md focus-ring resize-none font-mono"
-                rows={3}
+                value={front}
+                onChange={(e) => setFront(e.target.value)}
+                placeholder={isLatex ? "Enter LaTeX: \\frac{d}{dx}[x^2] = ?" : "Enter your question..."}
+                className="input-enhanced w-full p-4 rounded-lg resize-none focus-ring"
+                rows={6}
+                required
+                aria-label="Flashcard front content"
               />
-              <LaTeXPreview content={frontText} isLatex={isLatexMode} />
+              {isLatex && showPreview && front && (
+                <div className="mt-4 p-4 rounded-lg border" 
+                     style={{ 
+                       background: 'linear-gradient(to right, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.1))', 
+                       borderColor: 'rgba(59, 130, 246, 0.2)' 
+                     }}>
+                  <div className="text-sm font-medium mb-2" style={{ color: '#374151' }}>Preview:</div>
+                  <div className="card-content text-lg">
+                    <LaTeXPreview content={front} />
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Back Input */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div>
+              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
                 Back (Answer)
               </label>
               <textarea
-                value={backText}
-                onChange={(e) => setBackText(e.target.value)}
-                placeholder={isLatexMode ? "Enter LaTeX: 2x" : "Enter answer (text or LaTeX)"}
-                className="w-full p-3 border border-gray-300 rounded-md focus-ring resize-none font-mono"
-                rows={3}
+                value={back}
+                onChange={(e) => setBack(e.target.value)}
+                placeholder={isLatex ? "Enter LaTeX: 2x" : "Enter your answer..."}
+                className="input-enhanced w-full p-4 rounded-lg resize-none focus-ring"
+                rows={6}
+                required
+                aria-label="Flashcard back content"
               />
-              <LaTeXPreview content={backText} isLatex={isLatexMode} />
-            </div>
-
-            {/* Create Button */}
-            <button
-              onClick={createFlashcard}
-              disabled={!frontText.trim() || !backText.trim()}
-              className={`
-                w-full px-6 py-3 rounded-md text-white font-semibold
-                btn-primary focus-ring disabled:opacity-50 disabled:cursor-not-allowed
-                ${showSuccess ? 'animate-success' : ''}
-              `}
-              aria-label="Create flashcard"
-            >
-              <PlusIcon className="h-5 w-5 inline mr-2" />
-              Create Flashcard
-            </button>
-          </div>
-
-          {/* Navigation */}
-          <div className="space-y-3">
-            <button
-              onClick={() => {
-                setSidebarOpen(false);
-                setStudyMode(false);
-              }}
-              className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 rounded-md transition-colors focus-ring"
-            >
-              <EyeIcon className="h-5 w-5 inline mr-2" />
-              View All Cards
-            </button>
-            
-            <button
-              onClick={() => {
-                startStudyMode();
-                setSidebarOpen(false);
-              }}
-              disabled={flashcards.length === 0}
-              className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 rounded-md transition-colors focus-ring disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <AcademicCapIcon className="h-5 w-5 inline mr-2" />
-              Study Mode
-            </button>
-          </div>
-
-          {/* Stats */}
-          <div className="mt-auto pt-6 border-t border-gray-200">
-            <div className="text-sm text-gray-600">
-              <div className="flex justify-between">
-                <span>Total Cards:</span>
-                <span className="font-semibold">{flashcards.length}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile overlay */}
-      {sidebarOpen && (
-        <div
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Main Content */}
-      <div className="flex-1 p-6 md:p-8 overflow-y-auto custom-scrollbar">
-        {studyMode ? (
-          /* Study Modal */
-          <div className="max-w-3xl mx-auto">
-            <div className="mb-6 flex items-center justify-between">
-              <button
-                onClick={() => setStudyMode(false)}
-                className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors focus-ring"
-              >
-                <XMarkIcon className="h-5 w-5 inline mr-2" />
-                Close Study
-              </button>
-              
-              <div className="bg-gray-100 px-3 py-1 rounded-full text-sm text-gray-600">
-                Card {currentCardIndex + 1} of {flashcards.length}
-              </div>
-            </div>
-
-            {/* Study Card */}
-            <div className="mb-8">
-              <div 
-                className={`flip-card w-full h-72 cursor-pointer ${isFlipped ? 'flipped' : ''}`}
-                onClick={flipCard}
-              >
-                <div className="flip-card-inner gradient-border shadow-lg">
-                  <div className="flip-card-front">
-                    <LaTeXRenderer
-                      content={flashcards[currentCardIndex]?.front}
-                      isLatex={flashcards[currentCardIndex]?.isLatex}
-                      className="latex-content text-center"
-                    />
-                  </div>
-                  <div className="flip-card-back">
-                    <LaTeXRenderer
-                      content={flashcards[currentCardIndex]?.back}
-                      isLatex={flashcards[currentCardIndex]?.isLatex}
-                      className="latex-content text-center"
-                    />
+              {isLatex && showPreview && back && (
+                <div className="mt-4 p-4 rounded-lg border" 
+                     style={{ 
+                       background: 'linear-gradient(to right, rgba(16, 185, 129, 0.05), rgba(16, 185, 129, 0.1))', 
+                       borderColor: 'rgba(16, 185, 129, 0.2)' 
+                     }}>
+                  <div className="text-sm font-medium mb-2" style={{ color: '#374151' }}>Preview:</div>
+                  <div className="card-content text-lg">
+                    <LaTeXPreview content={back} />
                   </div>
                 </div>
-              </div>
-              
-              <p className="text-center text-gray-600 mt-4">
-                Click card to flip • Use arrow keys to navigate
-              </p>
-            </div>
-
-            {/* Study Controls */}
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={prevCard}
-                className="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors focus-ring"
-                aria-label="Previous card"
-              >
-                <ArrowLeftIcon className="h-5 w-5" />
-              </button>
-              
-              <button
-                onClick={() => {
-                  if (confirm('Delete this flashcard?')) {
-                    deleteFlashcard(flashcards[currentCardIndex].id);
-                  }
-                }}
-                className="px-6 py-3 bg-rose-500 text-white rounded-md hover:bg-rose-600 transition-colors focus-ring"
-                aria-label="Delete card"
-              >
-                <TrashIcon className="h-5 w-5" />
-              </button>
-              
-              <button
-                onClick={nextCard}
-                className="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors focus-ring"
-                aria-label="Next card"
-              >
-                <ArrowRightIcon className="h-5 w-5" />
-              </button>
+              )}
             </div>
           </div>
-        ) : (
-          /* Card Grid */
-          <div className="max-w-6xl mx-auto">
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Your Flashcards</h2>
-              <p className="text-gray-600">
-                {flashcards.length === 0 
-                  ? "No flashcards yet? Start your first FlashVibe set!" 
-                  : `${flashcards.length} card${flashcards.length !== 1 ? 's' : ''} ready to study`
-                }
-              </p>
-            </div>
 
-            {flashcards.length === 0 ? (
-              /* Empty State */
-              <div className="text-center py-16">
-                <SparklesIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg text-gray-600 mb-6">No flashcards yet? Start your first FlashVibe set!</h3>
-                <button
-                  onClick={() => setSidebarOpen(true)}
-                  className="px-6 py-3 btn-secondary text-white rounded-md font-semibold focus-ring"
-                >
-                  <PlusIcon className="h-5 w-5 inline mr-2" />
-                  Create Your First Card
-                </button>
-              </div>
-            ) : (
-              /* Cards Grid */
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {flashcards.map((card, index) => (
-                  <div
-                    key={card.id}
-                    className="w-full h-36 bg-white rounded-xl shadow-md gradient-border card-hover animate-slide-in"
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                  >
-                    <div className="p-4 h-full flex flex-col">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-xs font-semibold">
-                          #{index + 1}
-                        </span>
-                        <button
-                          onClick={() => {
-                            if (confirm('Delete this flashcard?')) {
-                              deleteFlashcard(card.id);
-                            }
-                          }}
-                          className="text-gray-400 hover:text-red-500 transition-colors focus-ring rounded"
-                          aria-label="Delete card"
-                        >
-                          <TrashIcon className="h-4 w-4" />
-                        </button>
-                      </div>
-                      
-                      <div className="flex-1 overflow-hidden">
-                        <LaTeXRenderer
-                          content={card.front}
-                          isLatex={card.isLatex}
-                          className="text-sm text-slate-800 font-mono line-clamp-3"
-                        />
-                      </div>
-                      
-                      {card.isLatex && (
-                        <div className="mt-2">
-                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-pink-100 text-pink-800">
-                            LaTeX
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
+                Folder (Optional)
+              </label>
+              <select
+                value={selectedFolder}
+                onChange={(e) => setSelectedFolder(e.target.value)}
+                className="input-enhanced w-full p-4 rounded-lg focus-ring"
+                aria-label="Select folder"
+              >
+                <option value="">No Folder</option>
+                {folders.map((folder) => (
+                  <option key={folder.id} value={folder.id}>
+                    📁 {folder.name}
+                  </option>
                 ))}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+              </select>
+            </div>
 
-      {/* Keyboard navigation for study mode */}
-      {studyMode && (
-        <div className="hidden">
-          <input
-            autoFocus
-            onKeyDown={(e) => {
-              if (e.code === 'Space') {
-                e.preventDefault();
-                flipCard();
-              } else if (e.code === 'ArrowLeft') {
-                prevCard();
-              } else if (e.code === 'ArrowRight') {
-                nextCard();
-              } else if (e.code === 'Escape') {
-                setStudyMode(false);
-              }
-            }}
-            className="opacity-0 absolute -top-10"
-          />
-        </div>
-      )}
+            <div>
+              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
+                Category
+              </label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="input-enhanced w-full p-4 rounded-lg focus-ring"
+                aria-label="Select flashcard category"
+              >
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-1 gap-8">
+            <div>
+              <label className="block text-base font-semibold mb-3" style={{ color: '#1F2937' }}>
+                Difficulty
+              </label>
+              <select
+                value={difficulty}
+                onChange={(e) => setDifficulty(e.target.value as 'easy' | 'medium' | 'hard')}
+                className="input-enhanced w-full p-4 rounded-lg focus-ring"
+                aria-label="Select flashcard difficulty"
+              >
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+              </select>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-4 px-6 rounded-lg text-base font-semibold flex items-center justify-center gap-3 focus-ring transition-all duration-300 btn-primary"
+            aria-label="Create flashcard"
+          >
+            <PlusIcon className="w-5 h-5" />
+            Create Flashcard
+          </button>
+        </form>
+      </div>
+      </div>
     </div>
   );
-}
-
-export default App;
+};
