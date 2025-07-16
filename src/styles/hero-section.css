@@ -170,8 +170,9 @@
 .name-highlight {
   background: linear-gradient(45deg, #ffd89b, #19547b);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  -webkit-text-fill-color: #FFFFFF;
   background-clip: text;
+  color: #FFFFFF;
   position: relative;
 }
 
