@@ -231,7 +231,7 @@ export const Header: React.FC<HeaderProps> = ({
                   <SparklesIcon className="w-5 h-5" />
                   <span>Progress Cards</span>
                 </button>
-              </div>
+
                 <button
                   onClick={() => {
                     onNavigate('decks');
@@ -244,8 +244,7 @@ export const Header: React.FC<HeaderProps> = ({
                   <SparklesIcon className="w-5 h-5" />
                   <span>Study Deck Tiles</span>
                 </button>
-
-
+              </div>
             )}
           </div>
 
