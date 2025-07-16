@@ -14,15 +14,7 @@
 .hero-background {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, 
-    #667eea 0%, 
-    #764ba2 25%, 
-    #f093fb 50%, 
-    #f5576c 75%, 
-    #4facfe 100%
-  );
-  background-size: 400% 400%;
-  animation: gradient-shift 15s ease infinite;
+  background: #3B82F6;
 }
 
 @keyframes gradient-shift {
