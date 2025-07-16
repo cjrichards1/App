@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PlusIcon, CommandLineIcon, DocumentTextIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { InlineMath, BlockMath } from 'react-katex';
-import { Folder } from '../types/flashcard';
+import { Folder } from './types/flashcard';
 import 'katex/dist/katex.min.css';
 
 interface FlashcardFormProps {
