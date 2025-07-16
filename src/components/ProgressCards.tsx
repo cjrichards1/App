@@ -3,11 +3,9 @@ import {
   TrophyIcon, 
   FireIcon, 
   ChartBarIcon,
-  ClockIcon,
   BookOpenIcon,
   AcademicCapIcon,
   StarIcon,
-  BoltIcon,
   CheckCircleIcon,
   FlagIcon
 } from '@heroicons/react/24/outline';
@@ -19,22 +17,15 @@ interface ProgressCardProps {
   unit?: string;
   icon: React.ComponentType<any>;
   gradient: string;
-  color: string;
   description: string;
-  target?: number;
-  streak?: number;
+  delay?: number;
 }
 
 interface ProgressCardsProps {
-  studyProgress: number;
-  accuracyRate: number;
-  dailyGoal: number;
-  dailyCompleted: number;
-  weeklyStreak: number;
   totalCards: number;
+  studiedCards: number;
   masteredCards: number;
-  studyTime: number;
-  targetStudyTime: number;
+  accuracyRate: number;
 }
 
 const ProgressCard: React.FC<ProgressCardProps> = ({
@@ -44,10 +35,8 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
   unit = '',
   icon: Icon,
   gradient,
-  color,
   description,
-  target,
-  streak
+  delay = 0
 }) => {
   const [animatedValue, setAnimatedValue] = useState(0);
   const [animatedProgress, setAnimatedProgress] = useState(0);
@@ -55,157 +44,123 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
 
   const percentage = Math.min((value / maxValue) * 100, 100);
   
-  // Determine color based on progress
-  const getProgressColor = () => {
-    if (percentage >= 80) return 'from-green-400 to-green-600';
-    if (percentage >= 60) return 'from-blue-400 to-blue-600';
-    if (percentage >= 40) return 'from-yellow-400 to-orange-500';
-    return 'from-orange-400 to-red-500';
-  };
-
-  const getProgressBg = () => {
-    if (percentage >= 80) return 'bg-green-50';
-    if (percentage >= 60) return 'bg-blue-50';
-    if (percentage >= 40) return 'bg-yellow-50';
-    return 'bg-orange-50';
-  };
-
   useEffect(() => {
-    setIsVisible(true);
-    
-    // Animate the value counter
-    const valueInterval = setInterval(() => {
-      setAnimatedValue(prev => {
-        if (prev >= value) {
-          clearInterval(valueInterval);
-          return value;
-        }
-        return prev + Math.ceil(value / 50);
-      });
-    }, 30);
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+      
+      // Animate the value counter
+      const valueInterval = setInterval(() => {
+        setAnimatedValue(prev => {
+          if (prev >= value) {
+            clearInterval(valueInterval);
+            return value;
+          }
+          return prev + Math.ceil(value / 30);
+        });
+      }, 50);
 
-    // Animate the progress bar
-    const progressInterval = setInterval(() => {
-      setAnimatedProgress(prev => {
-        if (prev >= percentage) {
-          clearInterval(progressInterval);
-          return percentage;
-        }
-        return prev + 2;
-      });
-    }, 20);
+      // Animate the progress bar
+      const progressInterval = setInterval(() => {
+        setAnimatedProgress(prev => {
+          if (prev >= percentage) {
+            clearInterval(progressInterval);
+            return percentage;
+          }
+          return prev + 3;
+        });
+      }, 30);
 
-    return () => {
-      clearInterval(valueInterval);
-      clearInterval(progressInterval);
-    };
-  }, [value, percentage]);
+      return () => {
+        clearInterval(valueInterval);
+        clearInterval(progressInterval);
+      };
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [value, percentage, delay]);
 
   return (
-    <div className={`progress-card ${isVisible ? 'animate-in' : ''}`}>
-      <div className="progress-card-inner">
-        {/* Header */}
-        <div className="progress-header">
-          <div className="progress-icon-container">
-            <div className={`progress-icon bg-gradient-to-br ${gradient}`}>
-              <Icon className="icon" />
-            </div>
-            {streak && streak > 0 && (
-              <div className="streak-badge">
-                <FireIcon className="streak-icon" />
-                <span>{streak}</span>
-              </div>
-            )}
+    <div className={`modern-card-gradient ${isVisible ? 'animate-scale-in' : 'opacity-0'}`}>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center">
+          <div className={`flex items-center justify-center w-10 h-10 rounded-xl mr-3 ${gradient}`}>
+            <Icon className="w-5 h-5 text-white" />
           </div>
-          <div className="progress-info">
-            <h3 className="progress-title">{title}</h3>
-            <p className="progress-description">{description}</p>
+          <div>
+            <h3 className="font-semibold text-gray-800">{title}</h3>
+            <p className="text-sm text-gray-600">{description}</p>
           </div>
         </div>
-
-        {/* Value Display */}
-        <div className="progress-value-section">
-          <div className="progress-main-value">
-            <span className="progress-number">{animatedValue}</span>
-            <span className="progress-unit">{unit}</span>
-            {maxValue !== 100 && (
-              <span className="progress-max">/ {maxValue}</span>
-            )}
-          </div>
-          {target && (
-            <div className="progress-target">
-              <FlagIcon className="target-icon" />
-              <span>Target: {target}{unit}</span>
-            </div>
-          )}
-        </div>
-
-        {/* Progress Bar */}
-        <div className="progress-bar-container">
-          <div className={`progress-bar-bg ${getProgressBg()}`}>
-            <div 
-              className={`progress-bar-fill bg-gradient-to-r ${getProgressColor()}`}
-              style={{ width: `${animatedProgress}%` }}
-            >
-              <div className="progress-bar-shine"></div>
-            </div>
-          </div>
-          <div className="progress-percentage">
-            <span>{Math.round(animatedProgress)}%</span>
+        <div className="text-right">
+          <div className="text-2xl font-bold text-gray-800">
+            {animatedValue}
+            <span className="text-sm font-medium text-gray-500 ml-1">
+              {unit}
+              {maxValue !== 100 && ` / ${maxValue}`}
+            </span>
           </div>
         </div>
+      </div>
 
-        {/* Status Indicator */}
-        <div className="progress-status">
+      {/* Progress Bar */}
+      <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
+        <div 
+          className={`h-2 rounded-full transition-all duration-1000 ${gradient}`}
+          style={{ width: `${animatedProgress}%` }}
+        />
+      </div>
+
+      {/* Status */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
           {percentage >= 80 ? (
-            <div className="status-excellent">
-              <CheckCircleIcon className="status-icon" />
-              <span>Excellent!</span>
-            </div>
+            <>
+              <CheckCircleIcon className="w-4 h-4 text-green-500 mr-1" />
+              <span className="text-sm font-medium text-green-600">Excellent!</span>
+            </>
           ) : percentage >= 60 ? (
-            <div className="status-good">
-              <StarIcon className="status-icon" />
-              <span>Good Progress</span>
-            </div>
+            <>
+              <StarIcon className="w-4 h-4 text-blue-500 mr-1" />
+              <span className="text-sm font-medium text-blue-600">Good Progress</span>
+            </>
           ) : percentage >= 40 ? (
-            <div className="status-okay">
-              <BoltIcon className="status-icon" />
-              <span>Keep Going</span>
-            </div>
+            <>
+              <FlagIcon className="w-4 h-4 text-yellow-500 mr-1" />
+              <span className="text-sm font-medium text-yellow-600">Keep Going</span>
+            </>
           ) : (
-            <div className="status-needs-work">
-              <FlagIcon className="status-icon" />
-              <span>Needs Focus</span>
-            </div>
+            <>
+              <FlagIcon className="w-4 h-4 text-orange-500 mr-1" />
+              <span className="text-sm font-medium text-orange-600">Needs Focus</span>
+            </>
           )}
         </div>
+        <span className="text-sm font-medium text-gray-500">
+          {Math.round(animatedProgress)}%
+        </span>
       </div>
     </div>
   );
 };
 
 export const ProgressCards: React.FC<ProgressCardsProps> = ({
-  studyProgress,
-  accuracyRate,
-  dailyGoal,
-  dailyCompleted,
-  weeklyStreak,
   totalCards,
+  studiedCards,
   masteredCards,
-  studyTime,
-  targetStudyTime
+  accuracyRate
 }) => {
+  const studyProgress = totalCards > 0 ? (studiedCards / totalCards) * 100 : 0;
+  const masteryRate = totalCards > 0 ? (masteredCards / totalCards) * 100 : 0;
+
   const progressData = [
     {
       title: 'Study Progress',
-      value: studyProgress,
-      maxValue: 100,
-      unit: '%',
+      value: studiedCards,
+      maxValue: totalCards,
+      unit: ' cards',
       icon: BookOpenIcon,
-      gradient: 'from-blue-500 to-blue-600',
-      color: 'blue',
-      description: 'Overall learning progress',
-      streak: weeklyStreak
+      gradient: 'bg-gradient-to-r from-blue-500 to-blue-600',
+      description: 'Cards you\'ve studied'
     },
     {
       title: 'Accuracy Rate',
@@ -213,70 +168,38 @@ export const ProgressCards: React.FC<ProgressCardsProps> = ({
       maxValue: 100,
       unit: '%',
       icon: TrophyIcon,
-      gradient: 'from-green-500 to-green-600',
-      color: 'green',
+      gradient: 'bg-gradient-to-r from-green-500 to-green-600',
       description: 'Correct answers percentage'
-    },
-    {
-      title: 'Daily Goal',
-      value: dailyCompleted,
-      maxValue: dailyGoal,
-      unit: ' cards',
-      icon: FlagIcon,
-      gradient: 'from-purple-500 to-purple-600',
-      color: 'purple',
-      description: 'Today\'s study target',
-      target: dailyGoal
     },
     {
       title: 'Cards Mastered',
       value: masteredCards,
       maxValue: totalCards,
-      unit: '',
+      unit: ' cards',
       icon: AcademicCapIcon,
-      gradient: 'from-indigo-500 to-indigo-600',
-      color: 'indigo',
+      gradient: 'bg-gradient-to-r from-purple-500 to-purple-600',
       description: 'Cards you\'ve mastered'
     },
     {
-      title: 'Study Time',
-      value: studyTime,
-      maxValue: targetStudyTime,
-      unit: ' min',
-      icon: ClockIcon,
-      gradient: 'from-orange-500 to-orange-600',
-      color: 'orange',
-      description: 'Time spent studying today',
-      target: targetStudyTime
-    },
-    {
-      title: 'Weekly Streak',
-      value: weeklyStreak,
-      maxValue: 7,
-      unit: ' days',
-      icon: FireIcon,
-      gradient: 'from-red-500 to-red-600',
-      color: 'red',
-      description: 'Consecutive study days'
+      title: 'Mastery Rate',
+      value: Math.round(masteryRate),
+      maxValue: 100,
+      unit: '%',
+      icon: StarIcon,
+      gradient: 'bg-gradient-to-r from-indigo-500 to-indigo-600',
+      description: 'Percentage of mastered cards'
     }
   ];
 
   return (
-    <div className="progress-cards-container">
-      <div className="progress-cards-header">
-        <h2 className="progress-cards-title">Your Progress</h2>
-        <p className="progress-cards-subtitle">Track your learning journey</p>
-      </div>
-      
-      <div className="progress-cards-grid">
-        {progressData.map((card, index) => (
-          <ProgressCard
-            key={card.title}
-            {...card}
-            style={{ animationDelay: `${index * 0.1}s` }}
-          />
-        ))}
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {progressData.map((card, index) => (
+        <ProgressCard
+          key={card.title}
+          {...card}
+          delay={index * 100}
+        />
+      ))}
     </div>
   );
 };

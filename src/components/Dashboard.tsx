@@ -1,5 +1,5 @@
 import React from 'react';
-import { FolderIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import { FolderIcon, SparklesIcon, BookOpenIcon, ChartBarIcon } from '@heroicons/react/24/outline';
 import { HeroSection } from './HeroSection';
 import { ProgressCards } from './ProgressCards';
 import { Flashcard, Folder } from '../types/flashcard';
@@ -28,10 +28,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
   const totalCorrect = flashcards.reduce((sum, card) => sum + card.correctCount, 0);
   const studyProgress = totalCards > 0 ? Math.round((studiedCards / totalCards) * 100) : 0;
   const accuracyRate = totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 100) : 0;
-  const masteredCards = flashcards.filter(card => card.correctCount >= 3).length; // Consider a card mastered if correctly answered 3+ times
+  const masteredCards = flashcards.filter(card => card.correctCount >= 3).length;
 
   return (
-    <div className="dashboard-container flex-1 overflow-y-auto">
+    <div className="flex-1 overflow-y-auto">
       {/* Hero Section */}
       <HeroSection
         userName="Alex"
@@ -43,89 +43,135 @@ export const Dashboard: React.FC<DashboardProps> = ({
         onStartStudy={onStudy}
       />
       
-      {/* Rest of Dashboard */}
-      <div className="section animate-fade-in">
-        <div className="container">
-          {/* Progress Cards Section */}
-          {totalCards > 0 && (
-            <div className="stack-lg mb-12">
-              <ProgressCards
-                studyProgress={studyProgress}
-                accuracyRate={accuracyRate}
-                dailyGoal={20}
-                dailyCompleted={Math.min(studiedCards, 20)}
-                weeklyStreak={5}
-                totalCards={totalCards}
-                masteredCards={masteredCards}
-                studyTime={35}
-                targetStudyTime={60}
-              />
-            </div>
-          )}
-
-          {/* Folders Section */}
-          {folders.length > 0 && (
-            <div className="glass-card p-6">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="p-2 bg-gradient-to-br from-flashvibe-coral to-rose-600 rounded-xl">
-                  <FolderIcon className="w-6 h-6 text-white" />
-                </div>
-                <h2 className="text-3xl font-bold text-flashvibe-slate">Your Folders</h2>
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Progress Cards Section */}
+        {totalCards > 0 && (
+          <div className="mb-12">
+            <div className="flex items-center mb-6">
+              <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl mr-3">
+                <ChartBarIcon className="w-5 h-5 text-white" />
               </div>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-md">
-                {folders.map((folder) => {
-                  const folderCards = flashcards.filter(card => card.folderId === folder.id);
-                  return (
-                    <button
-                      key={folder.id}
-                      onClick={() => onNavigateToFolder(folder.id)}
-                      className="p-6 rounded-xl border-2 border-gray-100 hover:border-gray-200 hover:shadow-lg transition-all duration-300 text-left group bg-gradient-to-br from-white to-gray-50"
-                    >
-                      <div className="flex items-center mb-3">
-                        <div 
-                          className="w-5 h-5 rounded-full mr-3 shadow-sm"
-                          style={{ backgroundColor: folder.color }}
-                        />
-                        <h3 className="font-bold text-flashvibe-slate group-hover:text-flashvibe-blue transition-colors text-lg">
+              <h2 className="text-2xl font-bold text-gray-800">Your Progress</h2>
+            </div>
+            <ProgressCards
+              totalCards={totalCards}
+              studiedCards={studiedCards}
+              masteredCards={masteredCards}
+              accuracyRate={accuracyRate}
+            />
+          </div>
+        )}
+
+        {/* Folders Section */}
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center">
+              <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl mr-3">
+                <FolderIcon className="w-5 h-5 text-white" />
+              </div>
+              <h2 className="text-2xl font-bold text-gray-800">Study Folders</h2>
+            </div>
+            <button
+              onClick={onCreateFolder}
+              className="btn-modern btn-primary"
+            >
+              <FolderIcon className="w-4 h-4 mr-2" />
+              New Folder
+            </button>
+          </div>
+          
+          {folders.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {folders.map((folder) => {
+                const folderCardCount = flashcards.filter(card => card.folderId === folder.id).length;
+                return (
+                  <div
+                    key={folder.id}
+                    onClick={() => onNavigateToFolder(folder.id)}
+                    className="modern-card cursor-pointer group"
+                  >
+                    <div className="flex items-center mb-4">
+                      <div 
+                        className="w-12 h-12 rounded-xl flex items-center justify-center mr-4 shadow-md"
+                        style={{ backgroundColor: folder.color }}
+                      >
+                        <FolderIcon className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-800 group-hover:text-indigo-600 transition-colors">
                           {folder.name}
                         </h3>
+                        <p className="text-sm text-gray-500">
+                          {folderCardCount} cards
+                        </p>
                       </div>
-                      <p className="text-gray-500 font-medium">
-                        {folderCards.length} card{folderCards.length !== 1 ? 's' : ''}
-                      </p>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Empty State */}
-          {totalCards === 0 && folders.length === 0 && (
-            <div className="center-text p-6">
-              <div className="stack gap-md">
-                <SparklesIcon className="w-16 h-16 text-gray-300 mx-auto" />
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Start Your Learning Journey</h2>
-                  <p className="text-gray-600 mb-8">Create your first flashcard or folder to begin studying.</p>
-                  <div className="flex gap-md justify-center">
-                    <button
-                      onClick={onCreateCard}
-                      className="btn-primary"
-                    >
-                      Create Flashcard
-                    </button>
-                    <button
-                      onClick={onCreateFolder}
-                      className="btn-secondary"
-                    >
-                      Create Folder
-                    </button>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full transition-all duration-300"
+                        style={{ width: folderCardCount > 0 ? '60%' : '0%' }}
+                      ></div>
+                    </div>
                   </div>
-                </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-2xl mb-4">
+                <FolderIcon className="w-8 h-8 text-gray-400" />
               </div>
+              <h3 className="text-lg font-medium text-gray-700 mb-2">No folders yet</h3>
+              <p className="text-gray-500 mb-4">Create your first folder to organize your flashcards</p>
+              <button
+                onClick={onCreateFolder}
+                className="btn-modern btn-primary"
+              >
+                <FolderIcon className="w-4 h-4 mr-2" />
+                Create First Folder
+              </button>
             </div>
           )}
+        </div>
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="modern-card-gradient">
+            <div className="flex items-center mb-4">
+              <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl mr-3">
+                <BookOpenIcon className="w-5 h-5 text-white" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-800">Quick Study</h3>
+            </div>
+            <p className="text-gray-600 mb-4">
+              Jump right into studying with a random selection of cards
+            </p>
+            <button
+              onClick={onStudy}
+              className="btn-modern btn-success w-full"
+            >
+              Start Quick Study
+            </button>
+          </div>
+          
+          <div className="modern-card-gradient">
+            <div className="flex items-center mb-4">
+              <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-xl mr-3">
+                <SparklesIcon className="w-5 h-5 text-white" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-800">Create Card</h3>
+            </div>
+            <p className="text-gray-600 mb-4">
+              Add new flashcards to expand your knowledge base
+            </p>
+            <button
+              onClick={onCreateCard}
+              className="btn-modern btn-primary w-full"
+            >
+              Create New Card
+            </button>
+          </div>
         </div>
       </div>
     </div>

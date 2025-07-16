@@ -154,7 +154,7 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
       <Header
         currentView={currentView}
         folders={folders}
