@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeftIcon, ArrowPathIcon, CheckCircleIcon, XCircleIcon, TrophyIcon, ChartBarIcon, ClockIcon, CommandLineIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, ArrowPathIcon, CheckCircleIcon, XCircleIcon, TrophyIcon, ChartBarIcon, ClockIcon, CommandLineIcon, DocumentTextIcon, BookOpenIcon } from '@heroicons/react/24/outline';
 import { Flashcard, StudySession } from '../types/flashcard';
 import { InlineMath, BlockMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
