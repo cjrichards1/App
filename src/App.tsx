@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Dashboard } from './components/Dashboard';
 import { FlashcardForm } from './components/FlashcardForm';
@@ -6,7 +6,8 @@ import { StudyMode } from './components/StudyMode';
 import { FolderView } from './components/FolderView';
 import { Auth } from './components/Auth';
 import { useFlashcards } from './hooks/useFlashcards';
-import { Flashcard, Folder } from './types/flashcard';
+import { Flashcard, Folder, NewFlashcard } from './types/flashcard';
+import { authService } from './services/authService';
 
 type View = 'dashboard' | 'create' | 'study' | 'folder';
 
@@ -19,7 +20,28 @@ function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
   const [selectedFolderId, setSelectedFolderId] = useState<string>('');
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const currentUser = await authService.getCurrentUser();
+        if (currentUser) {
+          setUser({
+            name: currentUser.name,
+            email: currentUser.email
+          });
+        }
+      } catch (error) {
+        console.error('Error checking auth state:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
   const {
     flashcards,
     folders,
@@ -46,8 +68,29 @@ function App() {
     setUser(userData);
   };
 
-  const handleLogout = () => {
-    setUser(null);
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      setUser(null);
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
+  const handleCreateFolder = () => {
+    // Implement folder creation logic
+  };
+
+  const handleNavigate = (view: View) => {
+    setCurrentView(view);
+  };
+
+  const handleAddFolder = (folder: Folder) => {
+    addFolder(folder.name, folder.color);
+  };
+
+  const handleUpdateFolder = (folder: Folder) => {
+    updateFolder(folder.id, { name: folder.name, color: folder.color });
   };
 
   const renderCurrentView = () => {
@@ -60,6 +103,7 @@ function App() {
             onNavigateToFolder={handleNavigateToFolder}
             onCreateCard={() => setCurrentView('create')}
             onStudy={() => setCurrentView('study')}
+            onCreateFolder={handleCreateFolder}
           />
         );
       case 'create':
@@ -68,7 +112,7 @@ function App() {
             folders={folders}
             categories={categories}
             onBack={handleBackToHome}
-            onAdd={(flashcard: Flashcard) => {
+            onAdd={(flashcard: NewFlashcard) => {
               addFlashcard(flashcard);
               handleBackToHome();
             }}
@@ -84,6 +128,8 @@ function App() {
         );
       case 'folder':
         const selectedFolder = folders.find((f: Folder) => f.id === selectedFolderId);
+        if (!selectedFolder) return null;
+        
         const folderFlashcards = flashcards.filter((f: Flashcard) => f.folderId === selectedFolderId);
         return (
           <FolderView
@@ -99,6 +145,10 @@ function App() {
     }
   };
 
+  if (isLoading) {
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+  }
+
   if (!user) {
     return <Auth onAuthSuccess={handleAuthSuccess} />;
   }
@@ -108,10 +158,10 @@ function App() {
       <Header
         currentView={currentView}
         folders={folders}
-        onNavigate={setCurrentView}
+        onNavigate={handleNavigate}
         onNavigateToFolder={handleNavigateToFolder}
-        onAddFolder={addFolder}
-        onUpdateFolder={updateFolder}
+        onAddFolder={handleAddFolder}
+        onUpdateFolder={handleUpdateFolder}
         onDeleteFolder={deleteFolder}
         user={user}
         onLogout={handleLogout}

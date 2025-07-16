@@ -95,8 +95,9 @@ export const authService = {
     };
   },
 
-  isAuthenticated(): boolean {
-    return !!supabase.auth.getSession();
+  async isAuthenticated(): Promise<boolean> {
+    const { data: { session } } = await supabase.auth.getSession();
+    return !!session;
   },
 
   onAuthStateChange(callback: (user: UserData | null) => void) {

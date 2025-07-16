@@ -2,13 +2,7 @@ import React from 'react';
 import { FolderIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { HeroSection } from './HeroSection';
 import { ProgressCards } from './ProgressCards';
-import { Flashcard } from '../types/flashcard';
-
-interface Folder {
-  id: string;
-  name: string;
-  color: string;
-}
+import { Flashcard, Folder } from '../types/flashcard';
 
 interface DashboardProps {
   flashcards: Flashcard[];
@@ -29,11 +23,12 @@ export const Dashboard: React.FC<DashboardProps> = ({
 }: DashboardProps) => {
   // Calculate statistics
   const totalCards = flashcards.length;
-  const studiedCards = flashcards.filter((card: Flashcard) => card.isCorrect !== undefined).length;
-  const correctCards = flashcards.filter((card: Flashcard) => card.isCorrect).length;
+  const studiedCards = flashcards.filter(card => card.correctCount + card.incorrectCount > 0).length;
+  const totalAttempts = flashcards.reduce((sum, card) => sum + card.correctCount + card.incorrectCount, 0);
+  const totalCorrect = flashcards.reduce((sum, card) => sum + card.correctCount, 0);
   const studyProgress = totalCards > 0 ? Math.round((studiedCards / totalCards) * 100) : 0;
-  const accuracyRate = studiedCards > 0 ? Math.round((correctCards / studiedCards) * 100) : 0;
-  const masteredCards = flashcards.reduce((sum: number, card: Flashcard) => sum + (card.isCorrect ? 1 : 0), 0);
+  const accuracyRate = totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 100) : 0;
+  const masteredCards = flashcards.filter(card => card.correctCount >= 3).length; // Consider a card mastered if correctly answered 3+ times
 
   return (
     <div className="dashboard-container flex-1 overflow-y-auto">
@@ -43,7 +38,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         studyStreak={15}
         totalCards={totalCards}
         cardsStudied={studiedCards}
-        accuracy={85}
+        accuracy={accuracyRate}
         onCreateCard={onCreateCard}
         onStartStudy={onStudy}
       />
@@ -78,7 +73,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <h2 className="text-3xl font-bold text-flashvibe-slate">Your Folders</h2>
               </div>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-md">
-                {folders.map((folder: Folder) => {
+                {folders.map((folder) => {
                   const folderCards = flashcards.filter(card => card.folderId === folder.id);
                   return (
                     <button

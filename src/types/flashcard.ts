@@ -5,18 +5,21 @@ export interface Flashcard {
   category: string;
   difficulty: 'easy' | 'medium' | 'hard';
   isLatex: boolean;
-  createdAt: Date;
-  lastStudied?: Date;
+  createdAt: string;
+  lastStudied?: string;
   correctCount: number;
   incorrectCount: number;
   folderId?: string;
+  isCorrect?: boolean;
 }
+
+export type NewFlashcard = Omit<Flashcard, 'id' | 'createdAt' | 'correctCount' | 'incorrectCount' | 'lastStudied' | 'isCorrect'>;
 
 export interface Folder {
   id: string;
   name: string;
   color: string;
-  createdAt: Date;
+  createdAt: string;
   cardCount: number;
 }
 
@@ -24,8 +27,8 @@ export interface StudySession {
   totalCards: number;
   correctAnswers: number;
   incorrectAnswers: number;
-  startTime: Date;
-  endTime?: Date;
+  startTime: string;
+  endTime?: string;
 }
 
 export interface FlashcardStats {

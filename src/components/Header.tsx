@@ -7,15 +7,22 @@ import {
 } from '@heroicons/react/24/outline';
 import { Folder } from '../types/flashcard';
 
+interface User {
+  name?: string;
+  email: string;
+}
+
+type View = 'dashboard' | 'create' | 'study' | 'folder';
+
 interface HeaderProps {
-  currentView: string;
+  currentView: View;
   folders: Folder[];
-  onNavigate: (view: string) => void;
+  onNavigate: (view: View) => void;
   onNavigateToFolder: (folderId: string) => void;
   onAddFolder: (folder: Folder) => void;
   onUpdateFolder: (folder: Folder) => void;
-  onDeleteFolder: (folderId: string) => void;
-  user: { name?: string; email: string };
+  onDeleteFolder: (id: string) => void;
+  user: User;
   onLogout: () => void;
 }
 
@@ -28,7 +35,7 @@ export const Header: React.FC<HeaderProps> = ({
   onUpdateFolder,
   onDeleteFolder,
   user,
-  onLogout
+  onLogout,
 }) => {
   return (
     <header className="bg-white shadow-sm">

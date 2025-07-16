@@ -6,7 +6,8 @@ import {
   TrashIcon,
   EyeIcon,
   CommandLineIcon,
-  DocumentTextIcon
+  DocumentTextIcon,
+  ArrowLeftIcon
 } from '@heroicons/react/24/outline';
 import { InlineMath, BlockMath } from 'react-katex';
 import { Flashcard, Folder } from '../types/flashcard';
@@ -15,10 +16,9 @@ import 'katex/dist/katex.min.css';
 interface FolderViewProps {
   folder: Folder;
   flashcards: Flashcard[];
-  onDeleteCard: (id: string) => void;
-  onUpdateCard: (id: string, updates: Partial<Flashcard>) => void;
-  onMoveCard: (cardId: string, folderId?: string) => void;
-  folders: Folder[];
+  onBack: () => void;
+  onUpdateFlashcard: (id: string, updates: Partial<Flashcard>) => void;
+  onDeleteFlashcard: (id: string) => void;
 }
 
 // Memoized empty state component
@@ -114,10 +114,9 @@ const FlashCard = React.memo(({
 export const FolderView: React.FC<FolderViewProps> = ({
   folder,
   flashcards,
-  onDeleteCard,
-  onUpdateCard,
-  onMoveCard,
-  folders,
+  onBack,
+  onUpdateFlashcard,
+  onDeleteFlashcard,
 }) => {
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
   const [editingCard, setEditingCard] = useState<string | null>(null);
@@ -169,10 +168,10 @@ export const FolderView: React.FC<FolderViewProps> = ({
 
   const saveEdit = useCallback(() => {
     if (editingCard) {
-      onUpdateCard(editingCard, editForm);
+      onUpdateFlashcard(editingCard, editForm);
       setEditingCard(null);
     }
-  }, [editingCard, editForm, onUpdateCard]);
+  }, [editingCard, editForm, onUpdateFlashcard]);
 
   const cancelEdit = useCallback(() => {
     setEditingCard(null);
@@ -186,9 +185,9 @@ export const FolderView: React.FC<FolderViewProps> = ({
 
   const handleDelete = useCallback((cardId: string) => {
     if (confirm('Delete this flashcard?')) {
-      onDeleteCard(cardId);
+      onDeleteFlashcard(cardId);
     }
-  }, [onDeleteCard]);
+  }, [onDeleteFlashcard]);
 
   const toggleExpand = useCallback((cardId: string) => {
     setExpandedCard(prev => prev === cardId ? null : cardId);
