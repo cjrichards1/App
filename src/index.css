@@ -8,6 +8,7 @@
 @import './styles/animations.css';
 @import './styles/enhanced-animations.css';
 @import './styles/dynamic-layout.css';
+@import './styles/hero-section.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
