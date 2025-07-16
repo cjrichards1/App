@@ -166,6 +166,19 @@ export const Header: React.FC<HeaderProps> = ({
                   <AcademicCapIcon className="w-5 h-5" />
                   <span>Study Mode</span>
                 </button>
+
+                <button
+                  onClick={() => {
+                    onNavigate('demo');
+                    setShowMainMenu(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-flashvibe-gray transition-colors ${
+                    currentView === 'demo' ? 'bg-blue-50 text-flashvibe-blue font-semibold' : 'text-flashvibe-slate'
+                  }`}
+                >
+                  <SparklesIcon className="w-5 h-5" />
+                  <span>Color Demo</span>
+                </button>
               </div>
             )}
           </div>

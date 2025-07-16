@@ -5,8 +5,9 @@ import { FlashcardForm } from './components/FlashcardForm';
 import { StudyMode } from './components/StudyMode';
 import { FolderView } from './components/FolderView';
 import { useFlashcards } from './hooks/useFlashcards';
+import { ColorSystemDemo } from './components/ColorSystemDemo';
 
-type View = 'dashboard' | 'create' | 'study' | 'folder';
+type View = 'dashboard' | 'create' | 'study' | 'folder' | 'demo';
 
 function App() {
   const [currentView, setCurrentView] = useState<View>('dashboard');
@@ -78,6 +79,8 @@ function App() {
             onDeleteFlashcard={deleteFlashcard}
           />
         );
+      case 'demo':
+        return <ColorSystemDemo />;
       default:
         return null;
     }
