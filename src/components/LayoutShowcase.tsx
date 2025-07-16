@@ -7,7 +7,7 @@ import {
   EyeIcon,
   DevicePhoneMobileIcon,
   ComputerDesktopIcon,
-  TabletIcon
+  DeviceTabletIcon
 } from '@heroicons/react/24/outline';
 
 export const LayoutShowcase: React.FC = () => {
@@ -284,7 +284,7 @@ export const LayoutShowcase: React.FC = () => {
                   <div className="flex justify-center gap-4">
                     {[
                       { id: 'mobile', icon: DevicePhoneMobileIcon, label: 'Mobile' },
-                      { id: 'tablet', icon: TabletIcon, label: 'Tablet' },
+                      { id: 'tablet', icon: DeviceTabletIcon, label: 'Tablet' },
                       { id: 'desktop', icon: ComputerDesktopIcon, label: 'Desktop' },
                     ].map((viewport) => (
                       <button
