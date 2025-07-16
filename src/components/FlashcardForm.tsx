@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PlusIcon, CommandLineIcon, DocumentTextIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, CommandLineIcon, DocumentTextIcon, SparklesIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { InlineMath, BlockMath } from 'react-katex';
 import { Folder } from '../types/flashcard';
 import 'katex/dist/katex.min.css';
@@ -7,6 +7,7 @@ import 'katex/dist/katex.min.css';
 interface FlashcardFormProps {
   folders: Folder[];
   categories: string[];
+  onBack: () => void;
   onAdd: (flashcard: {
     front: string;
     back: string;
@@ -29,7 +30,7 @@ const LaTeXPreview: React.FC<{ content: string; isBlock?: boolean }> = ({ conten
   }
 };
 
-export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categories, onAdd }) => {
+export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categories, onBack, onAdd }) => {
   const [front, setFront] = useState('');
   const [back, setBack] = useState('');
   const [category, setCategory] = useState('general');
@@ -83,7 +84,12 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categorie
   ];
 
   return (
-    <div className="animate-fade-in max-w-5xl mx-auto">
+    <div className="flex-1 p-8 bg-gray-50 overflow-y-auto">
+      <div className="animate-fade-in max-w-5xl mx-auto">
+        {/* Back Button */}
+        <div className="mb-8">
+          <button
+            onClick={onBack}
       <div className="rounded-xl shadow-md p-8 border-gradient bg-white">
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-4">
@@ -325,6 +331,7 @@ export const FlashcardForm: React.FC<FlashcardFormProps> = ({ folders, categorie
             Create Flashcard
           </button>
         </form>
+      </div>
       </div>
     </div>
   );
