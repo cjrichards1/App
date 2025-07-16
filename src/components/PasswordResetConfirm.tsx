@@ -1,65 +1,51 @@
 import React, { useState } from 'react';
-import { LockClosedIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { LockClosedIcon } from '@heroicons/react/24/outline';
 import '../styles/auth.css';
 
 interface PasswordResetConfirmProps {
-  onResetConfirm: (newPassword: string, token: string) => Promise<void>;
+  onResetConfirm: (newPassword: string) => Promise<void>;
   onBackToLogin: () => void;
-  token: string;
 }
 
 export const PasswordResetConfirm: React.FC<PasswordResetConfirmProps> = ({
   onResetConfirm,
   onBackToLogin,
-  token
 }) => {
-  const [password, setPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [errors, setErrors] = useState({ password: '', confirmPassword: '' });
+  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
 
-  const validateForm = () => {
-    const newErrors = { password: '', confirmPassword: '' };
-    let isValid = true;
-
-    if (!password) {
-      newErrors.password = 'Password is required';
-      isValid = false;
-    } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-      isValid = false;
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
-      newErrors.password = 'Password must contain uppercase, lowercase, and number';
-      isValid = false;
+  const validatePasswords = () => {
+    if (newPassword.length < 6) {
+      setError('Password must be at least 6 characters');
+      return false;
     }
-
-    if (password !== confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-      isValid = false;
+    if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(newPassword)) {
+      setError('Password must contain uppercase, lowercase, and number');
+      return false;
     }
-
-    setErrors(newErrors);
-    return isValid;
+    if (newPassword !== confirmPassword) {
+      setError('Passwords do not match');
+      return false;
+    }
+    return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
+    setError('');
+
+    if (!validatePasswords()) {
       return;
     }
 
     setIsLoading(true);
-
     try {
-      await onResetConfirm(password, token);
-      setIsSuccess(true);
+      await onResetConfirm(newPassword);
+      // Success will be handled by the parent component
     } catch (err) {
-      setErrors({
-        ...errors,
-        password: 'Failed to reset password. Please try again.'
-      });
+      setError(err instanceof Error ? err.message : 'Failed to reset password');
     } finally {
       setIsLoading(false);
     }
@@ -68,98 +54,50 @@ export const PasswordResetConfirm: React.FC<PasswordResetConfirmProps> = ({
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <button
-          onClick={onBackToLogin}
-          className="absolute top-4 left-4 text-gray-600 hover:text-gray-900 transition-colors flex items-center gap-1 text-sm"
-        >
-          <ArrowLeftIcon className="w-4 h-4" />
-          Back to Login
-        </button>
-
         <div className="auth-header">
-          <h2>Reset Your Password</h2>
-          <p>
-            {isSuccess
-              ? 'Your password has been reset successfully'
-              : 'Enter your new password'}
-          </p>
+          <h2>Reset Password</h2>
+          <p>Enter your new password</p>
         </div>
 
-        {!isSuccess ? (
-          <form onSubmit={handleSubmit} className="auth-form">
-            <div className="form-group">
-              <div className="input-icon-wrapper">
-                <LockClosedIcon className="input-icon" />
-                <input
-                  type="password"
-                  placeholder="New Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={errors.password ? 'error' : ''}
-                  disabled={isLoading}
-                />
-              </div>
-              {errors.password && (
-                <span className="error-message">{errors.password}</span>
-              )}
-            </div>
-
-            <div className="form-group">
-              <div className="input-icon-wrapper">
-                <LockClosedIcon className="input-icon" />
-                <input
-                  type="password"
-                  placeholder="Confirm New Password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className={errors.confirmPassword ? 'error' : ''}
-                  disabled={isLoading}
-                />
-              </div>
-              {errors.confirmPassword && (
-                <span className="error-message">{errors.confirmPassword}</span>
-              )}
-            </div>
-
-            <div className="password-requirements">
-              <p className="text-sm text-gray-600 mb-2">Password requirements:</p>
-              <ul className="text-xs text-gray-500 list-disc list-inside">
-                <li>At least 6 characters long</li>
-                <li>Include uppercase and lowercase letters</li>
-                <li>Include at least one number</li>
-              </ul>
-            </div>
-
-            <button
-              type="submit"
-              className={`auth-button ${isLoading ? 'loading' : ''}`}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <span className="loading-spinner" />
-              ) : (
-                'Reset Password'
-              )}
-            </button>
-          </form>
-        ) : (
-          <div className="reset-success">
-            <div className="success-message">
-              <p className="text-green-600 font-medium mb-4">
-                Password reset successful!
-              </p>
-              <p className="text-gray-600 text-sm mb-6">
-                Your password has been updated. You can now log in with your new password.
-              </p>
-              <button
-                onClick={onBackToLogin}
-                className="auth-button"
-              >
-                Log In
-              </button>
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-group">
+            <div className="input-icon-wrapper">
+              <LockClosedIcon className="input-icon" />
+              <input
+                type="password"
+                placeholder="New Password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                disabled={isLoading}
+              />
             </div>
           </div>
-        )}
+
+          <div className="form-group">
+            <div className="input-icon-wrapper">
+              <LockClosedIcon className="input-icon" />
+              <input
+                type="password"
+                placeholder="Confirm New Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                disabled={isLoading}
+              />
+            </div>
+          </div>
+
+          {error && <div className="error-message">{error}</div>}
+
+          <button type="submit" className="auth-button" disabled={isLoading}>
+            {isLoading ? 'Resetting...' : 'Reset Password'}
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          <button onClick={onBackToLogin} className="switch-auth-button" disabled={isLoading}>
+            Back to Login
+          </button>
+        </div>
       </div>
     </div>
   );

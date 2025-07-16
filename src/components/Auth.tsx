@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Login } from './Login';
 import { Signup } from './Signup';
 import { PasswordReset } from './PasswordReset';
@@ -13,14 +13,27 @@ interface AuthProps {
 
 export const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
   const [currentView, setCurrentView] = useState<AuthView>('login');
-  const [resetToken, setResetToken] = useState<string>('');
   const [error, setError] = useState<string>('');
+
+  useEffect(() => {
+    // Set up auth state listener
+    const { data: { subscription } } = authService.onAuthStateChange((user) => {
+      if (user) {
+        onAuthSuccess({ name: user.name, email: user.email });
+      }
+    });
+
+    // Cleanup subscription
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [onAuthSuccess]);
 
   const handleLogin = async (email: string, password: string) => {
     try {
       setError('');
-      const response = await authService.login(email, password);
-      onAuthSuccess({ name: response.user.name, email: response.user.email });
+      const user = await authService.login(email, password);
+      onAuthSuccess({ name: user.name, email: user.email });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     }
@@ -29,8 +42,8 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
   const handleSignup = async (name: string, email: string, password: string) => {
     try {
       setError('');
-      const response = await authService.signup(name, email, password);
-      onAuthSuccess({ name: response.user.name, email: response.user.email });
+      const user = await authService.signup(name, email, password);
+      onAuthSuccess({ name: user.name, email: user.email });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Signup failed');
     }
@@ -40,25 +53,21 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
     try {
       setError('');
       await authService.requestPasswordReset(email);
-      // In a real application, the token would come from the URL after the user clicks
-      // the reset link in their email. For demo purposes, we're simulating this.
-      setResetToken('mock-reset-token');
-      setCurrentView('reset-confirm');
+      // Show success message and switch to login view after a delay
+      setTimeout(() => setCurrentView('login'), 2000);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Password reset request failed');
-      throw err; // Re-throw to let the component handle the error state
     }
   };
 
-  const handleResetConfirm = async (newPassword: string, token: string) => {
+  const handleResetConfirm = async (newPassword: string) => {
     try {
       setError('');
-      await authService.confirmPasswordReset(token, newPassword);
-      // After successful reset, return to login after a delay
+      await authService.updatePassword(newPassword);
+      // After successful reset, return to login
       setTimeout(() => setCurrentView('login'), 2000);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Password reset failed');
-      throw err; // Re-throw to let the component handle the error state
     }
   };
 
@@ -91,7 +100,6 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
           <PasswordResetConfirm
             onResetConfirm={handleResetConfirm}
             onBackToLogin={() => setCurrentView('login')}
-            token={resetToken}
           />
         );
       default:
