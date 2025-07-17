@@ -1,329 +1,213 @@
-/* Modern Flashcard Styles using CSS Variables */
+/* Nature-Inspired Flashcard Styles */
 
-.modern-flashcard-container {
-  perspective: 1000px;
-  width: 100%;
-  max-width: 400px;
-  height: 280px;
-  margin: 0 auto;
-}
-
-.modern-flashcard {
+.flashcard {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  padding: 2rem;
   position: relative;
-  width: 100%;
-  height: 100%;
-  cursor: pointer;
-  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-style: preserve-3d;
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
 }
 
-.modern-flashcard.flipped {
-  transform: rotateY(180deg);
-}
-
-.modern-flashcard.answered {
-  animation: success-pulse 1.5s ease-out;
-}
-
-.flashcard-face {
+/* Add subtle texture */
+.flashcard::before {
+  content: '';
   position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  border-radius: 16px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  background: var(--bg-elevated);
-  border: 2px solid var(--border-primary);
-  box-shadow: var(--shadow-lg);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.15' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
 }
 
-.flashcard-face:hover {
-  box-shadow: var(--shadow-xl);
+.flashcard:hover {
   transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
+/* Flashcard States */
 .flashcard-front {
-  background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg-secondary) 100%);
-  border-left: 4px solid var(--primary-500);
+  background: linear-gradient(135deg, var(--primary-50), var(--earth-50));
 }
 
 .flashcard-back {
-  background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--primary-50) 100%);
-  border-left: 4px solid var(--accent-emerald);
-  transform: rotateY(180deg);
+  background: linear-gradient(135deg, var(--earth-50), var(--primary-50));
 }
 
-[data-theme="dark"] .flashcard-back {
-  background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--neutral-700) 100%);
-}
-
-.flashcard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.flashcard-type-indicator {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.type-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.latex-icon {
-  background: var(--gradient-secondary);
-  box-shadow: var(--shadow-glow-secondary);
-}
-
-.text-icon {
-  background: var(--gradient-primary);
-  box-shadow: var(--shadow-glow-primary);
-}
-
-.answer-icon {
-  background: var(--gradient-success);
-  box-shadow: var(--shadow-glow-success);
-}
-
-.type-icon .icon {
-  width: 16px;
-  height: 16px;
-  color: var(--text-inverse);
-}
-
-.type-label {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--text-secondary);
-}
-
-.difficulty-badge {
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border: 1px solid;
-  transition: all 0.3s ease;
-}
-
-.difficulty-badge:hover {
-  transform: scale(1.05);
-}
-
-.flashcard-content {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  margin: 20px 0;
-}
-
-.content-text {
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 1.5;
-  color: var(--text-primary);
-  word-wrap: break-word;
-  max-width: 100%;
-}
-
-.flashcard-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: auto;
-}
-
-.category-tag {
-  padding: 6px 12px;
-  background: var(--gradient-primary);
-  color: var(--text-inverse);
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: capitalize;
-  box-shadow: var(--shadow-sm);
-}
-
-.category-tag-back {
-  padding: 6px 12px;
-  background: var(--gradient-success);
-  color: var(--text-inverse);
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: capitalize;
-  box-shadow: var(--shadow-sm);
-}
-
-.flip-hint {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--text-tertiary);
-  font-size: 12px;
-  font-weight: 500;
-  opacity: 0.7;
-  transition: opacity 0.3s ease;
-}
-
-.modern-flashcard:hover .flip-hint {
-  opacity: 1;
-}
-
-.hint-icon {
-  width: 14px;
-  height: 14px;
-  animation: sparkle 2s ease-in-out infinite;
-}
-
-.flashcard-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.action-button {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 16px;
+/* Study Mode Styles */
+.study-mode .flashcard {
+  max-width: 800px;
+  margin: 2rem auto;
+  background: var(--bg-elevated);
   border: none;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
+  box-shadow: var(--shadow-natural);
+}
+
+/* Card Content */
+.flashcard-content {
+  position: relative;
+  z-index: 1;
+}
+
+.flashcard-question {
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.flashcard-answer {
+  color: var(--text-secondary);
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+/* Natural Interaction States */
+.flashcard-interactive {
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  color: var(--text-inverse);
 }
 
-.correct-button {
-  background: var(--gradient-success);
-  box-shadow: var(--shadow-md);
+.flashcard-interactive:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 
+    0 4px 6px rgba(34, 31, 26, 0.05),
+    0 10px 15px rgba(34, 31, 26, 0.1);
 }
 
-.correct-button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg), var(--shadow-glow-success);
+.flashcard-interactive:active {
+  transform: translateY(-2px) scale(0.99);
 }
 
-.incorrect-button {
-  background: var(--gradient-error);
-  box-shadow: var(--shadow-md);
+/* Category Tags */
+.flashcard-tag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--primary-700);
+  background: var(--primary-100);
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid var(--primary-200);
 }
 
-.incorrect-button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg), var(--shadow-glow-error);
+/* Progress Indicator */
+.progress-bar {
+  height: 4px;
+  background: var(--earth-200);
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 1rem 0;
 }
 
-.action-button:active {
-  transform: scale(0.95);
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-400), var(--accent-sage));
+  transition: width 0.3s ease-in-out;
 }
 
-.button-icon {
-  width: 16px;
-  height: 16px;
+/* Card Stack Effect */
+.card-stack {
+  position: relative;
 }
 
-/* Animations */
-@keyframes sparkle {
-  0%, 100% { 
-    opacity: 0.7; 
-    transform: scale(1);
-  }
-  50% { 
-    opacity: 1; 
-    transform: scale(1.1);
-  }
+.card-stack::before,
+.card-stack::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  background: var(--bg-primary);
+  z-index: -1;
 }
 
-@keyframes success-pulse {
-  0% { 
-    transform: scale(1);
-    box-shadow: var(--shadow-lg);
-  }
-  50% { 
-    transform: scale(1.02);
-    box-shadow: var(--shadow-2xl), var(--shadow-glow-success);
-  }
-  100% { 
-    transform: scale(1);
-    box-shadow: var(--shadow-lg);
-  }
+.card-stack::before {
+  bottom: -4px;
+  right: -4px;
+  background: linear-gradient(135deg, var(--earth-100), var(--primary-100));
+}
+
+.card-stack::after {
+  bottom: -8px;
+  right: -8px;
+  background: linear-gradient(135deg, var(--primary-100), var(--earth-100));
+}
+
+/* Natural Animations */
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.animate-float {
+  animation: cardFloat 6s ease-in-out infinite;
 }
 
 /* Responsive Design */
-@media (max-width: 640px) {
-  .modern-flashcard-container {
-    max-width: 320px;
-    height: 240px;
+@media (max-width: 768px) {
+  .flashcard {
+    padding: 1.5rem;
   }
   
-  .flashcard-face {
-    padding: 20px;
+  .flashcard-question {
+    font-size: 1.125rem;
   }
   
-  .content-text {
-    font-size: 16px;
+  .flashcard-answer {
+    font-size: 1rem;
   }
   
-  .flashcard-actions {
-    flex-direction: column;
-    gap: 8px;
+  .card-stack::before {
+    bottom: -3px;
+    right: -3px;
+  }
+  
+  .card-stack::after {
+    bottom: -6px;
+    right: -6px;
   }
 }
 
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-  .flashcard-face {
-    border-width: 3px;
-  }
-  
-  .difficulty-badge {
-    border-width: 2px;
-  }
-  
-  .content-text {
-    font-weight: 600;
-  }
+/* Dark Mode Adjustments */
+[data-theme="dark"] .flashcard::before {
+  opacity: 0.05;
 }
 
-/* Reduced motion support */
+[data-theme="dark"] .flashcard-front {
+  background: linear-gradient(135deg, var(--primary-900), var(--earth-900));
+}
+
+[data-theme="dark"] .flashcard-back {
+  background: linear-gradient(135deg, var(--earth-900), var(--primary-900));
+}
+
+[data-theme="dark"] .flashcard-tag {
+  color: var(--primary-200);
+  background: var(--primary-900);
+  border-color: var(--primary-800);
+}
+
+/* Focus States */
+.flashcard:focus-within {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
-  .modern-flashcard {
+  .flashcard,
+  .flashcard-interactive,
+  .progress-bar-fill {
     transition: none;
   }
   
-  .flashcard-face {
-    transition: none;
-  }
-  
-  .hint-icon {
-    animation: none;
-  }
-  
-  .modern-flashcard.answered {
+  .animate-float {
     animation: none;
   }
 }
