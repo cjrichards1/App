@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import {
   DocumentTextIcon,
   CommandLineIcon,
-  LeafIcon as LeafIconHero,
-  TreeIcon as TreeIconHero
+  ArrowPathIcon,
+  CheckIcon,
 } from '@heroicons/react/24/outline';
 import { InlineMath } from 'react-katex';
 import { Flashcard } from '../types/flashcard';
 
 // Custom icon components with proper typing
-const LeafIcon: React.FC<{ className?: string }> = (props) => <LeafIconHero {...props} />;
-const TreeIcon: React.FC<{ className?: string }> = (props) => <TreeIconHero {...props} />;
+const LeafIcon: React.FC<{ className?: string }> = (props) => <ArrowPathIcon {...props} />;
 
 interface ModernFlashcardProps {
   card: Flashcard;
@@ -26,6 +25,32 @@ export const ModernFlashcard: React.FC<ModernFlashcardProps> = ({
   const handleClick = () => {
     setIsFlipped(!isFlipped);
     if (onFlip) onFlip();
+  };
+
+  const getDifficultyLabel = (difficulty: 'easy' | 'medium' | 'hard') => {
+    switch (difficulty) {
+      case 'easy':
+        return 'Easy';
+      case 'medium':
+        return 'Medium';
+      case 'hard':
+        return 'Hard';
+      default:
+        return 'Unknown';
+    }
+  };
+
+  const getDifficultyColor = (difficulty: 'easy' | 'medium' | 'hard') => {
+    switch (difficulty) {
+      case 'easy':
+        return 'text-green-500';
+      case 'medium':
+        return 'text-yellow-500';
+      case 'hard':
+        return 'text-red-500';
+      default:
+        return 'text-gray-500';
+    }
   };
 
   return (
@@ -50,11 +75,11 @@ export const ModernFlashcard: React.FC<ModernFlashcardProps> = ({
               <span className="text-gradient-forest">Question</span>
             </div>
             <div className={`difficulty-tag border-pebble ${
-              card.difficulty === 'Easy' ? 'bg-gradient-moss' :
-              card.difficulty === 'Medium' ? 'bg-gradient-earth' :
+              card.difficulty === 'easy' ? 'bg-gradient-moss' :
+              card.difficulty === 'medium' ? 'bg-gradient-earth' :
               'bg-gradient-forest'
             }`}>
-              {card.difficulty}
+              {getDifficultyLabel(card.difficulty)}
             </div>
           </div>
 
@@ -92,7 +117,6 @@ export const ModernFlashcard: React.FC<ModernFlashcardProps> = ({
               )}
               <span className="text-gradient-earth">Answer</span>
             </div>
-            <TreeIcon className="w-6 h-6 text-accent-sage" />
           </div>
 
           <div className="flashcard-content texture-paper">
@@ -109,14 +133,14 @@ export const ModernFlashcard: React.FC<ModernFlashcardProps> = ({
                 className="action-btn bg-gradient-moss shadow-natural border-pebble"
                 type="button"
               >
-                <LeafIcon className="w-4 h-4" />
+                <CheckIcon className="w-4 h-4" />
                 <span>Correct</span>
               </button>
               <button 
                 className="action-btn bg-gradient-earth shadow-natural border-pebble"
                 type="button"
               >
-                <LeafIcon className="w-4 h-4" />
+                <ArrowPathIcon className="w-4 h-4" />
                 <span>Review</span>
               </button>
             </div>
